@@ -67,9 +67,9 @@ Equip only one ability and one skill at a time, one passive and one active, AP t
 
 Surge Forms and Form Skills, Bondkin:
 All of Sora's learnable skills are form skills. When a Bondkin changes its form, it unlocks a new set of skills, and those skills are also unlockable per form level.
-Surge Forms: Gale, Aegis, Zephyr, Tempest, Zenith. Every Bondkin has HP and MP bars. Surge Gauge fills with drive orbs, taking damage, and attacks. Transforming fully refills HP and MP.
+Surge Forms: Gale Form, Aegis Form, Zephyr Form, Tempest Form, Zenith Form. Every Bondkin has HP and MP bars. Surge Gauge fills with drive orbs, taking damage, and attacks. Transforming fully refills HP and MP.
 Surge Form and Summon levels are separate from character level, each to 7 by its own method.
-Zenith Surge Form unlocks High Jump skills. Gale Surge Form unlocks Quick Run / Air Slide skills. Tempest Surge Form unlocks Aerial Dodge skills. Zephyr Surge Form unlocks Glide skills. Aegis Surge Form unlocks Dodge Roll skills.
+Gale Surge Form unlocks Quick Run / Air Slide skills. Aegis Surge Form unlocks Dodge Roll skills. Zephyr Surge Form unlocks Glide skills. Tempest Surge Form unlocks Aerial Dodge skills. Zenith Surge Form unlocks High Jump skills.
 Per form level, higher form levels unlock stronger versions of that form's skills, Lv1, Lv2, Lv3, up to MAX.
 Other Sora form skills in the same system: Dodge Roll, High Jump, Glide, Superglide, Quick Run / Air Slide, Aerial Dodge, Doubleflight, Slide Roll, Sonic Impact, Double Impact, Flowmotion (Wall Kick, Pole Spin, Pole Swing, Rail Slide, Superjump, Superslide), Mermaid Kick, Sliding Dash / Flash Step. See fed-13-sora-skills.md for the full list.
 
