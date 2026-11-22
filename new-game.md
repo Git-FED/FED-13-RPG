@@ -1,6 +1,6 @@
-# Fed MMORPG
+# FED-13 RPG
 
-New game, name: Fed MMORPG.
+New game, name: FED-13 RPG.
 No design, no build until Git-FED finishes picking features.
 Assets first: create ALL assets before building anything. 4 directional sprites for every thing, front, back, left, right, plus battle front and back. Graphics: Level 3, 256 by 256, HD 2D, a lot more fur and shading.
 100% own assets from scratch, no copyrighted assets, so everything can be sold.
@@ -64,6 +64,14 @@ Nightlord, Galerider, Grand Avatar, Shade Saint, Vampyr, and the rest of the 30.
 Abilities, Bondkin:
 Learn ALL action, reaction, support, combo, and movement abilities from weapons and accessories.
 Equip only one ability and one skill at a time, one passive and one active, AP to equip. Every skill use takes a turn.
+
+Surge Forms and Form Skills, Bondkin:
+All of Sora's learnable skills are form skills. When a Bondkin changes its form, it unlocks a new set of skills, and those skills are also unlockable per form level.
+Surge Forms, formerly Drive Forms: Valor, Wisdom, Master, Final. Every Bondkin has HP and MP bars. Surge Gauge fills with drive orbs, taking damage, and attacks. Transforming fully refills HP and MP.
+Surge Form and Summon levels are separate from character level, each to 7 by its own method.
+Valor Surge Form unlocks High Jump skills. Wisdom Surge Form unlocks Quick Run / Air Slide skills. Master Surge Form unlocks Aerial Dodge skills. Final Surge Form unlocks Glide skills. Limit Surge Form unlocks Dodge Roll skills.
+Per form level, higher form levels unlock stronger versions of that form's skills, Lv1, Lv2, Lv3, up to MAX.
+Other Sora form skills in the same system: Dodge Roll, High Jump, Glide, Superglide, Quick Run / Air Slide, Aerial Dodge, Doubleflight, Slide Roll, Sonic Impact, Double Impact, Flowmotion (Wall Kick, Pole Spin, Pole Swing, Rail Slide, Superjump, Superslide), Mermaid Kick, Sliding Dash / Flash Step. See fed-mmorpg-sora-skills.md for the full list.
 
 Evolution, Bondkin only:
 Stage 1, Stage 2, Stage 3, smallest to largest. Stage 1 = 0.7, Stage 2 = 0.85, Stage 3 = 1.0. No Mega.
