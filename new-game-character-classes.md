@@ -1,20 +1,22 @@
 # Character Classes - Pick Before Your Bondkin Starter
 
 Order: you pick your character first, then you pick your Bondkin starter.
-Character creation is Race, Class, Advanced Class, then Bondkin starter, then Twin Path, then Twin Ascension.
+Character creation is Race, Pronouns, Class, Advanced Class, then Bondkin starter, then Twin Path, then Twin Ascension.
 
-## Step 1 - Race, Your Bloodline
+## Step 1 - Race, Polar or Solar
 
-Pick 1 of 5 core bloodlines:
-Hybrid - human like, balanced, all special jobs, not catchable.
-Puffkin - floating koala teddy bunny, magic, shops.
-Elderkin - old ancient sage, magic, strong.
-Harefolk - humanoid bunny, fast, fighting.
-Drakescale - lizard dragon, tough, ground.
+Pick 1 of 2 Mankind races:
+Polar - the palest skin tones, from very pale European to light Asian and light Mediterranean / Spanish.
+Solar - the deepest skin tones, from South Asian / Indian through darker Asian, Pacific Islander / Hawaiian, Black, and dark African.
 
-Plus pool bloodlines, 54, if you want a different race: Elf, Dwarf, Orc, Troll, Goblin, Fairy, Centaur, Werewolf, Demon, Vampire, Unicorn, and the rest, original names, only renamed if copyrighted.
+Race is your look. It does not lock any class.
 
-Bloodline decides which classes are available, and base stats.
+The 5 core bloodlines, Hybrid, Puffkin, Elderkin, Harefolk, and Drakescale, are Bondkin bloodlines, not Mankind races. You pick one at the Bondkin starter step, not here. The 9 other Bondkin bloodlines are also Bondkin, not Mankind races.
+
+## Step 1b - Pronouns, Him, Her, or They
+
+Pick 1 of 3 pronoun sets for your Mankind character: him, her, or they.
+Pronouns change only dialogue pronouns, how NPCs, guests, and the Grimoire address your character, he/him, she/her, or they/them. Pronouns change nothing else: no stat changes, no class or job restrictions, no outfit restrictions, no story changes.
 
 ## Step 2 - Class, Pick 1, Before Bondkin
 
@@ -85,7 +87,7 @@ Logger - chop wood, gather.
 Gatherer - harvest, gather.
 Scavenger - find items, gather.
 
-Total character classes at start: 50+.
+Total character classes at start: 52 unique.
 
 ## Step 3 - Advanced Class, Unlock Later
 
@@ -108,9 +110,11 @@ Advanced Class is your second class, stronger, more moves.
 
 Now you pick your starter Bondkin, after your character class is set.
 Your starter is your first Bondkin, your partner.
-Pick 1 of 3 starters, by bloodline, or by type, your call.
+Pick 1 of 5 starters, one per core Bondkin bloodline, your call.
 Example starters:
+- Hybrid starter, balanced, all special jobs.
 - Puffkin starter, magic, fairy.
+- Elderkin starter, magic, strong.
 - Harefolk starter, fighting, fast.
 - Drakescale starter, dragon, tough.
 
@@ -142,7 +146,7 @@ Character level and XP, gain new abilities, skills, talents.
 
 - Character first, Bondkin starter second. That is the order.
 - Character level cap 150, Bondkin cap 200.
-- Character has Race, Class, Advanced Class, Twin Path, Twin Ascension, plus roles, gear, customization.
+- Character has Race, Pronouns, Class, Advanced Class, Twin Path, Twin Ascension, plus roles, gear, customization.
 - Bondkin has Bloodline, Path, Ascended Path, Twin Path, Twin Ascension, plus evolution, Hollow / Echo variants.
 - Abilities cost AP to equip. One ability and one skill per Bondkin, one passive and one active.
 - Jobs are learned from equipment. Buy a weapon, learn its skill. Steal to learn.

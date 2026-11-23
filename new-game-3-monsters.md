@@ -14,10 +14,10 @@ A monster becomes a Bondkin after a character catches and trains it.
 
 ## Monster List, Short
 
-Dragon, Whelp, Drake, Wyrm, Wyvern, Slime, Ooze, Golem, Elemental, Skeleton, Zombie, Ghost, Ghoul, Vampire, Lich, Mummy, Phoenix, Demon, Imp, Giant, Troll, Ogre, Ettin, Minotaur, Cyclops, Goblin, Kobold, Gnoll, Treant, Mandragora, Morbol, Sabotender, Sea Serpent, Kraken, Leviathan, Nightmare, Unicorn, Hydra, Chimera, Manticore, Griffin, Hippogryph, Harpy, Gargoyle, Centaur, Mimic, Doppleganger, Djinn, Efreet, Genie, Wisp, Naga, Murloc, Sahagin, Skale, Baby Orc, Baby Elf, Fairy, Pixie, Dryad.
+Dragon, Whelp, Drake, Wyrm, Wyvern, Slime, Ooze, Golem, Elemental, Skeleton, Zombie, Ghost, Ghoul, Vampire, Lich, Mummy, Phoenix, Demon, Imp, Giant, Troll, Ogre, Ettin, Minotaur, Cyclops, Goblin, Kobold, Gnoll, Treant, Mandragora, Foulbloom, Pricklethorn, Sea Serpent, Kraken, Leviathan, Nightmare, Unicorn, Hydra, Chimera, Manticore, Griffin, Hippogryph, Harpy, Gargoyle, Centaur, Mimic, Doppleganger, Djinn, Efreet, Genie, Wisp, Naga, Murkfin, Sahagin, Finfolk, Baby Orc, Baby Elf, Fairy, Pixie, Dryad.
 
 Plus MMO monsters:
-Felguard, Succubus, Voidwalker, Doomguard, Infernal, Iksar, Froglok, Shissar, Dagannoth, TzHaar, Abyssal Demon, Balron, Lich Lord, Skeletal Dragon, Ahriman, Bomb, Tonberry, Cactuar, Charr, Tengu, Oni, Kirin, Kamael, Antharas, Valakas, Firbolg, Lurikeen, and the rest in the full Codex.
+Dreadguard, Succubus, Voidwalker, Doomguard, Infernal, Iksar, Froglok, Shissar, Deepmaw, Lavaborn, Abyssal Demon, Hellreaver, Lich Lord, Skeletal Dragon, Ahriman, Bomb, Grudgeknife, Pricklethorn, Ashmane, Tengu, Oni, Kirin, Soulwing, Terra Dragon, Pyre Dragon, Firbolg, Lurikeen, and the rest in the full Codex.
 
 Full list: 195 entries, in new-game-codex-renewed.md.
 
