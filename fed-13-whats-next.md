@@ -9,7 +9,7 @@ Refreshed 2026-11-23 from new-game.md (1338 lines), fed-13-all-prompts.md (928 p
 
 ## His call, unanswered
 
-- Push to GitHub FED-13-RPG and Slack #video-game: unanswered. 13 of 15 pushed files are pre-revision, 2 Disney files are still in the repo. His call, do not answer it here.
+- Push to GitHub FED-13-RPG: done, standing rule, always push game details to the repo, no approval needed. Slack #video-game push: still open.
 - Periodic Slack and GitHub save: period never chosen (6h, 12h, daily offered, he never picked). His call.
 
 ## App and art
