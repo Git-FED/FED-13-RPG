@@ -1337,5 +1337,361 @@ The 40 plus unnamed Undawn vehicles are now named with FED-13 original period na
 - Futuristic Mech, cut
 - Grand Prix Racer, cut
 
+### Relief quests and anti-stuck missions
+
+System name: Wayfinder Relief
+
+Wayfinder Relief is the FED-13 anti-stuck quest system. It gives the Mankind player the items needed to keep playing, so no one fails to play the game properly or gets stuck for lack of a healing item, a tool, a material, a Splicer, grovefruit, a transport part, a blueprint, or Crests. Wayfinder Relief quests are played by the Mankind player directly. They are never dispatched, like the 13 main missions. Combat dispatch missions and gathering missions stay Bondkin only. Wayfinder Relief stays open even when Bondkin are busy, tired, or out of action, and even when the Bank roster is full at 24 Beasts with 6 deployed.
+
+Currency in this system is the Crest, symbol Cr. Wallet cap is 999,999 Cr. Starting wallet is 3,000 Cr. Crest rewards from Wayfinder Relief never push the wallet past 999,999 Cr. If a Crest reward would pass the cap, the excess converts to sellable materials of equal value, so no reward is lost.
+
+Where Wayfinder Relief is posted
+
+Wayfinder Relief quests are posted only on the guild boards in the 3 guild halls: Realm Map Saltquay, fairy tale kingdom Forestgate, and ocean island Canoebay. There are no guild halls in the other 10 worlds. A quest posted in Saltquay, Forestgate, or Canoebay can send the Mankind player to any of the 13 worlds. A quest is claimed at any one of the 3 guild boards, and it is turned in at any one of the 3 guild boards. Puffkin shops do not post Wayfinder Relief quests. Puffkin shops sell general items in 3 tiers, and Wayfinder Relief rewards match those 3 tiers, so a rewarded item is always usable at the current stage.
+
+Quest types
+
+There are 8 Wayfinder Relief quest types. Every type is repeatable. Every type has a no-cost version, so no quest ever charges Cr to start.
+
+1. Mend Relief
+   Goal: help a hurt Bondkin or a hurt Beast, gather mendleaf, or carry supplies to a healer.
+   Rewards: healing items. Mendleaf Tonic, Bright Mendleaf Tonic, Greater Mendleaf Tonic, Revive Ember, and Bondkin Balm. Early stages reward Mendleaf Tonic and Bondkin Balm. Later stages reward Greater Mendleaf Tonic and Revive Ember.
+
+2. Tool Relief
+   Goal: fetch, repair, or deliver a tool for a guild worker, a Puffkin shopkeeper, or a traveler.
+   Rewards: tools. Rope and Hook Kit, Field Repair Kit, Harvest Sickle, Climbing Pick, and Master Repair Kit. Early stages reward Rope and Hook Kit and Field Repair Kit. Later stages reward Climbing Pick and Master Repair Kit.
+
+3. Harvest Relief
+   Goal: gather common materials in the open field, with no battle required.
+   Rewards: materials. Timber Bundle, Stone Bundle, Fiber Bundle, Iron Ore, Bright Crystal, and Sky Timber. Early stages reward Timber Bundle, Stone Bundle, and Fiber Bundle. Later stages reward Iron Ore, Bright Crystal, and Sky Timber.
+
+4. Splicer Relief
+   Goal: recover a lost Splicer, trade for a Splicer part, or help a splicer researcher.
+   Rewards: Splicers. Basic Splicer and Super Splicer. Basic Splicer is the early reward. Super Splicer unlocks at the middle stages and is rewarded in larger counts at the late stages. Splicers from this type cannot be sold, so the player never sells away the item needed to progress.
+
+5. Grove Relief
+   Goal: tend a grove, water grovefruit trees, or carry grovefruit to a hungry Bondkin or Beast.
+   Rewards: grovefruit. Grovefruit, Sweet Grovefruit, and Golden Grovefruit. Early stages reward Grovefruit. Middle stages reward Sweet Grovefruit. Late stages reward Golden Grovefruit.
+
+6. Wayfarer Relief
+   Goal: recover a broken transport part, help a driver or sailor, or clear a road, trail, or dock.
+   Rewards: transport parts. Wheel Hub, Sail Cloth, Engine Gear, Sky Galleon Rudder, and Golden Strider Saddle. Early stages reward Wheel Hub and Sail Cloth. Later stages reward Engine Gear, Sky Galleon Rudder, and Golden Strider Saddle.
+
+7. Blueprint Relief
+   Goal: find a lost blueprint, copy a blueprint for the guild, or deliver a blueprint to a builder.
+   Rewards: blueprints. Tool Blueprint, Transport Blueprint, Grove Blueprint, and Guild Hall Blueprint. Each blueprint unlocks a named craft or build at the current stage. A duplicate blueprint from this type converts to 500 Cr at turn in, so a repeat never wastes the reward slot.
+
+8. Crest Relief
+   Goal: run a guild errand, deliver a parcel, post a notice, or help a shopkeeper for a day.
+   Rewards: Crests only, plus one small healing item. Crest Relief is the direct Cr top up quest. It pays 300 Cr early, 800 Cr in the middle stages, and 2,000 Cr in the late stages. It also pays one Mendleaf Tonic, so a broke player leaves with Cr and a heal in hand.
+
+When each stage unlocks, tied to Trial Battle progress
+
+Trial Battles are the stage gate. There are 13 Trial Battles, one per world, in step with the 13 main missions. Wayfinder Relief unlocks in 5 stages. A new stage opens the moment the named Trial Battle is cleared. Earlier stages stay open after a later stage unlocks, so a player can always go back for an early item.
+
+Stage 1, Open Start, before Trial Battle 1
+   Open: Mend Relief, Tool Relief, Harvest Relief, Crest Relief.
+   Rewards match Puffkin shop tier 1.
+   Healing items: Mendleaf Tonic, Bondkin Balm.
+   Tools: Rope and Hook Kit, Field Repair Kit.
+   Materials: Timber Bundle, Stone Bundle, Fiber Bundle.
+   Crests: Crest Relief pays 300 Cr.
+
+Stage 2, After Trial Battle 3 cleared
+   Adds: Grove Relief, Splicer Relief with Basic Splicer.
+   Rewards still match Puffkin shop tier 1, with the first tier 2 healing items.
+   Healing items add: Bright Mendleaf Tonic.
+   Tools add: Harvest Sickle.
+   Materials add: Iron Ore.
+   Grovefruit: Grovefruit.
+   Splicers: Basic Splicer.
+   Crests: Crest Relief pays 300 Cr.
+
+Stage 3, After Trial Battle 6 cleared
+   Adds: Wayfarer Relief, Blueprint Relief with Tool Blueprint.
+   Rewards match Puffkin shop tier 2.
+   Healing items add: Greater Mendleaf Tonic.
+   Tools add: Climbing Pick.
+   Materials add: Bright Crystal.
+   Grovefruit add: Sweet Grovefruit.
+   Splicers add: Super Splicer.
+   Transport parts: Wheel Hub, Sail Cloth.
+   Blueprints: Tool Blueprint.
+   Crests: Crest Relief pays 800 Cr.
+
+Stage 4, After Trial Battle 9 cleared
+   Adds: Blueprint Relief with Transport Blueprint and Grove Blueprint.
+   Rewards match Puffkin shop tier 2, with the first tier 3 healing items.
+   Healing items add: Revive Ember.
+   Tools add: Master Repair Kit.
+   Materials add: Sky Timber.
+   Grovefruit add: Golden Grovefruit.
+   Transport parts add: Engine Gear, Sky Galleon Rudder.
+   Blueprints add: Transport Blueprint, Grove Blueprint.
+   Crests: Crest Relief pays 800 Cr.
+
+Stage 5, After Trial Battle 12 cleared, through Trial Battle 13
+   Adds: Blueprint Relief with Guild Hall Blueprint, Splicer Relief with Super Splicer in larger counts.
+   Rewards match Puffkin shop tier 3.
+   Healing items: full tier 3 set, Greater Mendleaf Tonic and Revive Ember in larger counts.
+   Tools: Master Repair Kit in larger counts.
+   Materials: Bright Crystal and Sky Timber in larger counts.
+   Grovefruit: Golden Grovefruit in larger counts.
+   Splicers: Super Splicer in larger counts.
+   Transport parts add: Golden Strider Saddle.
+   Blueprints add: Guild Hall Blueprint.
+   Crests: Crest Relief pays 2,000 Cr.
+
+Stage rewards by need, not by luck
+
+Every Wayfinder Relief quest lists its reward on the guild board before the player accepts it. No reward is hidden. A quest that needs a tool rewards that tool or the Cr to buy it. A quest that needs a material rewards that material. A quest that needs a Splicer rewards a Splicer. A quest that needs grovefruit rewards grovefruit. A quest that needs a transport part rewards that transport part. A quest that needs a blueprint rewards that blueprint. If the player is short on healing items, Mend Relief and Crest Relief are always open at the current stage, with no Trial Battle lock beyond the stage already cleared.
+
+Sell items for Crests fallback
+
+If a player cannot afford something, they can sell items for Crests at any Puffkin shop, and at the guild counter in Saltquay, Forestgate, and Canoebay. The sell rule is simple and fixed.
+
+Sell price is half value: every sellable item sells for 50 percent of its Puffkin shop buy price. A 100 Cr item sells for 50 Cr. A 1,000 Cr item sells for 500 Cr. A 2,000 Cr item sells for 1,000 Cr. There is no haggling and no price change by world.
+
+What can be sold:
+   Spare healing items, spare tools, surplus materials, extra grovefruit, duplicate transport parts, duplicate blueprints, and spare crafted goods.
+   Duplicate blueprints sell at the fixed sell price above, or convert to 500 Cr at Wayfinder Relief turn in if that is higher.
+   Surplus Timber Bundle, Stone Bundle, Fiber Bundle, Iron Ore, Bright Crystal, and Sky Timber can all be sold.
+
+What cannot be sold:
+   Splicers cannot be sold. Basic Splicer and Super Splicer stay in the wallet so the player never sells away progress.
+   Quest key items cannot be sold. A blueprint that is the only copy needed for the current stage cannot be sold until a second copy is held.
+   The last copy of a needed tool cannot be sold. The shop warns the player and blocks the sale if it is the last copy.
+
+Where to sell:
+   Any Puffkin shop, in any world where a Puffkin shop stands, and the guild counter in Saltquay, Forestgate, and Canoebay. Selling is instant, with Cr paid at once, up to the 999,999 Cr wallet cap.
+
+Emergency rule, player at 0 Cr who cannot afford a needed item
+
+If the Mankind player is at 0 Cr and cannot afford a needed item, the Emergency Relief rule applies at once, with no wait and no cost.
+
+1. Go to any guild board in Saltquay, Forestgate, or Canoebay and take the Emergency Relief quest for that item. It is always posted, at every stage, and it costs 0 Cr to start.
+2. The Emergency Relief quest is a short no-battle errand in the same world as the guild hall, such as carrying a parcel, posting a notice, or gathering 3 Fiber Bundles. It takes only a few minutes.
+3. On turn in, the guild gives the needed item free, plus 100 Cr and one Mendleaf Tonic, so the player is no longer at 0 Cr.
+4. If the needed item is a Splicer, a blueprint, a transport part, or grovefruit, the guild gives that exact item free, not a substitute and not Cr in its place.
+5. If the player needs a healing item right now and cannot reach a guild hall, any Puffkin shop gives one free Mendleaf Tonic per Trial stage, on request, with no purchase needed. The shopkeeper records it, and the free tonic does not block the guild Emergency Relief quest.
+6. Emergency Relief has no repayment, no debt, and no penalty. It can be used once per Trial stage per needed item type, then it refreshes at the next Trial Battle clear. The regular Wayfinder Relief quests stay open alongside it, so the player is never locked to one emergency use.
+
+Beast selling cross-reference
+
+Beast selling is a separate system, named here only as the Beast selling system. It is not designed in this section. Wayfinder Relief does not sell Beasts, does not price Beasts, and does not reward Beasts. A player who needs Cr uses the sell items fallback above, or Crest Relief, or Emergency Relief, not Beast selling.
+
+Anti-stuck checks
+
+A Wayfinder Relief quest never requires an item it does not also reward or let the player buy with its own Crest reward. A Wayfinder Relief quest never requires a full Bank roster, a deployed set of 6 Beasts, a specific Bondkin job, or a cleared Trial Battle beyond the stage already open. If a quest reward is a tool, a material, a Splicer, grovefruit, a transport part, or a blueprint, that reward is named on the board before acceptance.
+
+### Selling Beasts at The Bank
+
+The Bank is the Monster Bank, the place where Beasts are stored. The roster holds up to 24 Beasts, and the deploy team holds 6 Beasts. Selling Beasts at The Bank is one way for Mankind to earn Crests. The currency is the Crest, symbol Cr. The wallet cap is 999,999 Cr. The starting wallet is 3,000 Cr. Selling Items for Crests is a separate system and is not covered here.
+
+Bondkin are never sold at The Bank. Bondkin are partners with jobs and a daycare, and the daycare is not The Bank. Only Beasts are stored at The Bank and only Beasts are sold at The Bank.
+
+Beasts cannot use Arts or skills and cannot use weapons, so Arts, skills, and weapons add no value to a sale price. A sale price is based only on rarity, Stage, level, variant, and fusion status.
+
+#### Who Buys
+
+Broker Voss buys Beasts at The Bank. Broker Voss is the licensed buyer at The Bank. Broker Voss pays in Crests at once, and Broker Voss trades a bought Beast on to other Mankind. Mankind does not sell Beasts directly to other Mankind at The Bank. All sales go through Broker Voss.
+
+Broker Voss does not buy Common Beasts at any price.
+
+#### Which Beasts Can Be Sold
+
+Beast rarity tiers are Common, Uncommon, Rare, Epic, Legendary, and Mythic.
+
+Sellable rarities are Uncommon, Rare, Epic, Legendary, and Mythic.
+
+Too common to sell is Common. Common Beasts cannot be sold. A Common Beast has a sale value of 0 Cr. A Common Beast can be kept, evolved, fused, or released, but it cannot be sold to Broker Voss.
+
+A Beast can be sold only if it is in the roster at The Bank and it is not in the deploy team of 6. A Beast in the deploy team must be removed from deploy before it can be sold.
+
+#### Which Beasts Can Never Be Sold
+
+The starter Beast can never be sold. A story Beast can never be sold. A gifted story Beast can never be sold. A one of a kind story Beast can never be sold. A Beast with a story tag can never be sold, even if its rarity is Rare or higher.
+
+A Beast in the middle of evolution cannot be sold. A Beast in the middle of fusion cannot be sold. A Beast must finish evolution or fusion first, and then the result can be sold if it meets the other rules.
+
+#### Price Formula
+
+Sale Price = (Base Cr by rarity x Stage multiplier + Level x 10 Cr) x Variant multiplier x Fusion multiplier, rounded down to a whole Cr amount.
+
+Base Cr by rarity at Stage 1:
+
+- Uncommon: 150 Cr
+- Rare: 400 Cr
+- Epic: 900 Cr
+- Legendary: 2,500 Cr
+- Mythic: 6,000 Cr
+- Common: 0 Cr, cannot be sold
+
+Stage multipliers:
+
+- Stage 1: x1
+- Stage 2: x1.5
+- Stage 3: x2
+
+Level bonus is 10 Cr per level, added after the Stage multiplier is applied to the base.
+
+Variant multipliers:
+
+- Standard Beast: x1
+- Hollow Beast: x2
+- Echo Beast: x2.5
+
+Fusion multipliers:
+
+- Standard Beast: x1
+- Fused Beast: x3
+
+Worked examples:
+
+- Rare Stage 2 level 20 standard Beast: 400 Cr x 1.5 = 600 Cr, plus 20 x 10 Cr = 200 Cr, total 800 Cr. Variant x1 and fusion x1 leave it at 800 Cr.
+- Epic Stage 3 level 30 Hollow Beast: 900 Cr x 2 = 1,800 Cr, plus 30 x 10 Cr = 300 Cr, total 2,100 Cr. Hollow x2 gives 4,200 Cr.
+- Legendary Stage 1 level 10 Fused Beast: 2,500 Cr x 1 = 2,500 Cr, plus 10 x 10 Cr = 100 Cr, total 2,600 Cr. Fusion x3 gives 7,800 Cr.
+
+#### Hollow and Echo Beasts
+
+Hollow Beasts and Echo Beasts can be sold. Hollow Beasts are regional variants of Beasts. A Hollow Beast is dark, with the Dark type added. A Hollow Beast sells at x2 the standard price. Echo Beasts are regional variants of Beasts. An Echo Beast is ghostly, with the Ghost type added. An Echo Beast sells at x2.5 the standard price.
+
+A Beast is Hollow or Echo or standard. A Beast cannot be both Hollow and Echo, so the Hollow and Echo multipliers never stack.
+
+#### Fused Beasts
+
+Fused Beasts can be sold. Fusion makes a brand new Beast species, with its own name and its own Fusion Codex entry. A Fused Beast is priced from its own rarity tier as a brand new Beast species, then the x3 fusion multiplier is applied.
+
+Selling a Fused Beast sells that individual Fused Beast only. The Fusion Codex entry stays unlocked after the sale. The name and the Fusion Codex entry are kept as a record, but the sold Fused Beast itself is gone.
+
+Fusion is not undone by a sale. A sold Fused Beast cannot be split back into the two Beasts that made it.
+
+#### What Happens to a Sold Beast
+
+A sold Beast is gone forever. The sale removes the Beast from the roster at once and removes it from The Bank at once. Broker Voss takes the Beast and trades it on to other Mankind. There is no buyback. There is no buyback window. There is no reclaim. There is no return.
+
+The Codex entry for the sold Beast stays unlocked after the sale. The Fusion Codex entry for a sold Fused Beast stays unlocked after the sale. The record stays, the Beast does not.
+
+Every sale needs a two step confirm at The Bank. The confirm shows the Beast name, rarity, Stage, level, variant, fusion status, and the exact sale price in Cr. The confirm states that the Beast will be gone forever with no buyback. The sale goes through only after both confirms.
+
+#### Limits
+
+Daily cap is 3 Beasts sold per day. The cap resets each new day. There is no extra cooldown between sales inside the same day, apart from the daily cap of 3.
+
+Roster rules for a sale:
+
+- Roster holds up to 24 Beasts.
+- Deploy team holds 6 Beasts.
+- A Beast in the deploy team of 6 must be removed from deploy before sale.
+- At least 1 Beast must stay in the roster. A sale that would leave the roster empty is blocked.
+- A Common Beast cannot be sold, even if the roster is full.
+- A story Beast, starter Beast, gifted story Beast, or one of a kind story Beast cannot be sold, even if the roster is full.
+
+#### Wallet Cap
+
+A sale is blocked if the wallet plus the sale price would pass 999,999 Cr. The sale does not go through and no Cr is lost. Mankind must spend Crests first, then sell again. A sale never pays more than the wallet cap allows.
+
+### Turf battles and clan turf
+
+Clan turf and clan battles for items already existed as stubs in the design. This section is the full design of that stub. Turf battles are Bondkin grid battles for land. Beasts never enter turf battles. Beasts are wild and catchable, fought in 1v1 Pokemon style battles only, and they do not do combos. Mankind is the player and trainer. Mankind commands Bondkin from the deployment edge and does not fight on the grid.
+
+#### Turf areas
+
+There are 3 turf areas in each world, for 39 turf areas in total across the 13 worlds. Each turf area is one named place on the grid map of its world. A turf area is owned by one clan at a time. An unowned turf area is held by a local rival clan until the player clan wins it.
+
+| World | Turf areas |
+| --- | --- |
+| 1 Realm Map | Saltquay Docks, Saltquay Market, Salt Road Gate |
+| 2 The Thirteen headquarters | Vexhall Gate, Vexhall Hall, Vexhall Vault Steps |
+| 3 The Thirteen's dark corridors | White Room Corridor, White Room Door, White Room Stair |
+| 4 The Thirteen's secrecy | Cipherest Archive, Cipherest Listening Post, Cipherest Ink Lane |
+| 5 Magic multiverse | Portalwatch Gate, Portalwatch Steps, Portalwatch Crossroads |
+| 6 Mind and emotions world | Stillmere Shore, Stillmere Mirror Pool, Stillmere Quiet Field |
+| 7 Fairy tale kingdom | Thornwick Rose Gate, Thornwick Ballroom Steps, Thornwick Briar Lane |
+| 8 Hidden tech kingdom | Gearford Workshop Row, Gearford Cog Bridge, Gearford Spark Yard |
+| 9 Lion kingdom savanna | Goldmane Water Hole, Goldmane Tall Grass, Goldmane Sun Rock |
+| 10 Underwater kingdom | Coralport Reef Gate, Coralport Tide Market, Coralport Deep Steps |
+| 11 Ocean island | Wavecrest Beach, Wavecrest Wayfinder Pier, Wavecrest Palm Court |
+| 12 Animal city | Pawford Market Square, Pawford Burrow Lane, Pawford Rooftop Run |
+| 13 Haunted house | Gravewick Front Hall, Gravewick Graveyard Gate, Gravewick Cellar Door |
+
+#### How a turf battle is fought and won
+
+A turf battle is a 6v6 Bondkin grid battle in FFTA style. The attacker deploys 6 Bondkin from the clan roster of 24 Bondkin. The defender deploys 6 Bondkin. Each side fights with its deployed Bondkin only. Bondkin keep their jobs in turf battles. Combos are Bondkin only and grid only, so combos work in turf battles. Path Points cap at 10 in turf battles, the same as in other grid battles. A turf battle fought on turf the player clan owns starts with plus 1 Path Point, still capped at 10.
+
+There are two ways to win a turf area:
+
+1. Rout. Defeat all 6 opposing Bondkin. The side with Bondkin left on the grid wins the area.
+2. Banner hold. Each turf area has a Turf Banner on a marked tile in the center of the grid. If one Bondkin stands on the Turf Banner tile for 3 turns in a row, that side wins the area at once, even if opposing Bondkin are still on the grid. A Bondkin that is moved off the tile, or defeated, breaks the hold and the count starts again.
+
+A turf battle has no time limit in turns except the Banner hold rule. Bondkin defeated in a turf battle are not lost. They return to the clan camp after the battle and recover there. Mankind does not enter the grid and cannot be attacked.
+
+Laws and the Judge do not apply in turf battles. Laws and the Judge apply in tournaments only. Turf battles have no Laws, no Judge, and no law penalty. Any job, any ability, and any combo is allowed in a turf battle. This is part of why turf battles feel rougher than tournaments, and why affiliated rival clans can fight dirty over turf without a Judge stopping them.
+
+#### How a world gets added to your clan's turf
+
+A world is added to the player clan's turf when the player clan owns all 3 turf areas in that world at the same time. Owning 1 or 2 areas in a world does not add the world. Owning all 3 areas adds the world, unlocks the world bonus payout, and marks the world as clan turf on the Realm Map.
+
+A world stays in the player clan's turf while the player clan owns at least 2 of its 3 turf areas. If the player clan falls to 1 area in a world, the world leaves the clan's turf at once, the world bonus payout stops, and the player clan must win a third area again to add the world back.
+
+A new world opens for turf battles when the player clan reaches it in the story. The player clan does not need to win the Trial Battle in a world to fight for its turf. Turf comes first in most worlds, and turf is how the player meets the affiliated rival clan before the Trial Battle.
+
+#### What owning turf gives
+
+Owning turf pays Crests, gives items, and gives clan benefits. Crests use the symbol Cr. The wallet cap is 999,999 Cr. The player starts with 3,000 Cr. Turf payouts are collected at the clan camp.
+
+Crests payout:
+
+- Each owned turf area pays 100 Cr per day.
+- Each world in the player clan's turf pays a world bonus of 350 Cr per day.
+- One full world, 3 areas plus the world bonus, pays 650 Cr per day.
+- All 39 turf areas plus all 13 world bonuses pay 8,450 Cr per day.
+- Uncollected payouts wait at the clan camp for up to 7 days. After 7 days, payouts stop accruing until the player collects them. Payouts never push the wallet past 999,999 Cr.
+
+Items:
+
+- Each owned turf area gives 1 turf item per day, collected with the Crests payout at the clan camp.
+- Each world has its own turf item. Realm Map gives Salt Charm. The Thirteen headquarters gives Vex Seal. The Thirteen's dark corridors give White Thread. The Thirteen's secrecy gives Cipher Ink. Magic multiverse gives Portal Shard. Mind and emotions world gives Still Water. Fairy tale kingdom gives Thorn Rose. Hidden tech kingdom gives Gear Cog. Lion kingdom savanna gives Savanna Gold. Underwater kingdom gives Coral Bead. Ocean island gives Wave Shell. Animal city gives Paw Token. Haunted house gives Grave Candle.
+- Turf items are used for clan upgrades and Bondkin gear, and can be sold for Crests if the player does not need them.
+
+Other benefits of owning turf:
+
+- Training bonus. Bondkin gain 10 percent more experience from battles fought on turf the player clan owns.
+- Starting Path Points. A turf battle fought on owned turf starts with plus 1 Path Point, still capped at 10.
+- Fast travel. The player clan can fast travel to any turf area it owns, and can rest and recover Bondkin there for free.
+- Turf intel. Owning turf in a world reveals the movements of the rival clan affiliated with that world, including which area it plans to challenge next.
+- Clan standing. Each owned turf area raises clan standing by 1. Each owned world raises clan standing by 5. Higher clan standing unlocks larger rival clan challenges and better turf item trades at the clan camp.
+
+#### How rival clans challenge turf back
+
+Rival clans do not leave owned turf alone. Each owned turf area can be challenged once per day by a rival clan. A challenge arrives as a notice at the clan camp, naming the rival clan, the turf area, and the day the defense battle must be fought.
+
+- The player has until the end of the next day to accept and fight the defense battle.
+- If the player fights and wins, the player clan keeps the area. That rival clan cannot challenge that same area again for 3 days.
+- If the player fights and loses, the rival clan takes the area at once.
+- If the player does not fight by the deadline, the rival clan takes the area without a battle. Ignoring a challenge loses the turf.
+- A rival clan that wants a whole world will challenge 2 areas in the same world in the same cycle, so the player must defend both to keep the world bonus.
+- Defense battles use the same rules as attack battles: 6v6 Bondkin grid battle, deploy 6 from the roster of 24, rout or Banner hold to win, no Laws and no Judge, combos are Bondkin only and grid only, Path Points cap at 10.
+
+#### Rival clans affiliated with The Thirteen
+
+Some rival clans are affiliated with members of The Thirteen. The clan and turf system is another introduction to the shadowy organization. Fighting these clans over turf introduces the player to The Thirteen before the Trial Battles do. Each affiliated clan carries a visible mark of its patron: colors, a sigil, words, or orders from that member of The Thirteen. Unaffiliated local rival clans also hold turf, but they carry no Thirteen mark.
+
+| Member of The Thirteen | World | Rival clan | Mark of the affiliation the player sees |
+| --- | --- | --- | --- |
+| Maren Saltwright | 1 Realm Map | Clan Saltwake | Salt white cloaks and a blue wave sigil. Their banner reads "The tide keeps its debts." |
+| Aldous Vex | 2 The Thirteen headquarters | Clan Vexward | Black and gold colors and a Vexhall key sigil. Their orders arrive stamped with the Vex seal. |
+| Selene Whitehollow | 3 The Thirteen's dark corridors | Clan Whitehall | All white dress with no other color and a white room sigil. They speak in whispers and their banner reads "Say nothing. See everything." |
+| Orin Cipher | 4 The Thirteen's secrecy | Clan Cipher Ink | Ink black masks and a cipher wheel sigil. Their orders arrive in code, with one line in plain words: "Cipherest sees it first." |
+| Thalia Spellmere | 5 Magic multiverse | Clan Spellgate | Violet and silver colors and a portal ring sigil. Their banner reads "Every door opens for Spellmere." |
+| Joren Stillmere | 6 Mind and emotions world | Clan Stillwater | Still blue colors and a mirror pool sigil. They fight in silence and their banner reads "Still water holds every feeling." |
+| Rosalind Thornwick | 7 Fairy tale kingdom | Clan Thornrose | Red and green colors and a rose and thorn sigil. Their banner reads "Thornwick rules the tale." |
+| Ferran Gearford | 8 Hidden tech kingdom | Clan Gearwork | Brass and iron colors and a cog sigil. Their orders arrive as stamped work orders signed Gearford. |
+| Kito Goldmane | 9 Lion kingdom savanna | Clan Goldpride | Gold and tawny colors and a lion sigil. Their banner reads "Goldmane runs the savanna." |
+| Nerissa Coralport | 10 Underwater kingdom | Clan Coral Tide | Coral pink and deep blue colors and a coral branch sigil. Their banner reads "The tide answers Coralport." |
+| Kai Wavecrest | 11 Ocean island | Clan Wavefinder | Sea green and white colors and a wave and star sigil. Their orders arrive as wayfinder charts marked Wavecrest. |
+| Bramble Pawford | 12 Animal city | Clan Pawprint | Brown and green colors and a paw sigil. Their banner reads "Pawford keeps the city." |
+| Mortimer Gravewick | 13 Haunted house | Clan Gravewatch | Black and grey colors and a grave bell sigil. Their banner reads "The house always keeps its dead." Their orders arrive with no signature, only a grave bell mark, because Mortimer Gravewick is the leader of The Thirteen. |
+
 ### Still unverified, not decisions, left open
 - None. All 21 items verified 2026-11-22.

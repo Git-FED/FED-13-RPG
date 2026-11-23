@@ -6,7 +6,7 @@ Style line on every prompt: Level 3 HD 2D, 256x256, FFTA2 DS look, hand painted 
 
 No prompt describes a weapon, item, or Mankind from any other game. All weapons and items are FED-13 originals, no Keyblades, no weapons from other games. The Soulblade is an original FED-13 straight great blade with a wide straight crossguard and a bright crystal core, pale silver metal and deep blue crystal, leather wrapped handle, engraved lines. It is not key shaped, has no toothed tip, no bow guard, and is never held like a key.
 
-Total: 928 prompts.
+Total: 953 prompts.
 
 Counts per section:
 
@@ -28,6 +28,9 @@ Counts per section:
 - Section 16: Mankind Class Sprites: 52
 - Section 17: Apex Form Sprites: 14
 - Section 18: Named Vehicles: 39
+- Section 19: Broker Voss and Turf Banner: 2
+- Section 20: Rival Clan Banners: 13
+- Section 21: Wayfinder Relief Item Icons: 10
 
 ## Sprite Types
 
@@ -105,7 +108,7 @@ Guides, UI, items:
 - UI screens and cards: 16 prompts, covered, prompts 660 to 675, screens not sprites.
 - Item icon sets: 14 prompts, covered, prompts 676 to 689, icon sets not sprites.
 
-Sprite prompt totals: Sections 2, 3, 4, 5, 6, 13, 14, 16, and 17 hold 555 sprite prompts. Total prompts: 928.
+Sprite prompt totals: Sections 2, 3, 4, 5, 6, 13, 14, 16, 17, and 19 hold 556 sprite prompts. Total prompts: 953.
 
 Names not decided are flagged inside the prompts that need them. Where a name does not exist yet, the prompt is generic and says so. No names were invented.
 
@@ -1148,3 +1151,59 @@ Names not decided are flagged inside the prompts that need them. Where a name do
 926. The Lantern Ferry Boat is a broad ferry boat with a flat wooden deck, bench seats along its sides, paper lanterns hung from its posts, a small roof, and a long steering oar at its stern. Its warm lantern light and wide deck give it a river crossing look, and it carries folk and goods slow and steady from bank to bank. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
 927. The Nettlecast Fishing Boat is a sturdy fishing boat with a wide wooden hull, coiled nets piled at its stern, fishing rods along its rail, a small bait box, and a green painted stripe. Its work worn boards and neat nets give it a dawn catch look, and it drifts steady on calm water while its crew casts wide nets. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
 928. The Reedbank River Barge is a long flat river barge with a low wooden hull, high plank sides, a canvas covered hold, a long pole for pushing, and reed painted panels along its rails. Its broad deck and plain workman build give it a river trade look, and it moves slow and heavy downstream loaded with timber, grain, and trade crates. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+## Section 19: Broker Voss and Turf Banner (2)
+
+929. Broker Voss, the licensed Beast buyer at The Bank, a neat Mankind broker in a dark navy coat with brass buttons, a white shirt, a small brass scales emblem on his chest, a thick ledger tucked under one arm, and a heavy coin purse at his belt, standing behind a Bank counter with a calm businesslike stance. Show the front view, back view, left side view, right side view, plus battle front view and battle back view with the same colors, markings, and proportions in every view. Required views: front view, back view, left side view, right side view, plus battle front view and battle back view. Battle sprites: the battle front view and battle back view are the Pokemon style 1v1 battle sprites, side view, larger scale, the subject facing its opponent. The front view, back view, left side view, and right side view are the FFTA grid battle unit sprites, smaller scale, isometric grid units. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+930. The Turf Banner, a tall war banner on a brass pole planted on a marked stone tile in the center of a turf battle grid, with a plain cream banner field left blank for a clan sigil, a brass finial, rope ties, and a ring of pale marking stones around the tile base, the banner tall enough to be seen across the whole grid. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+## Section 20: Rival Clan Banners (13)
+
+931. The Clan Saltwake banner, a tall hanging war banner in salt white and deep sea blue, with a blue wave sigil in the center and the words "The tide keeps its debts." stitched along the bottom edge in dark blue thread, hung from a dark wood crossbar with rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+932. The Clan Vexward banner, a tall hanging war banner in black and gold, with a Vexhall key sigil in gold in the center and a small Vex seal stamped at the lower corner, hung from a black iron crossbar with gold rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+933. The Clan Whitehall banner, a tall hanging war banner in pure white with no other color, with a white room sigil in pale silver thread in the center and the words "Say nothing. See everything." stitched along the bottom edge in silver thread, hung from a white wood crossbar with white rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+934. The Clan Cipher Ink banner, a tall hanging war banner in ink black, with a cipher wheel sigil in pale ink grey in the center and the words "Cipherest sees it first." stitched along the bottom edge in pale grey thread, hung from a dark iron crossbar with black rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+935. The Clan Spellgate banner, a tall hanging war banner in violet and silver, with a portal ring sigil in silver in the center and the words "Every door opens for Spellmere." stitched along the bottom edge in silver thread, hung from a silver crossbar with violet rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+936. The Clan Stillwater banner, a tall hanging war banner in still blue, with a mirror pool sigil in pale blue in the center and the words "Still water holds every feeling." stitched along the bottom edge in pale blue thread, hung from a dark wood crossbar with blue rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+937. The Clan Thornrose banner, a tall hanging war banner in red and green, with a rose and thorn sigil in the center and the words "Thornwick rules the tale." stitched along the bottom edge in gold thread, hung from a dark wood crossbar with red rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+938. The Clan Gearwork banner, a tall hanging war banner in brass and iron, with a cog sigil in brass in the center and a small stamped work order tag signed Gearford tied at the lower corner, hung from an iron crossbar with brass rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+939. The Clan Goldpride banner, a tall hanging war banner in gold and tawny, with a lion sigil in deep gold in the center and the words "Goldmane runs the savanna." stitched along the bottom edge in dark brown thread, hung from a gold crossbar with tawny rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+940. The Clan Coral Tide banner, a tall hanging war banner in coral pink and deep blue, with a coral branch sigil in the center and the words "The tide answers Coralport." stitched along the bottom edge in deep blue thread, hung from a dark wood crossbar with coral rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+941. The Clan Wavefinder banner, a tall hanging war banner in sea green and white, with a wave and star sigil in the center and a small wayfinder chart tag marked Wavecrest tied at the lower corner, hung from a pale wood crossbar with sea green rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+942. The Clan Pawprint banner, a tall hanging war banner in brown and green, with a paw sigil in dark brown in the center and the words "Pawford keeps the city." stitched along the bottom edge in green thread, hung from a dark wood crossbar with brown rope ties. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+943. The Clan Gravewatch banner, a tall hanging war banner in black and grey, with a grave bell sigil in pale grey in the center and the words "The house always keeps its dead." stitched along the bottom edge in grey thread, hung from a black iron crossbar with grey rope ties, with no signature anywhere on the banner, only the grave bell mark. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+## Section 21: Wayfinder Relief Item Icons (10)
+
+944. A Mendleaf Tonic icon, a small glass vial of pale green tonic with a cork stopper and a sprig of mendleaf tied around its neck with twine, glowing soft green. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+945. A Bright Mendleaf Tonic icon, a small glass vial of bright glowing green tonic with a gold cap and a fresh mendleaf sprig tied around its neck, glowing bright green. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+946. A Greater Mendleaf Tonic icon, a large glass vial of deep green tonic with an ornate brass stopper and a full mendleaf sprig tied around its neck, glowing strong green. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+947. A Revive Ember icon, a small ember stone glowing orange red in a brass holder, with tiny sparks rising from it. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+948. A Bondkin Balm icon, a round wooden balm pot with a green salve inside and a paw print carved on its lid. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+949. A Rope and Hook Kit icon, a neatly coiled rope with a steel hook tied at its end, with a small leather strap around the coil. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+950. A Field Repair Kit icon, a small leather roll opened to show a hammer, a wrench, and nails tucked in its pockets. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+951. A Master Repair Kit icon, a large brass bound tool case opened to show fine tools in neat rows, with a polished hammer, small wrenches, and brass fittings. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+952. A Wheel Hub icon, a wooden wagon wheel hub with iron bands and short spokes, in plain workman wood and dark iron. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
+
+953. A Sky Galleon Rudder icon, a carved wooden ship rudder with brass fittings and a small sky sail emblem painted near its top. Style: Level 3 HD 2D, 256x256 sprite style, FFTA2 DS look, hand painted Ivalice watercolor.
