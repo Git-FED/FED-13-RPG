@@ -71,8 +71,8 @@ Graphics: Level 3, 256x256, HD 2D. Sprites: front, back, left, right, for everyt
 #060 Crab - Water - Beaches, coasts - Armored crab, high defense, pinch.
 #061 Treant - Grass - Forests - Living tree, roots, nature magic.
 #062 Mandragora - Grass - Fields - Small plant, squeaks, sleeps enemies.
-#063 Foulbloom - Grass, Poison - Swamps, dungeons - Plant monster, Bad Breath.
-#064 Pricklethorn - Grass - Deserts - Living cactus, needle shots.
+#063 Morbol - Grass, Poison - Swamps, dungeons - Plant monster, Bad Breath.
+#064 Sabotender - Grass - Deserts - Living cactus, needle shots.
 #065 Sea Serpent - Water, Dragon - Oceans - Huge sea serpent, drags ships.
 #066 Kraken - Water - Oceans, deep sea - Tentacle monster, grabs, crushes.
 #067 Leviathan - Water, Dragon - Oceans - Huge sea beast, biggest in water.
@@ -84,7 +84,7 @@ Graphics: Level 3, 256x256, HD 2D. Sprites: front, back, left, right, for everyt
 #073 Manticore - Normal - Deserts - Lion with scorpion tail, tail spikes.
 #074 Griffin - Flying - Mountains - Eagle and lion, flies, dives, claws.
 #075 Hippogryph - Flying - Plains - Horse and eagle, flies fast, loyal.
-#076 Pixel - Flying - Mountains, cliffs - Winged female, screech, dive.
+#076 Harpy - Flying - Mountains, cliffs - Winged female, screech, dive.
 #077 Gargoyle - Rock, Flying - Castles, dungeons - Stone statue alive, flies, claws.
 #078 Centaur - Normal - Forests - Half human, half horse, bow, charge.
 #079 Mimic - Normal - Dungeons - Chest that bites, ambush.
@@ -94,7 +94,7 @@ Graphics: Level 3, 256x256, HD 2D. Sprites: front, back, left, right, for everyt
 #083 Genie - Magic - Deserts - Wish granting being, magic, tricks.
 #084 Wisp - Ghost, Magic - Forests, swamps - Floating light, drains mana.
 #085 Naga - Water - Coasts, underwater ruins - Serpent humanoid, water magic.
-#086 Murkfin - Water - Coasts, lakes, swamps - Small fish humanoid, swarms.
+#086 Murloc - Water - Coasts, lakes, swamps - Small fish humanoid, swarms.
 #087 Rat - Normal - Sewers, dungeons - Swarm rat, bites, disease.
 #088 Ratman - Normal - Dungeons - Rat humanoid, bites, steals.
 #089 Frog - Water - Swamps - Hops, croaks, poison skin.

@@ -14,20 +14,20 @@ Quick Run = Air Slide, same technique, called Quick Run in KH2, Air Slide elsewh
 
 ## Kingdom Hearts 2, Growth Abilities
 Learned by leveling Drive Forms, not by character level. Form Lv3 = Lv1, Lv5 = Lv2, Lv7 = Lv3, Form MAX at Lv7.
-- High Jump, Zenith Form: jump higher, up to 320% at max.
 - Quick Run / Air Slide, Gale Form: rapid ground dash, hold for distance, up to 370% run speed at max.
-- Aerial Dodge, Tempest Form: second jump in midair, jump height 150%, longer midair combos.
-- Glide, Zephyr Form: ride the wind in midair, faster than running, speed and air time increase with level.
 - Dodge Roll, Aegis Form: short forward roll, invulnerable while rolling.
+- Glide, Zephyr Form: ride the wind in midair, faster than running, speed and air time increase with level.
+- Aerial Dodge, Tempest Form: second jump in midair, jump height 150%, longer midair combos.
+- High Jump, Zenith Form: jump higher, up to 320% at max.
 - Sliding Dash: instantly closes in on and attacks a far target, clear the Village Cave, Land of Dragons.
 - No Superglide in KH2, max Glide Lv3 is as fast as KH1 Superglide.
 
 ## Kingdom Hearts 2, Full Ability List
-Action: Guard, Upper Slash, Horizontal Slash, Finishing Leap, Retaliating Slash, Slapshot, Dodge Slash, Flash Step (FM), Slide Dash, Vicinity Break (FM), Guard Break, Explosion, Aerial Sweep, Aerial Dive (FM), Aerial Spiral, Aerial Finish, Magnet Burst (FM), Counterguard, Auto Zenith, Auto Gale, Auto Aegis (FM), Auto Tempest, Auto Zenith, Auto Summon, Trinity Aegis.
+Action: Guard, Upper Slash, Horizontal Slash, Finishing Leap, Retaliating Slash, Slapshot, Dodge Slash, Flash Step (FM), Slide Dash, Vicinity Break (FM), Guard Break, Explosion, Aerial Sweep, Aerial Dive (FM), Aerial Spiral, Aerial Finish, Magnet Burst (FM), Counterguard, Auto Gale, Auto Aegis (FM), Auto Zephyr, Auto Tempest, Auto Zenith, Auto Summon, Trinity Aegis.
 Growth: High Jump, Quick Run, Dodge Roll (FM), Aerial Dodge, Glide, Lv1-3 and MAX.
 Support: Scan, Aerial Recovery, Combo Master (FM), Combo Plus, Air Combo Plus, Combo Boost, Air Combo Boost, Reaction Boost, Finishing Plus, Negative Combo, Berserk Charge, Damage Drive, Drive Boost, Form Boost, Summon Boost, Combination Boost, Experience Boost, Leaf Bracer, Magic Lock-On, Draw, Jackpot, Lucky Lucky, Drive Converter (FM), Fire Boost, Blizzard Boost, Thunder Boost, Item Boost, MP Rage, MP Haste, MP Hastera, MP Hastega, Defender, Damage Control (FM), Second Chance, Once More, No Experience (FM).
 Form only: Synch Blade, HP Gain, Endless Magic, Light and Darkness, Protect, Protectra, Protectga.
-Surge Form only: Zenith Brave Shot, Brave Beat, Sonic Strike, Sonic End, Over the Horizon, Omega Finale; Gale Gale Shot, Mobile Action, Magic Haste, Magic Spice; Aegis Sonic Rave, Last Arcanum, Strike Raid, Infinity/Ragnarok, Zantetsuken, Ripple Drive, Hurricane Period, Zantetsu Counter, Reflect Combo; Tempest Tempest Strike, Disaster, Master Magic; Zephyr Zephyr Arcana, Zephyr Strike, Zephyr Arts, Auto Assault, Crime and Punishment.
+Surge Form only: Gale Gale Shot, Mobile Action, Magic Haste, Magic Spice; Aegis Sonic Rave, Last Arcanum, Strike Raid, Infinity/Ragnarok, Zantetsuken, Ripple Drive, Hurricane Period, Zantetsu Counter, Reflect Combo; Zephyr Zephyr Arcana, Zephyr Strike, Zephyr Arts, Auto Assault, Crime and Punishment; Tempest Tempest Strike, Disaster, Master Magic; Zenith Brave Shot, Brave Beat, Sonic Strike, Sonic End, Over the Horizon, Omega Finale.
 
 ## Kingdom Hearts 3
 - High Jump: leap high, defeat Angelic Amber.
