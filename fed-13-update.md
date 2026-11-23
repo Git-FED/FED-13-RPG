@@ -1,91 +1,45 @@
-# FED-13 RPG - Update
+# FED-13 RPG - What The Game Is About
 
-Updated 2026-11-23 ~10:07 EST.
+Updated 2026-11-23.
 
-## The game in one paragraph
+## The pitch
 
-FED-13 RPG. FED for Git-FED, 13 for The Thirteen. Sources: Pokemon (heavy base, all games and hack ROMs), Kingdom Hearts 2, Trails of Cold Steel 3, Undawn survival, Final Fantasy Tactics Advance. Mankind, Bondkin, and Beast are 100 percent separate. Mankind is the player and trainer. Bondkin is the partner creature and starter. Beasts are Feral, wild, catchable, the Pokemon side. 13 worlds, one member of The Thirteen per world, beat the member to unlock the next world. Elite Four and Hall of Fame after all 13. Currency is the Crest, symbol Cr, wallet cap 999,999 Cr. Caps: Mankind 150, Bondkin 200. Graphics Level 3, 256x256 HD 2D, FFTA2 DS look, 4 directional sprites plus battle front and back per sprite. Design only, no game build. Git-FED makes all art and animations himself from the prompts.
+FED-13 RPG is a monster catching and grid battle RPG built from five games: Pokemon, Kingdom Hearts 2, Trails of Cold Steel 3, Undawn, and Final Fantasy Tactics Advance. FED is for Git-FED, 13 is for The Thirteen, the shadowy organization that runs the whole story. You play a Mankind trainer in a world that used to be connected and is now cut apart, and you put it back together one world at a time.
 
-## What changed today, 2026-11-23
+## The story
 
-- Young and elder titles named for the 9 other Bondkin bloodlines. 18 titles in prompts 704-712 and 718-726. 0 "not decided yet" left in the prompt file.
-- Wayfinder Relief added. Anti-stuck quests and missions on the 3 guild boards, 8 quest types, rewards matched to the shop tiers. Sell items back at 50 percent. At 0 Cr a free Emergency Relief errand gives the exact item needed plus 100 Cr.
-- Selling Beasts at The Bank added. Broker Voss buys Beasts, only Uncommon and up. Common cannot be sold. Price scales with stage, level, Hollow or Echo, and fusion. Sold is gone forever, daily cap 3.
-- Turf battles added. 39 turf areas, 3 per world, 6v6 Bondkin grid battles. A world joins your clan's turf at 3 of 3, paying up to 8,450 Cr a day. All 13 rival clans are affiliated with Thirteen members, so turf fights introduce the shadowy organization early.
-- Pronoun choice added. Character creation asks him, her, or they instead of boy or girl. Dialogue pronouns only, no stat or story changes.
-- Prompts grew 928 to 953. 25 new prompts: Broker Voss, Turf Banner, 13 clan banners, 10 Wayfinder Relief item icons.
-- Three pushes to Git-FED/FED-13-RPG today. 09:02 commit 9c8a2976 (38 files, full design sync). Titles push commit ea0abf23. Prompts and new-game push commit c0ee9ade. All verified byte for byte.
+There are 13 worlds: the Realm Map, the home continent, plus 12 disconnected worlds. The Thirteen cut the sky lanes one by one, so only a Sky Galleon can cross the gaps now. Each world has one member of The Thirteen ruling it. Beat that world's member in a Trial Battle and the world opens up. Beat all 13 and the worlds reconnect, opening the Elite Four and the Hall of Fame endgame.
 
-## Current numbers
+Four threads run through everything: catch the best Beasts, defeat the hidden Thirteen, survive, and rescue each world. All of it runs through the guild system. Each world has a Beast to catch, a Thirteen member to defeat, a survival challenge to beat, and a rescue to complete.
 
-- new-game.md: 1,697 lines, the one design source.
-- fed-13-all-prompts.md: 953 prompts.
-- fed-13-effect-prompts.md: 171 prompts.
-- Codex: 134 Feral Beasts, Hollow 134, Echo 134.
-- Fusion: 17,956 ordered two-Beast fusions possible from 134 Beasts, each makes a new Beast species. Sprites auto-generated, he only draws the 134 base Beasts.
-- Worlds: 13, 65 towns, 5 per world.
-- Mankind classes: 52. Bondkin bloodlines: 14 (5 core, 9 other).
-- Apex Forms: 14 Beasts. Surge Forms: 5. Totem Forms: 5 core plus 9 other bloodlines.
-- Guests: 13 helpers, one per world. Pets: 12 kinds. Card game: Thirteen Crowns. Outfits: 13, one per world.
-- Grovefruit: 21 types. Showcases: 5 halls, 5 categories.
-- Combo attacks: Bondkin only, Link Attacks in grid battles. Fusion: Beasts only.
+## Three separate things
 
-## Still open
+Mankind, Bondkin, and Beast are 100 percent separate, always.
 
-- Slack #video-game push: still open, his call.
-- Save period: 6h, 12h, or daily, never picked.
-- 176 never-decided features: deferred out of v1, untouched.
-- App unique picture per card: never finished, some cards still share pictures.
-- Art and animations: his job, in progress from the 953 prompts and 171 effect prompts.
-- Scepter and Megalith lean list note: needs correcting to CS2.
+Mankind is you, the player and trainer. You choose your race, Polar or Solar, and your pronouns, him, her, or they. You pick one of 52 classes. Your trainer stats give your Bondkin passive bonuses, stronger as your Bond Lv with them grows. You fight in grid battles with Crafts and Arts, and you handle the survival side: hunger, hydration, mood, health, and the homestead.
 
-## File tree
+Bondkin is your partner creature and starter. There are 14 bloodlines: 5 core (Hybrid, Puffkin, Elderkin, Harefolk, Drakescale) and 9 others. Bondkin are the Final Fantasy side. They change jobs, learn skills from weapons by equipping them, and do Link Attacks, the combo system, in grid battles. They never evolve into another species. They advance inside their own bloodline through Growth Stage, Path to Ascended, Surge Form, Hollow or Echo, and Totem Form. They have full children, at triple the time a Beast egg takes.
 
-```
-~/workspace/your_files/
-├── new-game.md
-├── new-game-1-character.md
-├── new-game-2-bondkin.md
-├── new-game-3-monsters.md
-├── new-game-bondkin-advancement.md
-├── new-game-bondkin-jobs.md
-├── new-game-character-classes.md
-├── new-game-codex.md
-├── new-game-codex-renewed.md
-├── new-game-hollow-creatures.md
-├── new-game-echo-creatures.md
-├── new-game-evolution-system.md
-├── new-game-world-themes.md
-├── new-game-items.md
-├── new-game-transport-items-materials.md
-├── new-game-quartz-arts-items-tocs.md
-├── new-game-arts-tocs1.md
-├── new-game-arts-tocs2.md
-├── new-game-arts-tocs3.md
-├── new-game-crafts-tocs1.md
-├── new-game-crafts-tocs2.md
-├── new-game-crafts-tocs3.md
-├── new-game-crafts-per-race.md
-├── new-game-crafts-ffta-races.md
-├── new-game-crafts-diff.md
-├── fed-13-all-prompts.md
-├── fed-13-all-prompts-v1-backup.md
-├── fed-13-all-prompts-v2-backup.md
-├── fed-13-effect-prompts.md
-├── fed-13-combo-attacks-research.md
-├── fed-13-fusion-research.md
-├── fed-13-transport-professions.md
-├── fed-13-elderkin-nu-mou-races.md
-├── fed-13-monster-legal-renames.md
-├── fed-13-game-item-list.md
-├── fed-13-game-item-list-lean.md
-├── fed-13-sora-skills.md
-├── fed-13-unused-features.md
-├── fed-13-rpg-readme.md
-├── fed-13-rpg-what-it-is.md
-├── fed-13-rpg-summarized.md
-├── fed-13-worker-results.md
-├── fed-13-whats-next.md
-├── fed-13-not-resolved.md
-└── fed-13-update.md
-```
+Beasts are Feral, wild, catchable, the Pokemon side. There are 134 of them. They evolve Stage 1 to 3 after you catch them, like Pokemon. They cannot use Arts or skills and cannot use weapons. Their own interesting thing is fusion: fuse two Beasts and you get a brand new Beast species with its own name, type, stats, moves, and sprite. Beasts live in The Bank. Rare ones can be sold there for Crests.
+
+## Battles
+
+Two styles, same rules. 1v1 is normal Pokemon style. 2v2 to 6v6 is FFTA small grid turn based team style, bigger map for more creatures. No random encounters, enemies are visible on the field. Field attacks and type advantage matter. Roster of 24, deploy 6. Losing all 6 is a loss, but you choose whether to use your remaining members instead of being sent straight to healing.
+
+## The worlds
+
+Every world is a full Pokemon region sized map: 5 towns, routes between them, wild areas with visible wild Beasts, dungeons, landmarks, and a Trial Battle hall. 65 towns across the 13 worlds. Each world has a helper who joins your team, a guest character with their own join condition. Each world grants a new weapon themed to that world, and the character dresses in that world's theme while visiting it.
+
+The game is set a little in the past. Transport is horse and carriage, not motor vehicles: riding horses, carriages, wagons, boats, kayaks, the Sky Skiff for fast travel inside one world, and the Sky Galleon between worlds. You need the right profession to use each one: Pilot, Engineer, Cook, Gatherer, Sailor, Rider, Coachman. The materials to build transport are scattered across all thirteen worlds, so you have to travel them all.
+
+## The systems around the fighting
+
+Guild halls in three worlds post missions to all thirteen. Main missions take you to each Trial Battle. Combat dispatch sends Bondkin out on missions. Gathering missions send them out for logging, mining, harvesting, hunting and fishing, and salvage. Wayfinder Relief quests give you the items you need to keep playing, so nobody gets stuck or fails for lack of an item, and you can always sell items for Crests when you are short.
+
+Turf battles work like FFTA. There are 39 turf areas, 3 per world. Win them in 6v6 Bondkin grid battles and the world joins your clan's turf, paying daily Crests. Rival clans fight you for that turf, and some of them are affiliated with members of The Thirteen, so turf is another way the shadowy organization shows up before the Trial Battles do.
+
+Grovefruit grows on grove trees and works like berries: healing, status cures, stat boosts, and mash for Showcases, the renamed contest system in 5 halls. Thirteen Crowns is the card game inside the game, easy to learn by playing. Pets walk beside you, find small things, and warn you about what is ahead. The Grimoire is your in game wiki and contact book, an AI assisted guide that answers any question about the game.
+
+## The magic
+
+Arts come from Shards set in the Lattice, the orbment system, with a Core Shard at its center. EP is the Arts resource, CP is the Crafts resource, and they are separate bars. Cooking, synthesis, shops in three tiers, and the Trade Shop round out the economy. The currency is the Crest, symbol Cr.
