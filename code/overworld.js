@@ -199,7 +199,7 @@
     'ov3_ow_grass.png', 'ov3_ow_town.png', 'ov3_ow_road.png',
     'ov3_ow_snow.png', 'ov3_ow_harbor.png', 'ov3_ow_cragfall.png',
     'ov3_ow_frame.png', 'ov3_dialog_box.png', 'ov3_dialog_arrow.png',
-    'ov3_portrait_frame.png', 'ov4_dpad.png', 'ov3_menu_panel.png',
+    'ov4_dpad.png', 'ov3_menu_panel.png',
     'tile_ground.png', 'tile_nature.png', 'tile_buildings.png',
     'tile_snow_harbor.png'
   ];
@@ -2417,29 +2417,33 @@
       ctx.strokeRect(bx + 1, by + 1, bw - 2, boxH - 2);
     }
     if (hasPortrait) {
-      // Circular portrait clipped to the ring, gold ring frame on top.
+      // BUBBLE-FIX: square portrait, square gold frame. No circle
+      // clip, no ring art. The portrait is square, so it fills the
+      // frame exactly, DS style.
       ctx.save();
       ctx.beginPath();
-      ctx.arc(bx + 26, by + 26, 20, 0, Math.PI * 2);
+      ctx.rect(bx + 6, by + 6, 40, 40);
       ctx.clip();
       ctx.drawImage(pImg, bx + 6, by + 6, 40, 40);
       ctx.restore();
-      var frameImg = ov3Image('ov3_portrait_frame.png');
-      if (ov3Ready(frameImg)) {
-        ctx.drawImage(frameImg, bx + 4, by + 4, 44, 44);
-      } else {
-        ctx.strokeStyle = '#e8c838';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(bx + 26, by + 26, 21, 0, Math.PI * 2);
-        ctx.stroke();
-      }
+      ctx.strokeStyle = '#d9a441';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(bx + 5, by + 5, 42, 42);
+      ctx.strokeStyle = '#20242a';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(bx + 7.5, by + 7.5, 37, 37);
     }
+    /* DIALOGUE-FIX v8: 10px, not 11px. At 11px the guildmaster line
+     * ("Guildmaster: Take down Maren Saltwright. Reward: 1,000,000
+     * Cr. Trial Battle 1.") wrapped to 4 lines in a box that fits 3,
+     * so "1." fell off the bottom edge. At 10px it wraps to 3 lines
+     * (28 / 29 / 19 chars in the 184px portrait width). The 4-line
+     * cap in wrapText keeps any longer line inside the box. */
     ctx.fillStyle = '#1a1a2e';
-    ctx.font = '11px monospace';
+    ctx.font = '10px monospace';
     ctx.textBaseline = 'top';
     var text = line.slice(0, shown);
-    wrapText(ctx, text, textX, by + 6, textW, 13);
+    wrapText(ctx, text, textX, by + 6, textW, 12);
     // Continue prompt blinks on the same 400ms beat as the other
     // dialogue screens. ov3_dialog_arrow.png replaces the 'v'/'A'
     // text when it has loaded; the text is the fallback.
@@ -2463,17 +2467,18 @@
     var words = text.split(' ');
     var line = '';
     var yy = y;
+    var drawn = 0;
     for (var i = 0; i < words.length; i++) {
       var test = line ? line + ' ' + words[i] : words[i];
       if (ctx.measureText(test).width > maxW && line) {
-        ctx.fillText(line, x, yy);
+        if (drawn < 4) { ctx.fillText(line, x, yy); drawn++; }
         line = words[i];
         yy += lh;
       } else {
         line = test;
       }
     }
-    if (line) ctx.fillText(line, x, yy);
+    if (line && drawn < 4) { ctx.fillText(line, x, yy); }
   }
 
   function drawGrimoire(ctx) {
@@ -2560,10 +2565,15 @@
       if (i === state.menuIndex) {
         ctx.fillStyle = '#e8c838';
         ctx.fillRect(20, y - 1, VIEW_W - 40, 15);
+        ctx.strokeStyle = '#20242a';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(20.5, y - 0.5, VIEW_W - 41, 14);
         ctx.fillStyle = '#101030';
+        ctx.font = 'bold 12px monospace';
         ctx.fillText('> ' + MENU_ITEMS[i], 24, y);
       } else {
         ctx.fillStyle = '#ffffff';
+        ctx.font = '12px monospace';
         ctx.fillText('  ' + MENU_ITEMS[i], 24, y);
       }
     }
@@ -2625,8 +2635,56 @@
     // before any actor draws, so no label can ever be unreadable.
     // Header pill occupies y10 to y24, hint strip y168 to y181.
     // A label pill is 10px tall with a 2px gap to any keep-out edge.
+    // V8 SPRITE KEEP-OUT: a pill must also clear every actor sprite
+    // on screen (wilds, NPCs, player, including its own sprite). A
+    // 32x32 sprite frame drawn at screen (sx, sy) occupies x sx-8
+    // to sx+24, y sy-18 to sy+14, plus up to 1px of bob, so each
+    // keep-out box carries a 1px margin. The old code only kept
+    // labels clear of the header, the hint strip and each other, so
+    // a label dropped below a top-edge sprite (or staggered down a
+    // crowded column) could land on a neighbour sprite: the
+    // Saltquay harbor framing put the Whelp Lv6 pill across the
+    // Goblin, Puk and NPC sprites. Placement now searches, per wild
+    // top to bottom, candidate slots above and below the sprite in
+    // 12px steps, then horizontal shifts, and takes the first slot
+    // clear of every sprite box and every placed label. A fully
+    // packed column falls back to the least-overlapping candidate
+    // instead of the old hint clamp.
     var LABEL_H = 10, LABEL_GAP = 2;
     var HEADER_BOTTOM = 24, HINT_TOP = VIEW_H - 24;
+    var LABEL_TOP_MIN = HEADER_BOTTOM + LABEL_GAP + 1;
+    var LABEL_TOP_MAX = HINT_TOP - LABEL_GAP - LABEL_H;
+    var spriteBoxes = [];
+    function spriteBox(sx, sy) {
+      return { x: sx - 8 - 1, y: sy - 18 - 1, w: 34, h: 34 };
+    }
+    state.wild.forEach(function (w) { spriteBoxes.push(spriteBox(w.px - cam.x, w.py - cam.y)); });
+    state.npcs.forEach(function (n) { spriteBoxes.push(spriteBox(n.px - cam.x, n.py - cam.y)); });
+    spriteBoxes.push(spriteBox(state.player.px - cam.x, state.player.py - cam.y));
+    function pillHitsSprite(x, top, w) {
+      var px0 = x - 2, py0 = top - 1, px1 = x + w + 2, py1 = top - 1 + LABEL_H;
+      for (var i = 0; i < spriteBoxes.length; i++) {
+        var s = spriteBoxes[i];
+        if (px0 < s.x + s.w && s.x < px1 && py0 < s.y + s.h && s.y < py1) { return true; }
+      }
+      return false;
+    }
+    function labelHits(r, list) {
+      // Pill rects, not text rects: a pill is 4px wider than its
+      // text (2px each side) and runs from top-1 to top+9, so two
+      // labels whose text boxes sit 2px apart have pills that
+      // overlap by 2px and read as one label. Saltquay guildhall
+      // proved it: "Puk Lv7" and "Goblin Lv5" ran together above
+      // the yellow-roofed house. Require a full LABEL_GAP between
+      // the pills themselves.
+      for (var pi = 0; pi < list.length; pi++) {
+        var p = list[pi];
+        var touchV = (r.top - 1 - LABEL_GAP < p.top + LABEL_H - 1) && (p.top - 1 - LABEL_GAP < r.top + LABEL_H - 1);
+        var touchH = (r.x - 2 - LABEL_GAP < p.x + p.w + 2) && (p.x - 2 - LABEL_GAP < r.x + r.w + 2);
+        if (touchV && touchH) { return true; }
+      }
+      return false;
+    }
     var labelRects = [];
     ctx.save();
     ctx.textBaseline = 'top';
@@ -2637,90 +2695,85 @@
       var labelW = ctx.measureText(wildLabel).width;
       // Edge clipping: clamp so the full pill fits inside the screen
       // and the text clears the 8px frame strips painted over the
-      // view after the actors (x0 to 8 and x248 to 256). The old
-      // x2 bound left the first glyph under the frame strip, so a
-      // left-edge wild still rendered as "andragora Lv6".
+      // view after the actors (x0 to 8 and x248 to 256). The pill
+      // is 2px wider than the text on each side, and a pill edge
+      // inside x10 is flagged, so clamp the text to x12 and keep
+      // the pill right edge at or inside x246.
       var labelX = w.px - cam.x - 4;
-      if (labelX < 8) { labelX = 8; }
-      var maxLabelX = VIEW_W - 8 - labelW;
+      if (labelX < 12) { labelX = 12; }
+      var maxLabelX = VIEW_W - 12 - labelW;
       if (labelX > maxLabelX) { labelX = maxLabelX; }
-      if (labelX < 8) { labelX = 8; }
-      // Label sits above the sprite, clear of it: the sprite is
-      // 32px tall drawn from py - 20, so the label top is 11px
-      // above that (8px text plus a 3px gap). The old draw put the
-      // baseline at py - 8, right across the sprite.
-      var labelTop = sy - 20 - 11;
-      // Header keep-out: a label top that would land under the
-      // header pill (y10 to y24) drops below the sprite instead,
-      // clear of the shadow. This extends the old near-top fallback,
-      // which only fired when there was no room above at all.
-      if (labelTop < HEADER_BOTTOM + LABEL_GAP) { labelTop = sy + 14; }
-      // A sprite at the very top edge drops its label below the
-      // sprite and still inside the header band (below-sprite top
-      // sy + 14 can be as low as y22), so push the below-sprite
-      // label clear of the header pill too. Pill top ends at y26,
-      // 2px below the header pill bottom.
-      if (labelTop < HEADER_BOTTOM + LABEL_GAP + 1) { labelTop = HEADER_BOTTOM + LABEL_GAP + 1; }
-      // Hint strip keep-out: a label bottom that would cross the
-      // hint strip goes above the sprite instead. A wild at the
-      // bottom edge already has its label above the sprite and can
-      // still cross the strip, so when even the above-sprite spot
-      // crosses it, clamp the label just above the strip.
-      if (labelTop + LABEL_H > HINT_TOP - LABEL_GAP) {
-        var aboveTop = sy - 20 - 11;
-        if (aboveTop + LABEL_H <= HINT_TOP - LABEL_GAP) { labelTop = aboveTop; }
-        else { labelTop = HINT_TOP - LABEL_GAP - LABEL_H; }
-      }
-      labelRects.push({ text: wildLabel, x: labelX, top: labelTop, w: labelW });
+      if (labelX < 12) { labelX = 12; }
+      // Natural spots: above the sprite (11px above the frame top)
+      // and below it (pill top sy+17, so the pill starts below the
+      // sprite box even with 1px of bob).
+      var aboveTop = sy - 20 - 11;
+      var belowTop = sy + 17;
+      labelRects.push({ text: wildLabel, x: labelX, top: aboveTop, w: labelW, sy: sy, aboveTop: aboveTop, belowTop: belowTop });
     });
     ctx.restore();
-    // Stacking: labels in the same row band that would overlap or
-    // touch are staggered, the lower one pushed down one label
-    // height plus the gap, so both read in full with a gap between
-    // them. Processed top to bottom so a placed label never moves.
-    // A push down that would cross the hint strip is NOT a fix: the
-    // old code clamped back to the same row and left the two labels
-    // overlapped (the Saltquay soak showed "Puk Lv7p Lv6"). So the
-    // stagger searches slots: first below the natural spot, one
-    // label height at a time, stopping just above the hint strip,
-    // then above the natural spot, stopping clear of the header
-    // pill. The first free slot wins; only a fully packed column
-    // leaves a label at the hint clamp.
+    // Place top to bottom so a placed label never moves. Each label
+    // tries its natural slots first, then 12px steps up and down,
+    // then horizontal shifts, taking the first slot clear of every
+    // sprite box and every placed label. Only a fully packed column
+    // falls back to the least-overlapping candidate.
     var labelOrder = labelRects.map(function (r, i) { return i; });
-    labelOrder.sort(function (a, b) { return (labelRects[a].top - labelRects[b].top) || (labelRects[a].x - labelRects[b].x); });
+    labelOrder.sort(function (a, b) { return (labelRects[a].aboveTop - labelRects[b].aboveTop) || (labelRects[a].x - labelRects[b].x); });
     var placedLabels = [];
-    function labelHits(r, list) {
-      for (var pi = 0; pi < list.length; pi++) {
-        var p = list[pi];
-        var touchV = (r.top < p.top + LABEL_H + LABEL_GAP) && (p.top < r.top + LABEL_H + LABEL_GAP);
-        var touchH = (r.x - LABEL_GAP < p.x + p.w) && (p.x - LABEL_GAP < r.x + r.w);
-        if (touchV && touchH) { return true; }
-      }
-      return false;
+    function labelSlotFree(r, top, x) {
+      if (top < LABEL_TOP_MIN || top > LABEL_TOP_MAX) { return false; }
+      if (x < 12 || x > VIEW_W - 12 - r.w) { return false; }
+      if (pillHitsSprite(x, top, r.w)) { return false; }
+      var probeRect = { x: x, top: top, w: r.w };
+      return !labelHits(probeRect, placedLabels);
     }
     labelOrder.forEach(function (idx) {
       var r = labelRects[idx];
-      if (labelHits(r, placedLabels)) {
-        var naturalTop = r.top;
-        var placed = false;
-        var t = naturalTop + LABEL_H + LABEL_GAP;
-        while (t + LABEL_H <= HINT_TOP - LABEL_GAP) {
-          r.top = t;
-          if (!labelHits(r, placedLabels)) { placed = true; break; }
-          t += LABEL_H + LABEL_GAP;
-        }
-        if (!placed) {
-          t = naturalTop - (LABEL_H + LABEL_GAP);
-          while (t >= HEADER_BOTTOM + LABEL_GAP + 1) {
-            r.top = t;
-            if (!labelHits(r, placedLabels)) { placed = true; break; }
-            t -= LABEL_H + LABEL_GAP;
+      var cands = [r.aboveTop, r.belowTop];
+      var step = LABEL_H + LABEL_GAP;
+      for (var k = 1; k <= 12; k++) {
+        cands.push(r.aboveTop - step * k);
+        cands.push(r.belowTop + step * k);
+      }
+      var shifts = [0, -12, 12, -24, 24, -36, 36, -48, 48, -60, 60];
+      var placed = false;
+      for (var ci = 0; ci < cands.length && !placed; ci++) {
+        for (var si = 0; si < shifts.length && !placed; si++) {
+          var nx = r.x + shifts[si];
+          if (nx < 12) { nx = 12; }
+          if (nx > VIEW_W - 12 - r.w) { nx = VIEW_W - 12 - r.w; }
+          if (labelSlotFree(r, cands[ci], nx)) {
+            r.top = cands[ci];
+            r.x = nx;
+            placed = true;
           }
         }
-        if (!placed) { r.top = HINT_TOP - LABEL_GAP - LABEL_H; }
+      }
+      if (!placed) {
+        // Best-effort fallback: fewest sprite hits, then fewest
+        // label hits, then closest to the natural above spot.
+        var best = null, bestScore = null;
+        for (var fi = 0; fi < cands.length; fi++) {
+          var ft = cands[fi];
+          if (ft < LABEL_TOP_MIN || ft > LABEL_TOP_MAX) { continue; }
+          for (var fj = 0; fj < shifts.length; fj++) {
+            var fx = r.x + shifts[fj];
+            if (fx < 12) { fx = 12; }
+            if (fx > VIEW_W - 12 - r.w) { fx = VIEW_W - 12 - r.w; }
+            var sh = pillHitsSprite(fx, ft, r.w) ? 1 : 0;
+            var lh = labelHits({ x: fx, top: ft, w: r.w }, placedLabels) ? 1 : 0;
+            var score = sh * 100 + lh * 10 + Math.abs(ft - r.aboveTop) / 100 + Math.abs(fx - r.x) / 1000;
+            if (bestScore === null || score < bestScore) { bestScore = score; best = { top: ft, x: fx }; }
+          }
+        }
+        if (best) { r.top = best.top; r.x = best.x; }
+        else { r.top = Math.max(LABEL_TOP_MIN, Math.min(LABEL_TOP_MAX, r.aboveTop)); }
       }
       placedLabels.push(r);
     });
+    // Probe aid: the exact label rects drawn this frame, read by the
+    // v8 labels probe instead of a Python replica of this algorithm.
+    state._debugLabels = labelRects;
 
     // Draw wild Wildlife, then NPCs, then the player, sorted by Y.
     var actors = [];
@@ -2807,9 +2860,13 @@
     ctx.font = '10px monospace';
     var headerText = MAPS[state.mapId].name + ' - ' + PERIODS[state.period].label;
     var headerW = ctx.measureText(headerText).width;
-    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    /* DS HUD pill: deep navy field, gold border, gold label text. */
+    ctx.fillStyle = '#0b0b20';
     ctx.fillRect(4, 10, headerW + 8, 14);
-    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.strokeStyle = '#d9a441';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(4.5, 10.5, headerW + 7, 13);
+    ctx.fillStyle = '#ffe9a8';
     ctx.fillText(headerText, 8, 12);
     ctx.restore();
 
@@ -3000,7 +3057,16 @@
           state.roadWalkDone = !!save.roadWalkDone;
           state.saltquayArrived = !!save.saltquayArrived;
           state.boardSighted = !!save.boardSighted;
-          loadMap(save.mapId, { x: save.x, y: save.y, dir: save.dir || 'down' });
+          /* V8 FIX: a save written before the arrival fix (or any
+           * stale home town save) must not resurrect the home town
+           * dump: once the story flags say Saltquay was reached,
+           * the home town is sealed and the player belongs in
+           * Saltquay, at the map start. */
+          if (isHomeTown(save.mapId) && FED13.state.flags && FED13.state.flags.saltquayArrived) {
+            loadMap('saltquay');
+          } else {
+            loadMap(save.mapId, { x: save.x, y: save.y, dir: save.dir || 'down' });
+          }
           if (save.period) { state.period = save.period; }
         } else {
           loadMap(homeMapId(), spawn);

@@ -1875,6 +1875,26 @@
     markSaltquayArrival: function (state) {
       state.flags.saltquayArrived = true;
       state.flags.prologueLevel = PROLOGUE_ARRIVAL_LEVEL;
+      /* V8 FIX: the story chain never walks the overworld maps, so
+       * the overworld module is still sitting on the home town map
+       * when this scene plays. Move it to Saltquay now, at the
+       * moment the story says the player arrives, so a chain end
+       * (Trial Battle 1 win or loss) resumes in Saltquay instead
+       * of dropping the player back in the sealed home town. The
+       * flags are set first, so loadMap's own arrival trigger
+       * cannot re-fire, and the load is skipped outright when the
+       * player walked in on foot and is already on the Saltquay
+       * map. The save is persisted too, so a reload and Continue
+       * lands in Saltquay as well. */
+      try {
+        var ow = (typeof FED13 !== 'undefined' && FED13.overworld) || null;
+        if (ow && ow.state && ow.state.mapId !== 'saltquay') {
+          ow.state.visitedSaltquay = true;
+          ow.state.saltquayArrived = true;
+          if (typeof ow.loadMap === 'function') { ow.loadMap('saltquay'); }
+          if (typeof ow.saveGame === 'function') { ow.saveGame(); }
+        }
+      } catch (e) { /* overworld not ready; the start() guard covers it */ }
       return state;
     },
     markGuildBoardSeen: function (state) {
@@ -2133,14 +2153,18 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* FX fallback. fx_slash, fx_smoke, fx_sparkle and fx_shield now     */
-  /* exist as image files in build/assets, so this module loads the     */
-  /* real files (FX_MISSING_PROCEDURAL below is empty). The procedural  */
-  /* drawings stay as a fallback if an image fails to load. Never stop  */
-  /* the module for a missing file. Never retry generation.             */
+  /* FX fallback. fx_slash, fx_smoke and fx_sparkle now exist as image
+   * files in build/assets, so this module loads the real files. Shield
+   * stays procedural (FX_MISSING_PROCEDURAL below lists it) because the
+   * shield image file cannot be pushed to the repo as a binary. The
+   * procedural drawings stay as a fallback if an image fails to load.
+   * Never stop the module for a missing file. Never retry generation.  */
   /* ------------------------------------------------------------------ */
 
-  var FX_MISSING_PROCEDURAL = [];
+  /* 'shield' stays procedural: the shield image file cannot be pushed
+   * to the repo as a binary, so the procedural hexagon is the shield
+   * on every copy. No circle, no bubble. */
+  var FX_MISSING_PROCEDURAL = ['shield'];
   var FX_WITH_IMAGE = ['fire', 'fira', 'firaga', 'blizzard', 'thunder', 'cure', 'holy', 'snare_burst'];
   var FX_FALLBACK_COLORS = {
     fire: '#ff7a1a',
@@ -2267,27 +2291,52 @@
     ctx.restore();
   }
 
-  /* fx_shield: blue translucent shield bubble. */
+  /* fx_shield: angular DS barrier. A translucent blue hexagon with
+   * bright edge lines and diagonal shimmer, no circle, no bubble. */
   function drawFxShield(ctx, x, y, size, t) {
     var r = size * 0.5 * (1 + 0.06 * Math.sin(t * Math.PI * 2));
+    var pts = [];
+    for (var i = 0; i < 6; i++) {
+      var a = -Math.PI / 2 + i * Math.PI / 3;
+      pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+    }
     ctx.save();
     ctx.translate(x, y);
-    ctx.globalAlpha = 0.35 + 0.15 * Math.sin(t * Math.PI);
+    /* Translucent blue fill inside the hexagon. */
+    ctx.globalAlpha = 0.22 + 0.10 * Math.sin(t * Math.PI);
     ctx.fillStyle = '#3f8cff';
     ctx.beginPath();
-    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var j = 1; j < 6; j++) { ctx.lineTo(pts[j][0], pts[j][1]); }
+    ctx.closePath();
     ctx.fill();
+    /* Diagonal shimmer lines, clipped to the hexagon. */
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var k = 1; k < 6; k++) { ctx.lineTo(pts[k][0], pts[k][1]); }
+    ctx.closePath();
+    ctx.clip();
+    ctx.globalAlpha = 0.8 * (1 - t * 0.5);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = Math.max(1, size * 0.03);
+    var off = (t * r * 0.8) - r * 0.4;
+    for (var m = -1; m <= 1; m++) {
+      ctx.beginPath();
+      ctx.moveTo(-r * 0.7 + off + m * r * 0.35, r * 0.9);
+      ctx.lineTo(r * 0.2 + off + m * r * 0.35, -r * 0.9);
+      ctx.stroke();
+    }
+    ctx.restore();
+    /* Bright outer edge. */
     ctx.globalAlpha = 0.95;
     ctx.strokeStyle = '#bfe0ff';
     ctx.lineWidth = Math.max(2, size * 0.05);
+    ctx.lineJoin = 'miter';
     ctx.beginPath();
-    ctx.arc(0, 0, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.globalAlpha = 0.8;
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = Math.max(1, size * 0.03);
-    ctx.beginPath();
-    ctx.arc(0, 0, r * 0.72, Math.PI * 1.15, Math.PI * 1.65);
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var n = 1; n < 6; n++) { ctx.lineTo(pts[n][0], pts[n][1]); }
+    ctx.closePath();
     ctx.stroke();
     ctx.restore();
   }

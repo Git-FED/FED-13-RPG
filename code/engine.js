@@ -359,11 +359,19 @@
      * The sub sits on a dark strip so it stays readable over busy
      * art, which used to wash the faint grey question line out. */
     drawScreenBg(ctx, path);
-    drawText(ctx, title, 10, 10, '#e8c838', '14px monospace');
+    /* BANNER-FIX v8: title moved down 4px so the full glyphs show
+     * clear of the top edge; the sub strip moves down with it. */
+    drawText(ctx, title, 10, 14, '#e8c838', '14px monospace');
     if (sub) {
       ctx.fillStyle = 'rgba(5,5,15,0.62)';
-      ctx.fillRect(0, 26, W, 16);
-      drawText(ctx, sub, 10, 30, '#ffffff');
+      ctx.fillRect(0, 30, W, 16);
+      /* BANNER-FIX v8: long subs (deploy, sell) ran off the right
+       * edge at 10px. Measure first; shrink to 8px when the sub
+       * would not fit, so every sub reads in full. Wording unchanged. */
+      var subFont = '10px monospace';
+      ctx.font = subFont;
+      if (ctx.measureText(sub).width > W - 20) { subFont = '8px monospace'; }
+      drawText(ctx, sub, 10, 34, '#ffffff', subFont);
     }
   }
   function drawOv3Panel(ctx, x, y, w, h, fill, border) {
@@ -379,9 +387,22 @@
     }
   }
   function drawPortraitFrame(ctx, x, y, w, h) {
-    /* ov3_portrait_frame.png is RGBA, so it draws straight over the
-     * portrait, 2 px proud on every side. Missing file draws nothing. */
-    drawImageOrNull(ctx, 'assets/ov3_portrait_frame.png', x - 2, y - 2, w + 4, h + 4);
+    /* BUBBLE-FIX: square DS frame, no circular ring art. Gold outer
+     * border, dark inner line, gold corner studs. The portrait images
+     * are square, so they fill the frame exactly. */
+    ctx.fillStyle = '#d9a441';
+    ctx.fillRect(x - 2, y - 2, w + 4, 2);
+    ctx.fillRect(x - 2, y + h, w + 4, 2);
+    ctx.fillRect(x - 2, y - 2, 2, h + 4);
+    ctx.fillRect(x + w, y - 2, 2, h + 4);
+    ctx.strokeStyle = '#20242a';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    ctx.fillStyle = '#ffe9a8';
+    ctx.fillRect(x - 2, y - 2, 4, 4);
+    ctx.fillRect(x + w - 2, y - 2, 4, 4);
+    ctx.fillRect(x - 2, y + h - 2, 4, 4);
+    ctx.fillRect(x + w - 2, y + h - 2, 4, 4);
   }
   function isNightHour() {
     var h = new Date().getHours();
@@ -458,7 +479,13 @@
       b.style.margin = '2px';
       b.style.fontSize = '16px';
       b.style.fontFamily = 'monospace';
+      b.style.fontWeight = 'bold';
       b.style.cursor = 'pointer';
+      /* DS controls: deep navy face, gold border, pale gold label. */
+      b.style.background = '#1c2a4a';
+      b.style.color = '#ffe9a8';
+      b.style.border = '2px solid #d9a441';
+      b.style.borderRadius = '4px';
       b.addEventListener('pointerdown', function (e) {
         e.preventDefault();
         press(action);
@@ -471,7 +498,10 @@
     mkBtn('A', 'confirm', 56);
     mkBtn('B', 'cancel', 56);
     mkBtn('X', 'menu', 56);
-    mkBtn('START', 'start', 64);
+    /* START stands out: gold face, dark navy label. */
+    var startBtn = mkBtn('START', 'start', 64);
+    startBtn.style.background = '#d9a441';
+    startBtn.style.color = '#101030';
   }
 
   /* ---------- Helpers: drawing ---------- */
@@ -647,22 +677,31 @@
       if (m) { speaker = m[1]; }
     }
     if (speaker) {
-      var tagW = Math.min(200, Math.max(64, speaker.length * 6 + 18));
-      var tagH = Math.round(tagW / 4);
+      /* NAME-TAG-FIX v8-grid-pill: the ov3_name_tag.png art is a small
+       * pill floating in the middle of a 128x32 canvas (opaque x 42-84,
+       * y 7-25), so stretching it to the tag rect put the pill on top
+       * of the middle of a long name ("Guild Clerk Petra") while the
+       * ends hung off it. Draw a procedural pill sized to the measured
+       * name instead, so the pill always sits behind the whole name.
+       * Text is drawn with an explicit middle baseline, centred in
+       * the pill. */
+      ctx.save();
+      ctx.font = '9px monospace';
+      var tagW = Math.min(W - 12, Math.ceil(ctx.measureText(speaker).width) + 16);
+      var tagH = 16;
       var tagY = y - tagH - 2;
       if (tagY >= 0) {
-        var tagOk = drawImageOrNull(ctx, 'assets/ov3_name_tag.png', x, tagY, tagW, tagH);
-        if (!tagOk) {
-          ctx.fillStyle = '#e8c838';
-          ctx.fillRect(x, tagY, tagW, tagH);
-        }
-        ctx.save();
+        ctx.fillStyle = '#1c2c4e';
+        ctx.fillRect(x, tagY, tagW, tagH);
+        ctx.strokeStyle = '#e8c838';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 0.5, tagY + 0.5, tagW - 1, tagH - 1);
         ctx.textAlign = 'center';
-        ctx.font = '9px monospace';
-        ctx.fillStyle = '#101030';
-        ctx.fillText(speaker, x + tagW / 2, tagY + tagH - 5);
-        ctx.restore();
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#f8f0c8';
+        ctx.fillText(speaker, x + tagW / 2, tagY + tagH / 2 + 1);
       }
+      ctx.restore();
     }
     var textX = x + 8;
     var textW = w - 16;
@@ -679,10 +718,22 @@
     }
     var full = textBox.lines[textBox.lineIndex] || '';
     var shown = full.slice(0, textBox.charsShown);
-    var wrapped = wrapLines(ctx, shown, textW);
+    /* DIALOGUE-FIX v8: measure with the font that is actually drawn.
+     * wrapLines used to run before ctx.font was set to 10px, so it
+     * measured with whatever font the previous draw left on this
+     * context and wrapped lines wider than the box, clipping the
+     * last words at the right edge. A 4th line is allowed so a long
+     * line is never silently dropped. */
     ctx.font = '10px monospace';
-    for (var i = 0; i < wrapped.length && i < 3; i++) {
-      drawText(ctx, wrapped[i], textX, y + 8 + i * 13, ink);
+    var wrapped = wrapLines(ctx, shown, textW);
+    /* DIALOGUE-LAYOUT-FIX v8-grid-pill: the box art's cream interior
+     * is canvas y 137-177 (the art is 512x128 drawn at 244x58, cream
+     * y 20-108), so lines start at y+9 on a 10px step: tops 137, 147,
+     * 157, 167, glyph bottoms inside 177. The old y+8 on a 13px step
+     * put line 1 on the dark top band (its top cut) and line 4 at
+     * 175-187, its lower half cut by the bottom border. */
+    for (var i = 0; i < wrapped.length && i < 4; i++) {
+      drawText(ctx, wrapped[i], textX, y + 9 + i * 10, ink);
     }
     /* Continue prompt when the line is complete */
     if (textBox.charsShown >= full.length) {
@@ -1056,11 +1107,16 @@
       var y = y0 + i * 14;
       if (y > H - 16) { break; }
       if (i === selected) {
+        /* DS selected row: gold bar with a navy border and a dark
+         * arrow, bold dark text. */
         ctx.fillStyle = '#e8c838';
         ctx.fillRect(tx - 4, y - 1, W - (tx - 4) - 6, 13);
-        drawText(ctx, '> ' + items[i], tx, y, '#101030');
+        ctx.strokeStyle = '#20242a';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(tx - 3.5, y - 0.5, W - (tx - 4) - 7, 12);
+        drawText(ctx, '> ' + items[i], tx, y, '#101030', 'bold 10px monospace');
       } else {
-        drawText(ctx, '  ' + items[i], tx, y, '#fff');
+        drawText(ctx, '  ' + items[i], tx, y, '#d8d8f0');
       }
     }
     if (showIndex) {
@@ -1201,20 +1257,28 @@
      * with the logo art showed no tagline at all. It sits on its own
      * dark tab over the frame bottom ornament band (drawn after the
      * frame), so no frame ornament crosses a letter. */
-    ctx.fillStyle = 'rgba(5,5,15,0.92)';
+    /* Tagline on a gold tab over the frame bottom ornament band,
+     * dark text on gold so it reads as a DS title ribbon. */
+    ctx.fillStyle = '#e8c838';
     ctx.fillRect(44, 178, 168, 14);
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    ctx.font = '9px monospace';
-    ctx.fillStyle = '#e8c838';
+    ctx.font = 'bold 9px monospace';
+    ctx.fillStyle = '#101030';
     ctx.fillText('A MONSTER TRAINER TALE', 128, 180);
     ctx.restore();
     drawTextBoxTop(ctx);
   }
   function drawTitleBottom(ctx, t) {
     t = t || 0;
-    clearScreen(ctx, '#0a0a1e');
+    /* DS title menu: deep navy gradient, not flat dark blue. */
+    var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#141d42');
+    bgGrad.addColorStop(0.6, '#0a0a1e');
+    bgGrad.addColorStop(1, '#05050f');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
     drawTitleStars(ctx, t, 0.5, 0.5); /* slow faint drift behind the menu */
     if (titleMode === 'options') {
       drawText(ctx, 'OPTIONS', 10, 10, '#e8c838', '12px monospace');
@@ -1255,6 +1319,14 @@
     }
     ctx.restore();
     ctx.textAlign = 'left';
+    /* DS menu panel: dark navy field with a gold border behind the
+     * menu list, so the title menu reads as a framed DS menu, not
+     * bare text on stars. */
+    ctx.fillStyle = '#0b0b20';
+    ctx.fillRect(6, 50, W - 12, 52);
+    ctx.strokeStyle = '#d9a441';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(6.5, 50.5, W - 13, 51);
     drawMenuList(ctx, '', titleItems(), titleSel, 52, false);
     /* Tagline inset to x 32: the frame art covers the left 20 px,
      * and its bottom corner ornament reaches further right still,
@@ -1913,6 +1985,23 @@
         var story = window.FED13.story;
         try { story.choose(scene.id, opt.id, storyStateForEngine()); } catch (e) {}
         saveGame();
+        if (scene.id === 'egg_choice') {
+          /* SCHOOL SCENES FIX v8-grid-pill: the egg screen used to do
+           * the party push and the hatch; the story choice hook
+           * (setStarterWildlife, already run above) only sets state
+           * fields. Do the same push here, then hatch into grad_hatch,
+           * exactly as the old egg screen did. */
+          var egg = hatchEggById(opt.id);
+          state.party.push({ kind: 'Wildlife', name: egg.name, codex: egg.codex, type: egg.type, level: 1, hp: 12, maxHp: 12, egg: true, bond: 1 });
+          syncPlayerProfile();
+          setFlag('egg_picked');
+          setFlag('egg_' + egg.id);
+          saveGame();
+          playHatchSequence(egg.id, function () {
+            startStoryScene('grad_hatch');
+          });
+          return;
+        }
         if (scene.examQuestion && typeof story.examQuestionFeedback === 'function') {
           var fb = null;
           try { fb = story.examQuestionFeedback(scene.examQuestion, opt.id); } catch (e) { fb = null; }
@@ -2332,28 +2421,14 @@
     state.createdAt = new Date().toISOString();
     state.location = state.trainer.race === 'Polar' ? 'Dreamrest' : 'Gatehollow';
     saveGame();
-    /* School arc staging, from the story module when it is loaded.
-     * Cutscene line to beat: paradise road 0, Ghoul blocks the path 1,
-     * Wisp drives it off 4, bag drops 5, 3 eggs 6, pick one 6. Without
-     * the story module the cutscene falls back to banner and map. */
-    var ghoulStaging = null;
-    try {
-      var gs = window.FED13 && window.FED13.story && window.FED13.story.ghoulEncounterStaging;
-      if (gs && gs.beats) { ghoulStaging = { beats: gs.beats, lineBeats: [0, 1, 4, 5, 6, 6] }; }
-    } catch (e) { ghoulStaging = null; }
-    playCutscene('THE SCHOOL ARC', [
-      'The 14th world. A paradise, shiny and clean, not a single flaw.',
-      'On the mountain road, a Ghoul, Codex 013, blocks your path.',
-      'A kind Wisp, Codex 043, a floating light, drives it off.',
-      'The Wisp floats into the trees and drops a bag.',
-      'Inside the bag: 3 eggs. Whelp, Puk, Mandragora.',
-      'Pick one. Your hatched Wildlife travels in a carry sling, too young to fight.'
-    ], 'assets/p_wisp.png', state.trainer.race === 'Polar' ? 'assets/map_dreamrest.png' : 'assets/map_gatehollow.png', function () {
-      setScreen('egg');
-    }, ghoulStaging);
-    /* NOTE: the school arc cutscene above uses the map art matching
-     * the player's race: map_dreamrest.png for Polar, map_gatehollow.png
-     * for Solar. */
+    /* SCHOOL SCENES FIX v8-grid-pill: the school arc lives in story.js
+     * as creation_intro -> family_rival -> school_road_ghoul ->
+     * egg_choice, with the egg choice wired to the hatch in the
+     * storyScene choice handler below. The old hardcoded 6-line
+     * cutscene skipped all of it, so none of those scenes ever
+     * played (scenesPlayed was empty at the egg screen). Start the
+     * chain and let it run to the hatch and the grad arc. */
+    startStoryScene('creation_intro');
   }
 
   /* ---------- Creation helpers: home town, sprite, pronouns ---------- */
@@ -2527,6 +2602,11 @@
     drawOv3Panel(ctx, 8, 46, 84, 84, '#101030', '#e8c838');
     drawPortraitOrPlaceholder(ctx, b.img, 10, 48, 80, 80);
     drawPortraitFrame(ctx, 10, 48, 80, 80);
+    /* Dark backing behind the right-column text: the bloodline art
+     * has five gold medallions right where these lines sit, and the
+     * white and gold text washed out on them. */
+    ctx.fillStyle = 'rgba(5,5,15,0.72)';
+    ctx.fillRect(96, 46, W - 102, 86);
     drawText(ctx, '#' + b.num + ' ' + b.name, 100, 48, '#e8c838', '11px monospace');
     drawText(ctx, 'Totem Spirit:', 100, 64, '#8888aa');
     drawText(ctx, b.totem, 100, 76, '#fff', '11px monospace');
@@ -2536,6 +2616,10 @@
       drawText(ctx, titleLines[i], 100, 92 + i * 12, '#c8c8e8');
     }
     drawText(ctx, 'Arc partner: ' + b.arc, 100, 118, '#fff');
+    /* Dark backing behind the two lower lines, same reason: the
+     * medallion row ends just above them. */
+    ctx.fillStyle = 'rgba(5,5,15,0.72)';
+    ctx.fillRect(6, 134, W - 12, 56);
     ctx.font = '10px monospace';
     var lineLines = wrapLines(ctx, b.line, W - 20);
     for (var j = 0; j < lineLines.length && j < 2; j++) {
@@ -2549,6 +2633,11 @@
   }
   function drawBloodlineShowcaseBottom(ctx) {
     var b = BLOODLINES[creation.sel];
+    /* Dark backing behind the list, the arc reward, and the eggs
+     * header: the bloodline art medallions sit right behind them,
+     * and the rows read struck through without it. */
+    ctx.fillStyle = 'rgba(5,5,15,0.72)';
+    ctx.fillRect(6, 26, W - 12, 110);
     for (var i = 0; i < BLOODLINES.length; i++) {
       var y = 30 + i * 14;
       var label = '#' + BLOODLINES[i].num + ' ' + BLOODLINES[i].name + '  ' + BLOODLINES[i].totem;
@@ -2574,6 +2663,17 @@
       drawText(ctx, EGGS[e].name, x - 4, 166, '#fff');
     }
     drawText(ctx, creationHint(), 10, H - 14, '#8888aa');
+  }
+
+  /* Long creation lines shrink from 10px to 8px when they would run
+   * off the right edge, the same rule the banner sub uses. Wording
+   * is never changed. maxW is the width the text has from x. */
+  function drawCreationLine(ctx, text, x, y, color, maxW) {
+    var f = '10px monospace';
+    ctx.font = f;
+    if (ctx.measureText(text).width > maxW) { f = '9px monospace'; ctx.font = f; }
+    if (ctx.measureText(text).width > maxW) { f = '8px monospace'; }
+    drawText(ctx, text, x, y, color, f);
   }
 
   function drawCreationTop(ctx) {
@@ -2620,16 +2720,10 @@
       drawText(ctx, 'Polar: pale tones, cold highlands.', 10, 180, '#fff');
       return;
     }
-    /* Picked trainer sprite, top right, once sex and race are set. */
-    var sprite = creationSpritePath();
-    if (sprite) {
-      drawCreationSpriteFrame(ctx, sprite, 188, 48, 64, 64);
-      drawText(ctx, 'YOU', 212, 116, '#e8c838');
-    }
     /* The name step summary lines already show on the bottom screen
      * (Name line plus hint), so the top screen drops its two extra
      * lines here: they used to land on the summary rows below. */
-    var y = 40;
+    var y = 48;
     var rows = [
       'Name: ' + (creation.name || t.name || '-'),
       'Look: ' + (t.sex || '-'),
@@ -2648,15 +2742,18 @@
      * their summary stops after 9 rows, clear of those lines. */
     if (step === 'guideForm' || step === 'guide') { rowCount = 9; }
     /* Dark backing behind the summary block so the lines read over
-     * the hall art, 12 px pitch so each row has its own clear row.
-     * Rows at or below y120 sit below the YOU sprite (which ends at
-     * y112, label at y116), so those rows get the full width to
-     * x246 instead of stopping at x182: "Craft Grimoire: Grimoire
-     * of Dawn" is 32 chars and was truncated to "Grimoire ..." at
-     * the old 172px cap. A row that still does not fit at 10px is
-     * set at 9px first, and only then truncated. */
+     * the hall art. The block starts at y48, clear of the banner sub
+     * strip above it (which ends at y46): the old y40 start put the
+     * first row straight on top of the sub line. 12 px pitch so each
+     * row has its own clear row. Rows at or below y120 sit below the
+     * YOU sprite (which ends at y102, label at y104), so those rows
+     * get the full width to x246 instead of stopping at x182:
+     * "Craft Grimoire: Grimoire of Dawn" is 32 chars and was
+     * truncated to "Grimoire ..." at the old 172px cap. A row that
+     * still does not fit at 10px is set at 9px first, and only then
+     * truncated. */
     ctx.fillStyle = 'rgba(5,5,15,0.62)';
-    ctx.fillRect(6, 36, W - 12, rowCount * 12 + 8);
+    ctx.fillRect(6, 44, W - 12, rowCount * 12 + 8);
     for (var i = 0; i < rowCount; i++) {
       var rowText = rows[i];
       var rowY = y + i * 12;
@@ -2673,6 +2770,17 @@
       if (ctx.measureText(rows[i]).width > rowMaxW) { rowText = rowText + '...'; }
       drawText(ctx, rowText, 10, rowY, '#ffffff', rowFont);
     }
+    /* Picked trainer sprite, top right, once sex and race are set.
+     * Drawn AFTER the summary block, so the summary backing can no
+     * longer dim the sprite and the YOU label: the old order drew
+     * them first and the 62% dark backing painted over both. The
+     * sprite is 56px now and the label sits at y104, clear of the
+     * class panel below (which starts at y116). */
+    var sprite = creationSpritePath();
+    if (sprite) {
+      drawCreationSpriteFrame(ctx, sprite, 188, 46, 56, 56);
+      drawText(ctx, 'YOU', 212, 104, '#e8c838');
+    }
     if (step === 'guideForm' || step === 'guide') {
       /* Guide lines sit on their own dark strip, clear of the
        * summary block above (which stops at 9 rows for these steps). */
@@ -2682,36 +2790,77 @@
     if (step === 'guideForm') {
       var gf = GUIDE_FORMS[creation.sel];
       if (gf) {
-        drawText(ctx, gf.name + ': your guide is a ' + gf.guide + '.', 10, 168, '#e8c838');
-        drawText(ctx, gf.desc, 10, 180, '#fff');
+        drawCreationLine(ctx, gf.name + ': your guide is a ' + gf.guide + '.', 10, 168, '#e8c838', W - 20);
+        drawCreationLine(ctx, gf.desc, 10, 180, '#fff', W - 20);
       }
     }
     if (step === 'guide') {
       var gg = GUIDE_GRIMOIRES[creation.sel];
       if (gg) {
-        drawText(ctx, gg.name + ': ' + gg.voice, 10, 168, '#e8c838');
-        drawText(ctx, 'Wiki and contacts only. Same answers, new voice.', 10, 180, '#fff');
+        drawCreationLine(ctx, gg.name + ': ' + gg.voice, 10, 168, '#e8c838', W - 20);
+        drawCreationLine(ctx, 'Wiki and contacts only. Same answers, new voice.', 10, 180, '#fff', W - 20);
       }
     }
     if (step === 'class') {
       /* Class detail panel on the top screen: big icon, name, group,
-       * one line description, group blurb, and count out of 52. */
+       * one line description, group blurb, and count out of 52.
+       * DARK panel, not the light ov3 panel art: the name, desc, and
+       * blurb are light text made for a dark field, and on the light
+       * art the name washed out, the desc sat on the bottom border
+       * band, and the blurb fell below the panel entirely. The panel
+       * starts at y116, clear of the YOU label above it (ends y114),
+       * and every line sits inside it with room to spare. */
       var c = CLASSES[creation.sel];
       if (c) {
         var gm = CLASS_GROUPS[classGroupIndex(c.group)];
         var groupCount = classesInGroup(c.group).length;
-        drawOv3Panel(ctx, 6, 118, W - 12, 68, '#101030', gm.color);
-        drawClassIcon(ctx, c, 14, 126, 36, gm.color);
-        drawText(ctx, c.name.toUpperCase(), 58, 126, '#f8f0c8', '12px monospace');
-        drawText(ctx, gm.group + '  ' + groupCount + ' in group', 58, 142, gm.color, '9px monospace');
-        drawText(ctx, 'Class ' + (creation.sel + 1) + ' of ' + CLASSES.length, 58, 154, '#8888aa', '9px monospace');
+        ctx.fillStyle = '#0b0b20';
+        ctx.fillRect(6, 116, W - 12, 70);
+        ctx.strokeStyle = gm.color;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(7, 117, W - 14, 68);
+        drawClassIcon(ctx, c, 14, 122, 36, gm.color);
+        drawText(ctx, c.name.toUpperCase(), 58, 122, '#f8f0c8', '12px monospace');
+        drawText(ctx, gm.group + '  ' + groupCount + ' in group', 58, 138, gm.color, '9px monospace');
+        drawText(ctx, 'Class ' + (creation.sel + 1) + ' of ' + CLASSES.length, 58, 150, '#8888aa', '9px monospace');
+        /* Measure the desc with the font it is drawn in: the old code
+         * wrapped at whatever font the previous line left, so a long
+         * desc wrapped too late and ran past the panel edge. */
+        ctx.font = '10px monospace';
         var descLines = wrapLines(ctx, c.desc, W - 20);
         for (var di = 0; di < descLines.length && di < 1; di++) {
-          drawText(ctx, descLines[di], 58, 168, '#fff');
+          drawCreationLine(ctx, descLines[di], 58, 164, '#fff', W - 68);
         }
-        drawText(ctx, gm.blurb, 10, 178, '#c8c8e8', '8px monospace');
+        drawText(ctx, gm.blurb, 10, 176, '#c8c8e8', '8px monospace');
       }
     }
+  }
+
+  /* Guide options carry a voice line each, and the Chronicler line
+   * ran off the right edge on one row. Two lines per option: name
+   * on line one, voice on line two, so the full wording fits. */
+  function drawGuideListBottom(ctx) {
+    /* Dark backing behind the option rows: the hall art is bright
+     * where the rows sit, and the first letters of the unselected
+     * rows washed out on the left arch pillar. */
+    ctx.fillStyle = 'rgba(5,5,15,0.55)';
+    ctx.fillRect(0, 26, W, 108);
+    for (var i = 0; i < GUIDE_GRIMOIRES.length; i++) {
+      var g = GUIDE_GRIMOIRES[i];
+      var y = 30 + i * 26;
+      if (i === creation.sel) {
+        ctx.fillStyle = '#e8c838';
+        ctx.fillRect(6, y - 2, W - 12, 24);
+        drawText(ctx, '> ' + g.name, 10, y, '#101030');
+        drawText(ctx, '  ' + g.voice, 10, y + 12, '#101030', '9px monospace');
+      } else {
+        drawText(ctx, '  ' + g.name, 10, y, '#fff');
+        drawText(ctx, '  ' + g.voice, 10, y + 12, '#c8c8e8', '9px monospace');
+      }
+    }
+    ctx.fillStyle = 'rgba(5,5,15,0.62)';
+    ctx.fillRect(0, H - 16, W, 16);
+    drawText(ctx, creationHint(), 10, H - 14, '#8888aa');
   }
 
   function drawCreationBottom(ctx) {
@@ -2732,6 +2881,12 @@
     if (step === 'confirm') {
       var t = state.trainer;
       var confirmName = creation.name || 'FED';
+      /* Dark backing behind the summary lines: the hall art is bright
+       * where these lines sit, and the first letters washed out on
+       * the arch pillars. Drawn BEFORE the portrait, so the portrait
+       * paints over it undimmed. */
+      ctx.fillStyle = 'rgba(5,5,15,0.55)';
+      ctx.fillRect(6, 30, W - 12, 122);
       drawCreationPortrait(ctx, t.sex, t.race, 166, 30, 80, 80);
       drawText(ctx, confirmName + ', ' + t.sex + ', ' + t.race + ' ' + t.path, 10, 34, '#fff');
       drawText(ctx, 'Pronouns: ' + t.pronouns, 10, 50, '#fff');
@@ -2750,11 +2905,20 @@
       return;
     }
     if (step === 'class') { drawClassPickerBottom(ctx); return; }
+    if (step === 'guide') { drawGuideListBottom(ctx); return; }
     var opts = creationOptions();
     var pageSize = 8;
     var page = Math.floor(creation.sel / pageSize);
     var start = page * pageSize;
     var end = Math.min(opts.length, start + pageSize);
+    /* Dark backing behind the option rows: the hall art is bright
+     * where the rows sit, and the first letters of the unselected
+     * rows washed out on the left arch pillar. Sized to the rows
+     * actually shown, so the race sprite below keeps its own space;
+     * the pronouns step gets extra height for its two example lines
+     * below the rows (y96 and y109), which washed out the same way. */
+    ctx.fillStyle = 'rgba(5,5,15,0.55)';
+    ctx.fillRect(0, 26, W, (step === 'pronouns') ? 96 : (end - start) * 15 + 2);
     for (var i = start; i < end; i++) {
       var y = 30 + (i - start) * 15;
       var label = opts[i];
@@ -2778,12 +2942,21 @@
         var pr = PRONOUNS[i];
         if (pr) { label = opts[i] + '  (' + pr.he + ' / ' + pr.him + ' / ' + pr.his + ')'; }
       }
+      /* A label that would run off the right edge shrinks to 9px,
+       * then 8px, rather than truncating. The guide step uses two
+       * lines per option instead (drawGuideListBottom), so this net
+       * only ever fires on a future long label. */
+      var fullLabel = ((i === creation.sel) ? '> ' : '  ') + label;
+      var labelFont = '10px monospace';
+      ctx.font = labelFont;
+      if (ctx.measureText(fullLabel).width > W - 20) { labelFont = '9px monospace'; ctx.font = labelFont; }
+      if (ctx.measureText(fullLabel).width > W - 20) { labelFont = '8px monospace'; }
       if (i === creation.sel) {
         ctx.fillStyle = '#e8c838';
         ctx.fillRect(6, y - 2, W - 12, 14);
-        drawText(ctx, '> ' + label, 10, y, '#101030');
+        drawText(ctx, '> ' + label, 10, y, '#101030', labelFont);
       } else {
-        drawText(ctx, '  ' + label, 10, y, '#fff');
+        drawText(ctx, '  ' + label, 10, y, '#fff', labelFont);
       }
     }
     if (opts.length > pageSize) {
@@ -2843,6 +3016,11 @@
     }
     drawText(ctx, gm.group + ' (' + inGroup.length + ')', 10, 46, gm.color, '9px monospace');
     drawText(ctx, (pos + 1) + ' / ' + inGroup.length, W - 46, 46, '#8888aa', '9px monospace');
+    /* Dark backing behind the class rows: the hall art is bright
+     * where the names sit, and the first letters washed out on the
+     * left arch pillar. */
+    ctx.fillStyle = 'rgba(5,5,15,0.55)';
+    ctx.fillRect(0, 54, W, inGroup.length * 10 + 8);
     for (var i = 0; i < inGroup.length; i++) {
       var ci = inGroup[i];
       var c = CLASSES[ci];
@@ -2856,6 +3034,10 @@
         drawText(ctx, '  ' + c.name, 26, y - 1, '#fff', '9px monospace');
       }
     }
+    /* Hint on its own dark strip, like the other bottom screens:
+     * it used to sit straight on the bright floor tiles. */
+    ctx.fillStyle = 'rgba(5,5,15,0.62)';
+    ctx.fillRect(0, H - 16, W, 16);
     drawText(ctx, 'Up/Down pick. Left/Right group. A confirms.', 10, H - 14, '#8888aa', '8px monospace');
   }
 
@@ -4098,25 +4280,21 @@
         var y = 24 + i * 25;
         var rowInk = i === partySel ? '#101030' : '#ffffff';
         var rowGold = i === partySel ? '#101030' : '#e8c838';
-        /* Slot art scaled to the 244x24 row, drawn behind the row:
-         * tall enough to cover both text lines. The selected row
-         * keeps a translucent gold wash over the art. */
-        if (!drawImageOrNull(bottomCtx, 'assets/ov3_party_slot.png', 6, y - 2, W - 12, 24) && i === partySel) {
-          bottomCtx.fillStyle = '#e8c838';
-          bottomCtx.fillRect(6, y - 2, W - 12, 24);
-        }
-        if (i === partySel) {
-          bottomCtx.fillStyle = 'rgba(232,200,56,0.35)';
-          bottomCtx.fillRect(6, y - 2, W - 12, 24);
-        }
-        /* PARTY-FIX 2: the slot art behind the text is busy, a gold
-         * frame line crosses the kind line and the green bar at the
-         * right sits under Lv and HP, so the rows read muddy even
-         * though kind and HP no longer touch. Paint a flat field
-         * behind the text columns (x62 to the right edge, the
-         * portrait oval at the left stays on the art): solid gold
-         * for the selected row so the dark text reads, solid dark
-         * for the rest so the white and gold text reads. */
+        /* BUBBLE-FIX: slot rows are drawn procedurally now, no slot
+         * art with its circular portrait well at the left. Sharp DS
+         * rows: dark navy field, gold border on the selected row,
+         * navy border on the rest. The portrait at the left is a
+         * square, framed by drawPortraitFrame. */
+        bottomCtx.fillStyle = (i === partySel) ? '#e8c838' : '#0b0b20';
+        bottomCtx.fillRect(6, y - 2, W - 12, 24);
+        bottomCtx.strokeStyle = (i === partySel) ? '#20242a' : '#3a3a5a';
+        bottomCtx.lineWidth = 1;
+        bottomCtx.strokeRect(6.5, y - 1.5, W - 13, 23);
+        /* PARTY-FIX 2: paint a flat field behind the text columns
+         * (x62 to the right edge, the square portrait at the left
+         * sits on the row field): solid gold for the selected row so
+         * the dark text reads, solid dark for the rest so the white
+         * and gold text reads. */
         bottomCtx.fillStyle = (i === partySel) ? '#e8c838' : '#0b0b20';
         bottomCtx.fillRect(62, y - 2, W - 68, 24);
         if (s.empty) {
@@ -4439,9 +4617,12 @@
   }
   function bankDrawGrid() {
     var bank = ensureMonsterBank();
-    var x0 = 4, y0 = 52, cw = 40, ch = 20, gap = 2;
+    /* BANK-FIX v8: 4 columns of 60px at 8px, so full names fit. The
+     * old 6x40 grid sliced names to 5 chars (Gobli, Mandr). Longest
+     * roster name is Mandragora, 10 chars, 11 with the deploy star. */
+    var x0 = 4, y0 = 48, cw = 60, ch = 15, gap = 2, cols = 4;
     for (var slot = 0; slot < BANK_ROSTER_MAX; slot++) {
-      var col = slot % 6, row = Math.floor(slot / 6);
+      var col = slot % cols, row = Math.floor(slot / cols);
       var x = x0 + col * (cw + gap), y = y0 + row * (ch + gap);
       var w = bankSlotAt(slot);
       if (!w) { topCtx.fillStyle = '#30304a'; }
@@ -4454,18 +4635,21 @@
         topCtx.strokeRect(x + 1, y + 1, cw - 2, ch - 2);
       }
       if (w) {
-        var label = bankShortName(w.name) + (bankIsDeployed(w.id) ? '*' : '');
-        drawText(topCtx, label, x + 3, y + 4, bankIsDeployed(w.id) ? '#ffffff' : '#101030', '9px monospace');
+        var label = w.name + (bankIsDeployed(w.id) ? '*' : '');
+        drawText(topCtx, label, x + 3, y + 3, bankIsDeployed(w.id) ? '#ffffff' : '#101030', '8px monospace');
       } else {
-        drawText(topCtx, '-', x + 16, y + 4, '#8888aa', '9px monospace');
+        drawText(topCtx, '-', x + 27, y + 3, '#8888aa', '8px monospace');
       }
     }
-    drawText(topCtx, 'Roster ' + bank.roster.length + ' / 24   Deploy ' + bank.deployedIds.length + ' / 6   Sold today ' + bank.soldToday + ' / 3', 6, 148, '#c8c8e8', '9px monospace');
-    /* Same dark-strip treatment as the counter lines, so the info
-     * lines read over the bank art instead of washing out on it. */
+    /* BANK-FIX v8: both info lines sit on one dark strip, drawn
+     * BEFORE the text. The old code drew the first line bare on the
+     * bright gold seal, then put the strip under only the second
+     * line, so the first line washed out. The first line is set at
+     * 8px so the full Roster / Deploy / Sold counts fit the width. */
     topCtx.fillStyle = 'rgba(5,5,15,0.85)';
-    topCtx.fillRect(6, 160, W - 12, 12);
-    drawText(topCtx, '* = on the deploy team. Gold box = cursor.', 6, 162, '#c8c8e8', '9px monospace');
+    topCtx.fillRect(6, 150, W - 12, 28);
+    drawText(topCtx, 'Roster ' + bank.roster.length + ' / 24   Deploy ' + bank.deployedIds.length + ' / 6   Sold today ' + bank.soldToday + ' / 3', 6, 152, '#c8c8e8', '8px monospace');
+    drawText(topCtx, '* = on the deploy team. Gold box = cursor.', 6, 166, '#c8c8e8', '9px monospace');
   }
   function bankDetailLines(w) {
     if (!w) { return ['Empty slot.', 'Catch Wildlife with a Snare Orb', 'to fill the roster.']; }
@@ -4484,8 +4668,18 @@
   }
   function bankDrawDetail(lines) {
     drawScreenBg(bottomCtx, 'assets/ov3_bank_bg.png');
+    /* BANK-FIX v8: wrap every detail line to the bottom screen width
+     * with the drawn font, so long lines like the Cannot-sell wallet
+     * cap line wrap inside the screen instead of running off the
+     * right edge. First line stays gold. */
+    bottomCtx.font = '10px monospace';
+    var y = 12;
     for (var i = 0; i < lines.length; i++) {
-      drawText(bottomCtx, lines[i], 10, 12 + i * 15, i === 0 ? '#e8c838' : '#fff');
+      var sub = wrapLines(bottomCtx, lines[i], W - 20);
+      for (var j = 0; j < sub.length; j++) {
+        drawText(bottomCtx, sub[j], 10, y, (i === 0 && j === 0) ? '#e8c838' : '#fff');
+        y += 15;
+      }
     }
   }
 
@@ -4517,8 +4711,8 @@
         if (a === 'cancel') { bankPhase = 'counter'; return; }
         if (a === 'left') { bankCursor = (bankCursor + BANK_ROSTER_MAX - 1) % BANK_ROSTER_MAX; return; }
         if (a === 'right') { bankCursor = (bankCursor + 1) % BANK_ROSTER_MAX; return; }
-        if (a === 'up') { bankCursor = (bankCursor + BANK_ROSTER_MAX - 6) % BANK_ROSTER_MAX; return; }
-        if (a === 'down') { bankCursor = (bankCursor + 6) % BANK_ROSTER_MAX; return; }
+        if (a === 'up') { bankCursor = (bankCursor + BANK_ROSTER_MAX - 4) % BANK_ROSTER_MAX; return; }
+        if (a === 'down') { bankCursor = (bankCursor + 4) % BANK_ROSTER_MAX; return; }
         if (a === 'confirm') {
           var w = bankSlotAt(bankCursor);
           if (bankPhase === 'roster') {
@@ -4650,8 +4844,15 @@
         drawScreenBg(bottomCtx, 'assets/ov3_bank_bg.png');
         drawText(bottomCtx, 'A sold Wildlife is gone forever.', 10, 12, '#e8a838', '11px monospace');
         drawText(bottomCtx, 'No buyback. No reclaim. No return.', 10, 30, '#e8a838');
-        drawText(bottomCtx, 'Broker Voss trades it on to other Mankind.', 10, 48, '#fff');
-        drawText(bottomCtx, 'The Codex entry stays unlocked. The Wildlife does not.', 10, 66, '#fff');
+        /* The two warning lines used to run straight off the right
+         * edge (43 and 54 chars at 10px). They wrap to two lines
+         * each now, same words, 16px pitch. */
+        bottomCtx.font = '10px monospace';
+        var warnLines = wrapLines(bottomCtx, 'Broker Voss trades it on to other Mankind.', W - 20)
+          .concat(wrapLines(bottomCtx, 'The Codex entry stays unlocked. The Wildlife does not.', W - 20));
+        for (var wi = 0; wi < warnLines.length; wi++) {
+          drawText(bottomCtx, warnLines[wi], 10, 48 + wi * 16, '#fff');
+        }
         drawBottomHint(bottomCtx, 'A: continue  B: stop, keep ' + (sw ? sw.name : 'it'));
         drawTextBox(bottomCtx);
         return;

@@ -38,7 +38,8 @@
  * draws procedurally on canvas when a file fails to load:
  * slash is a white sword slash arc with impact sparks, smoke is a grey
  * and purple dispersing puff, sparkle is gold star sparkles, shield is
- * a blue translucent bubble. A missing file never stops the module.
+ * an angular blue barrier hexagon with bright edge lines. A missing
+ * file never stops the module.
  */
 (function () {
   'use strict';
@@ -124,8 +125,16 @@
   /* ------------------------------------------------------------------ */
   /* Battle Fast Forward: 1x / 2x / 4x speed control.                  */
   /* Design: new-game.md, Battle Fast Forward. One button at the top    */
-  /* right of the top screen, above the turn order display, shows the   */
-  /* current speed at all times and cycles 1x to 2x to 4x to 1x.       */
+  /* right of the top screen, in the gap between the icon strip and     */
+  /* the turn order display, shows the current speed at all times and   */
+  /* cycles 1x to 2x to 4x to 1x. It must never sit on the 0-16 icon    */
+  /* strip: the strip art is a full row of icons and the old y 0-16    */
+  /* box covered the last icons, and its text spilled below the box     */
+  /* whenever the shared top canvas still had textBaseline 'top' left   */
+  /* over from a story scene. The button now lives at y 17-28, clear    */
+  /* of the strip above (ends y 16) and the first turn row highlight    */
+  /* below (starts y 29), and draws its text with an explicit middle    */
+  /* baseline so no ambient baseline can move it.                       */
   /* Timing scale: every battle sleep runs through sleepScaled, the     */
   /* render loop advances floats, effects, HP bar drains, weather and  */
   /* the camera pan by dt times the speed, so 2x runs twice as fast    */
@@ -148,7 +157,7 @@
 
   var SPEED_MIN_SLEEP_MS = 30;
   var SPEED_BANNER_MIN_MS = 400;
-  var SPEED_BUTTON = { x: 208, y: 0, w: 44, h: 16 };
+  var SPEED_BUTTON = { x: 208, y: 17, w: 44, h: 11 };
   var SPEED_SAVE_KEY = 'fed13_battle_speed';
   var RESET_BATTLE_KINDS = { trial: true, trialbattle: true, elitefour: true, elite: true, champion: true, crowntrial: true, crown: true, first: true };
   var rememberedSpeed = 1;
@@ -327,7 +336,7 @@
     list.forEach(function (n) { names.push(n); });
     ['fx_fire.png', 'fx_fira.png', 'fx_firaga.png', 'fx_blizzard.png',
      'fx_thunder.png', 'fx_cure.png', 'fx_holy.png', 'fx_snare_burst.png',
-     'fx_slash.png', 'fx_smoke.png', 'fx_sparkle.png', 'fx_shield.png'
+     'fx_slash.png', 'fx_smoke.png', 'fx_sparkle.png'
     ].forEach(function (n) { names.push(n); });
     if (cfg && cfg.starterSprite) { names.push(cfg.starterSprite); }
     if (cfg && cfg.mapImage) { names.push(cfg.mapImage); }
@@ -341,6 +350,13 @@
 
   function drawFxImage(ctx, fxName, cx, cy, size, t) {
     /* t is 0 to 1 progress through the effect. */
+    /* fx_shield is always procedural: the shield image file cannot be
+     * pushed to the repo as a binary, so the hexagon is the shield on
+     * every copy. No circle, no bubble. */
+    if (fxName === 'fx_shield') {
+      drawFxProcedural(ctx, fxName, cx, cy, size, t);
+      return;
+    }
     var img = loadImage(fxName + '.png');
     if (img && !img._fed13Missing && img.complete && img.naturalWidth > 0) {
       var s = size * (0.7 + 0.3 * Math.sin(t * Math.PI));
@@ -405,20 +421,47 @@
         drawStar(ctx, qx, qy, s2, '#ffd94a', '#fff7c8');
       }
     } else if (fxName === 'fx_shield') {
-      /* Blue translucent shield bubble. */
+      /* Angular DS barrier: translucent blue hexagon, bright edge
+       * lines, diagonal shimmer. No circle, no bubble. */
       var pulse = 1 + 0.08 * Math.sin(t * Math.PI * 2);
       var rad2 = size * 0.48 * pulse;
-      ctx.globalAlpha = 0.55 - t * 0.25;
+      var pts = [];
+      for (var i = 0; i < 6; i++) {
+        var a = -Math.PI / 2 + i * Math.PI / 3;
+        pts.push([cx + Math.cos(a) * rad2, cy + Math.sin(a) * rad2]);
+      }
+      ctx.globalAlpha = 0.22 + 0.08 * Math.sin(t * Math.PI);
       ctx.fillStyle = '#5aa8f0';
-      ctx.beginPath(); ctx.arc(cx, cy, rad2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var j = 1; j < 6; j++) { ctx.lineTo(pts[j][0], pts[j][1]); }
+      ctx.closePath();
+      ctx.fill();
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var k = 1; k < 6; k++) { ctx.lineTo(pts[k][0], pts[k][1]); }
+      ctx.closePath();
+      ctx.clip();
+      ctx.globalAlpha = 0.8 * (1 - t * 0.5);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      var off = (t * rad2 * 0.8) - rad2 * 0.4;
+      for (var m = -1; m <= 1; m++) {
+        ctx.beginPath();
+        ctx.moveTo(cx - rad2 * 0.7 + off + m * rad2 * 0.35, cy + rad2 * 0.9);
+        ctx.lineTo(cx + rad2 * 0.2 + off + m * rad2 * 0.35, cy - rad2 * 0.9);
+        ctx.stroke();
+      }
+      ctx.restore();
       ctx.globalAlpha = 0.9;
       ctx.strokeStyle = '#c8e8ff';
       ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(cx, cy, rad2, 0, Math.PI * 2); ctx.stroke();
-      ctx.globalAlpha = 0.8;
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(cx, cy, rad2 * 0.62, Math.PI * 1.15, Math.PI * 1.65); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var n = 1; n < 6; n++) { ctx.lineTo(pts[n][0], pts[n][1]); }
+      ctx.closePath();
+      ctx.stroke();
       ctx.globalAlpha = 1;
     } else {
       /* Generic burst fallback for any other missing effect image. */
@@ -1341,22 +1384,28 @@
    * real HP number; only the bar drains. */
   function dispHp(u) { return (u && u.dispHp !== undefined) ? u.dispHp : (u ? u.hp : 0); }
 
-  /* Fast Forward speed button, top right of the top screen, above the
-   * turn order display. 44x16, always shows the current speed. */
+  /* Fast Forward speed button, top right of the top screen, in the
+   * gap between the icon strip (y 0-16) and the turn rows (first
+   * highlight starts y 29). 44x11, always shows the current speed.
+   * Text is drawn with an explicit middle baseline: the top canvas
+   * is shared with the engine, which leaves textBaseline 'top' set
+   * after story scenes, and the old bare fillText at y+11 then drew
+   * the label from y 11 down, half below the box. */
   function drawSpeedButton(b, ctx) {
     var r = SPEED_BUTTON;
     ctx.fillStyle = '#101826';
     ctx.fillRect(r.x, r.y, r.w, r.h);
     ctx.fillStyle = '#3a5a8a';
-    ctx.fillRect(r.x, r.y, r.w, 3);
+    ctx.fillRect(r.x, r.y, r.w, 2);
     ctx.strokeStyle = '#ffe98a';
     ctx.lineWidth = 1;
     ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1);
     ctx.save();
-    ctx.font = 'bold 9px monospace';
+    ctx.font = 'bold 8px monospace';
     ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     ctx.fillStyle = '#ffe98a';
-    ctx.fillText(speedLabel(b), r.x + r.w / 2, r.y + 11);
+    ctx.fillText(speedLabel(b), r.x + r.w / 2, r.y + r.h / 2 + 1);
     ctx.restore();
   }
 
@@ -1375,7 +1424,8 @@
     /* Turn list header sits BELOW the 0-16 icon strip, never on it:
      * the strip art is a row of portraits that covered the text.
      * Rows start at y 38 so the header has clear space above them.
-     * The speed button stays at the top right, y 0-16, untouched. */
+     * The speed button sits in the y 17-28 gap between the strip
+     * and the first row highlight, clear of both. */
     drawText(ctx, 'UNIT TURN LIST', 6, 27, '#ffe98a', true, 9);
     drawText(ctx, 'Round ' + b.round, 150, 27, '#ffffff', false, 8);
     drawSpeedButton(b, ctx);
@@ -1646,13 +1696,34 @@
     /* Battle log strip. Top of the bottom screen, in its own dedicated
      * strip, clear of the menus: every menu sits at x >= 102 and
      * y >= 74 (Action menu, 5 items, is the highest at y 74), so this
-     * strip (y 0-14, full width) never intersects any menu rect. The
+     * strip (y 0-26, full width) never intersects any menu rect. The
      * grid starts at GRID_OY 50, so no unit chrome reaches the strip.
-     * Same text, same 52-char slice, same font, only the position
-     * changed. Drawn after the field, before the menu, as before. */
+     * The message wraps by measured width to at most two lines, so a
+     * long hint is never sliced mid-word: the old 52-char slice cut
+     * the deployment hint off at "Press" and the single line was
+     * drawn at y 10 with the ambient 'top' baseline, hanging below
+     * the 14px strip. Lines are drawn with an explicit 'top'
+     * baseline at y 4 and y 15, inside the 26px strip. */
     ctx.fillStyle = 'rgba(8,10,18,0.85)';
-    ctx.fillRect(0, 0, SCREEN_W, 14);
-    drawText(ctx, (b.message || '').slice(0, 52), 4, 10, '#ffffff', false, 8);
+    ctx.fillRect(0, 0, SCREEN_W, 26);
+    ctx.save();
+    ctx.font = '8px monospace';
+    ctx.textBaseline = 'top';
+    var logWords = String(b.message || '').split(' ');
+    var logLine = '';
+    var logY = 4;
+    var logDrawn = 0;
+    for (var wi = 0; wi < logWords.length && logDrawn < 2; wi++) {
+      var logTest = logLine ? logLine + ' ' + logWords[wi] : logWords[wi];
+      if (ctx.measureText(logTest).width > SCREEN_W - 8 && logLine) {
+        drawText(ctx, logLine, 4, logY, '#ffffff', false, 8);
+        logLine = logWords[wi];
+        logY += 11;
+        logDrawn++;
+      } else { logLine = logTest; }
+    }
+    if (logLine && logDrawn < 2) { drawText(ctx, logLine, 4, logY, '#ffffff', false, 8); }
+    ctx.restore();
 
     /* Command menu. */
     if (b.menu) { drawMenu(ctx, b.menu); }

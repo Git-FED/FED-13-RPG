@@ -7,13 +7,13 @@
 <link rel="preload" as="image" href="assets/ov3_title_bg.png?v=4">
 <title>FED-13</title>
 <style>
-  html, body { margin: 0; padding: 0; background: #0a0a14; }
+  html, body { margin: 0; padding: 0; background: #07070f; }
   body { font-family: monospace; color: #c8c8e8; text-align: center; }
-  #fed13-ds { background: #101018; padding: 8px 8px 12px; max-width: 560px; margin: 0 auto; }
-  #fed13-ds h1 { color: #f8f0c8; font-size: 18px; margin: 4px 0 10px; letter-spacing: 2px; }
-  canvas { display: inline-block; background: #000; border: 2px solid #222244; image-rendering: pixelated; width: 448px; height: 336px; max-width: 100%; }
+  #fed13-ds { background: #0d1230; padding: 8px 8px 12px; max-width: 560px; margin: 0 auto; border-left: 2px solid #d9a441; border-right: 2px solid #d9a441; }
+  #fed13-ds h1 { color: #ffe9a8; font-size: 18px; margin: 4px 0 10px; letter-spacing: 2px; border-bottom: 2px solid #d9a441; padding-bottom: 4px; }
+  canvas { display: inline-block; background: #000; border: 2px solid #d9a441; image-rendering: pixelated; width: 448px; height: 336px; max-width: 100%; }
   #fed13-controls { margin-top: 8px; user-select: none; background-image: url("assets/ov4_controls_bar.png?v=4"); background-repeat: no-repeat; background-position: center center; background-size: 448px 84px; padding: 16px 0; }
-  #fed13-controls button { width: 52px; height: 44px; margin: 3px; font-size: 14px; font-family: monospace; cursor: pointer; background: #1a1a2e; color: #f8f0c8; text-shadow: 0 1px 2px #000; border: 2px solid #8888aa; box-shadow: none; border-radius: 6px; background-repeat: no-repeat; background-position: center center; background-size: contain; }
+  #fed13-controls button { width: 52px; height: 44px; margin: 3px; font-size: 14px; font-family: monospace; font-weight: bold; cursor: pointer; background: #1c2a4a; color: #ffe9a8; text-shadow: 0 1px 2px #000; border: 2px solid #d9a441; box-shadow: none; border-radius: 4px; background-repeat: no-repeat; background-position: center center; background-size: contain; }
   #fed13-controls button.btn-dpad { background-image: url("assets/ov4_dpad.png?v=4"); }
   #fed13-controls button.btn-dpad:nth-of-type(1) { background-size: 136.26px 136.26px; background-position: -42.13px 0; }
   #fed13-controls button.btn-dpad:nth-of-type(2) { background-size: 120.69px 120.69px; background-position: 7.14px -38.97px; }
@@ -22,7 +22,7 @@
   #fed13-controls button.btn-a { background-image: url("assets/ov4_btn_a.png?v=4"); }
   #fed13-controls button.btn-b { background-image: url("assets/ov4_btn_b.png?v=4"); }
   #fed13-controls button.btn-x { background-image: url("assets/ov4_btn_x.png?v=4"); }
-  #fed13-controls button.btn-start { background-image: url("assets/ov4_btn_start.png?v=4"); }
+  #fed13-controls button.btn-start { background-image: url("assets/ov4_btn_start.png?v=4"); background-color: #d9a441; color: #101030; }
   #fed13-controls button.wide { width: 64px; }
   #fed13-hint { font-size: 11px; color: #8888aa; margin-top: 8px; }
   /* Compact layout for short viewports (900px tall): tighten spacing

@@ -92,10 +92,12 @@
   var W = 256;
   var H = 192;
 
-  /* Top screen. */
+  /* Top screen. DS layout: sprites stand large on the field, no
+   * token discs. Foe upper right, player lower left, Pokemon
+   * Diamond and Pearl style. */
   var FOE_PLATE = { x: 7, y: 7, w: 108, h: 32 };
-  var FOE_TOKEN = { x: 184, y: 13, d: 59 };
-  var MY_TOKEN = { x: 13, y: 127, d: 52 };
+  var FOE_TOKEN = { x: 168, y: 12, d: 76 };
+  var MY_TOKEN = { x: 6, y: 112, d: 68 };
   var MY_PLATE = { x: 141, y: 137, w: 108, h: 48 };
 
   /* Bottom screen. */
@@ -629,12 +631,11 @@
 
     /* Preload the images the battle draws, so showFx can tell a missing
      * effect file from one that simply has not loaded yet. */
+    /* BUBBLE-FIX: the token ring art and the plate art are no longer
+     * drawn. Sprites stand straight on the field, plates and command
+     * buttons are drawn procedurally below. The asset files stay on
+     * disk, they are just not used. */
     var bgImg = loadImage(backgroundFor(environment));
-    /* OV3 (Phase B): plate, token, command and dialogue art. */
-    var plateImg = loadImage(asset('ov3_battle_plate.png'));
-    var foeTokenImg = loadImage(asset('ov3_battle_token_foe.png'));
-    var myTokenImg = loadImage(asset('ov3_battle_token_mine.png'));
-    var cmdImg = loadImage(asset('ov3_battle_cmd.png'));
     var dialogImg = loadImage(asset('ov3_dialog_box_dark.png'));
     var foeImg = loadImage(asset(foe.sprite));
     var myImg = loadImage(asset(TRAINER_BACK[gender]));
@@ -860,29 +861,20 @@
       var anim = tokenAnim(battler, now);
       var cx = rect.x + rect.d / 2 + anim.dx;
       var cy = rect.y + rect.d / 2 + anim.dy;
-      var r = rect.d / 2;
+      var d = rect.d;
       ctx.save();
       ctx.globalAlpha = anim.alpha;
       ctx.translate(cx, cy);
       if (anim.rot) { ctx.rotate(anim.rot); }
       ctx.translate(-cx, -cy);
-      /* Drop shadow, then the circle. */
+      /* DS ground shadow only: a flat dark ellipse under the sprite.
+       * No solid disc, no circle clip, no ring art. The sprite stands
+       * straight on the battle field, Pokemon Diamond and Pearl style. */
       ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.beginPath();
-      ctx.ellipse(cx, cy + r - 2, r * 0.9, 4, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy + d / 2 - 3, d * 0.42, 4, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fillStyle = isMine ? '#d9a441' : '#3fae4a';
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = isMine ? '#8a6414' : '#1e6b2a';
-      ctx.stroke();
-      /* Sprite clipped inside the circle, or the first letter. */
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r - 2, 0, Math.PI * 2);
-      ctx.clip();
+      /* Sprite drawn full size, bottom anchored, never clipped. */
       var img = null;
       var letter = battler.displayName.charAt(0);
       if (isMine) {
@@ -893,10 +885,16 @@
       }
       if (imageReady(img)) {
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(img, cx - r * 0.88, cy - r * 0.88, r * 1.76, r * 1.76);
+        ctx.drawImage(img, cx - d / 2, cy - d / 2, d, d);
       } else {
+        /* Square name tile, DS style, for a Bondkin with no battle art. */
+        ctx.fillStyle = '#20242a';
+        ctx.fillRect(cx - 14, cy - 14, 28, 28);
+        ctx.strokeStyle = '#d9a441';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cx - 14, cy - 14, 28, 28);
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 22px monospace';
+        ctx.font = 'bold 20px monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(letter, cx, cy + 1);
@@ -904,34 +902,23 @@
         ctx.textBaseline = 'top';
       }
       ctx.restore();
-      /* OV3 (Phase B): ring art over the sprite. The ring is
-       * transparent in the center, so the sprite shows through. */
-      var tokenImg = isMine ? myTokenImg : foeTokenImg;
-      if (imageReady(tokenImg)) {
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(tokenImg, cx - r, cy - r, rect.d, rect.d);
-      }
-      ctx.restore();
     }
 
     function drawPlate(ctx, rect, name, level, hp, maxHp, showNumbers, xp, xpNext) {
       ctx.save();
-      roundRect(ctx, rect.x, rect.y, rect.w, rect.h, 5);
-      if (imageReady(plateImg)) {
-        /* OV3 (Phase B): plate art scaled into the frozen rect. The
-         * name, Lv, HP bar and XP bar are drawn on top as before. */
-        ctx.save();
-        ctx.clip();
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(plateImg, rect.x, rect.y, rect.w, rect.h);
-        ctx.restore();
-      } else {
-        ctx.fillStyle = '#fff8dc';
-        ctx.fill();
-      }
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#20242a';
-      ctx.stroke();
+      /* DS plate, drawn procedurally: sharp corners, cream body, navy
+       * border, gold rule along the bottom, colored top stripe (red
+       * for the foe plate, blue for the player plate). No plate art,
+       * no rounded edge. */
+      var isFoePlate = rect.y < 100;
+      ctx.fillStyle = '#20242a';
+      ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+      ctx.fillStyle = '#fffbe8';
+      ctx.fillRect(rect.x + 2, rect.y + 2, rect.w - 4, rect.h - 4);
+      ctx.fillStyle = isFoePlate ? '#c0392b' : '#2a5db0';
+      ctx.fillRect(rect.x + 2, rect.y + 2, rect.w - 4, 2);
+      ctx.fillStyle = '#d9a441';
+      ctx.fillRect(rect.x + 2, rect.y + rect.h - 4, rect.w - 4, 2);
       ctx.fillStyle = '#20242a';
       ctx.font = 'bold 8px monospace';
       ctx.textBaseline = 'top';
@@ -1135,9 +1122,9 @@
       var ctx = bottomCtx;
       ctx.fillStyle = '#2a2f3a';
       ctx.fillRect(0, 0, W, H);
-      /* Message box, dark, left side. */
+      /* Message box, dark, left side. Sharp DS corners. */
       ctx.save();
-      roundRect(ctx, MSG_BOX.x, MSG_BOX.y, MSG_BOX.w, MSG_BOX.h, 5);
+      roundRect(ctx, MSG_BOX.x, MSG_BOX.y, MSG_BOX.w, MSG_BOX.h, 2);
       if (imageReady(dialogImg)) {
         /* OV3 (Phase B): dark dialogue art as the message box. The
          * 512x128 art is 9-sliced into the 128x178 portrait box so
@@ -1157,9 +1144,13 @@
       ctx.fillStyle = '#f2f2f2';
       ctx.font = '9px monospace';
       ctx.textBaseline = 'top';
-      var lines = wrapLines(ctx, b.msg, MSG_BOX.w - 16);
+      /* V8 FIX: the dialog art corner diamonds straddle the 9-slice
+       * seam, so they render as a vertical spike at about +12px that
+       * clips the first letter of the first line. Start text at +16px
+       * and narrow the wrap to match. */
+      var lines = wrapLines(ctx, b.msg, MSG_BOX.w - 24);
       for (var i = 0; i < lines.length && i < 12; i++) {
-        ctx.fillText(lines[i], MSG_BOX.x + 8, MSG_BOX.y + 8 + i * 13);
+        ctx.fillText(lines[i], MSG_BOX.x + 16, MSG_BOX.y + 8 + i * 13);
       }
       if (Math.floor(now / 400) % 2 === 0) {
         ctx.fillText('v', MSG_BOX.x + MSG_BOX.w - 14, MSG_BOX.y + MSG_BOX.h - 14);
@@ -1181,40 +1172,37 @@
         var y = GRID_BOX.y + Math.floor(i / 2) * (ch + gap);
         b.hitRects.push({ x: x, y: y, w: cw, h: ch, index: i, kind: 'command' });
         ctx.save();
-        roundRect(ctx, x, y, cw, ch, 5);
-        if (imageReady(cmdImg)) {
-          /* OV3 (Phase B): the right half of the command strip art is
-           * the 2x2 button grid. Each cell shows its matching art
-           * quadrant as the button face, so the art buttons sit
-           * behind the labels. Selected cell gets a translucent
-           * gold wash over the art. */
-          var col = i % 2;
-          var row = Math.floor(i / 2);
-          ctx.save();
-          ctx.clip();
-          ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(cmdImg, 256 + col * 128, row * 64, 128, 64, x, y, cw, ch);
-          ctx.restore();
-          if (i === b.sel) {
-            ctx.globalAlpha = 0.45;
-            ctx.fillStyle = '#ffe9a8';
-            ctx.fill();
-            ctx.globalAlpha = 1;
-          }
-        } else {
-          ctx.fillStyle = (i === b.sel) ? '#ffe9a8' : '#f2f2f2';
-          ctx.fill();
-        }
+        /* DS command button, drawn procedurally: sharp corners, white
+         * body, navy border, colored side stripe per command (FIGHT
+         * red, BAG gold, BONDKIN green, RUN blue). Selected button
+         * fills gold with a dark arrow marker. No command art. */
+        var cmdColors = ['#c0392b', '#8a6414', '#2a7a3a', '#2a5db0'];
+        roundRect(ctx, x, y, cw, ch, 2);
+        ctx.fillStyle = (i === b.sel) ? '#ffe9a8' : '#ffffff';
+        ctx.fill();
+        ctx.fillStyle = cmdColors[i];
+        ctx.fillRect(x + 2, y + 2, 4, ch - 4);
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#20242a';
         ctx.stroke();
+        if (i === b.sel) {
+          /* Selection arrow sits left of the label: keep it clear of
+           * the first letter (FIGHT and BONDKIN are wide enough that
+           * a centered label runs into the arrow at x + 9). */
+          ctx.fillStyle = '#20242a';
+          ctx.font = 'bold 10px monospace';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('>', x + 8, y + ch / 2 + 1);
+        }
         ctx.fillStyle = '#20242a';
         /* V4 FIX: BONDKIN at 10px is wider than its button, so draw
          * that label at 8px. The other three labels stay at 10px. */
         ctx.font = labels[i] === 'BONDKIN' ? 'bold 8px monospace' : 'bold 10px monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(labels[i], x + cw / 2, y + ch / 2 + 1);
+        /* V8 FIX: shift a selected label right so the arrow clears it. */
+        ctx.fillText(labels[i], x + cw / 2 + (i === b.sel ? 6 : 0), y + ch / 2 + 1);
         ctx.restore();
       }
     }
@@ -1258,34 +1246,24 @@
       var w = GRID_BOX.w;
       var h = GRID_BOX.h;
       ctx.save();
-      roundRect(ctx, x, y, w, h, 5);
-      if (imageReady(cmdImg)) {
-        /* OV3 (Phase B): command strip art backs the panel. The top
-         * left button quadrant is the light backing, kept readable
-         * under a translucent light wash. Title, rows, selection
-         * and the Back button draw on top exactly as before. */
-        ctx.save();
-        ctx.clip();
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(cmdImg, 256, 0, 128, 64, x, y, w, h);
-        ctx.restore();
-        ctx.globalAlpha = 0.72;
-        ctx.fillStyle = '#f2f2f2';
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      } else {
-        ctx.fillStyle = '#f2f2f2';
-        ctx.fill();
-      }
+      /* DS panel: sharp corners, light body, navy border, gold title
+       * bar. No command art. */
+      roundRect(ctx, x, y, w, h, 2);
+      ctx.fillStyle = '#f2f2f2';
+      ctx.fill();
+      ctx.fillStyle = '#20242a';
+      ctx.fillRect(x + 2, y + 2, w - 4, 14);
+      ctx.fillStyle = '#d9a441';
+      ctx.fillRect(x + 2, y + 16, w - 4, 1);
       ctx.lineWidth = 2;
       ctx.strokeStyle = '#20242a';
       ctx.stroke();
-      ctx.fillStyle = '#20242a';
+      ctx.fillStyle = '#ffe9a8';
       ctx.font = 'bold 8px monospace';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      ctx.fillText(data.title, x + 6, y + 5);
-      var iy = y + 18;
+      ctx.fillText(data.title, x + 6, y + 6);
+      var iy = y + 20;
       data.items.forEach(function (item, i) {
         var ih = item.kind === 'move' ? 30 : 22;
         if (item.kind === 'back') { ih = 18; }
