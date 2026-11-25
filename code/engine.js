@@ -24,7 +24,7 @@
 
   var W = 256;
   var H = 192;
-  var SCALE = 2;
+  var SCALE = 1.75;
   var SAVE_KEY = 'fed13_save_v1';
   var VERSION = '4.0.0-overhaul';
 
@@ -422,6 +422,15 @@
       c.style.border = '2px solid #222244';
       c.style.display = 'inline-block';
     });
+    /* START FIX: tapping either canvas on the title screen works like
+     * START / Enter. Gated to the title screen only, so battle taps
+     * (battle1v1 owns its own canvas handlers while it runs) and
+     * overworld input are untouched. */
+    function onTitleCanvasTap() {
+      if (currentScreen === 'title') { press('start'); }
+    }
+    topCanvas.addEventListener('click', onTitleCanvasTap);
+    bottomCanvas.addEventListener('click', onTitleCanvasTap);
     topCtx = topCanvas.getContext('2d');
     bottomCtx = bottomCanvas.getContext('2d');
     topCtx.imageSmoothingEnabled = false;

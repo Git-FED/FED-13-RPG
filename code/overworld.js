@@ -2929,8 +2929,8 @@
       canvas.width = VIEW_W;
       canvas.height = VIEW_H;
       canvas.style.imageRendering = 'pixelated';
-      canvas.style.width = '512px';
-      canvas.style.height = '384px';
+      canvas.style.width = '448px';
+      canvas.style.height = '336px';
       state.ctx = canvas.getContext('2d');
       resolvePlayerSheets();
       loadImages();
