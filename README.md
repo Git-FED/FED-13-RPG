@@ -1,8 +1,14 @@
 # FED-13 RPG Field Guide
 
+<img width="1280" height="693" alt="Screenshot 2026-11-24 084216" src="https://github.com/user-attachments/assets/4b5e082d-2153-4a2e-87b7-e3c29331467c" />
+
 A static, GitHub Pages / Cloudflare Pages-ready promotional site built from the FED-13 RPG design documents.
 
+<img width="1287" height="694" alt="Screenshot 2026-11-24 183223" src="https://github.com/user-attachments/assets/59ea696b-5699-4184-8ce3-2d971305271b" />
+
 ## Pages
+
+<img width="1330" height="712" alt="Screenshot 2026-11-25 080420" src="https://github.com/user-attachments/assets/f1645fc3-4715-4c19-85ee-23f01da1b3aa" />
 
 - `index.html` — animated landing page, looping ticker, promo art
 - `codex.html` — filterable creature codex
