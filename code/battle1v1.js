@@ -205,12 +205,18 @@
 
   /* ---------------- Bondkin bloodlines ---------------- */
 
+  /* V9-SPRITES: every Bondkin bloodline has a real battle sprite now,
+   * b_bondkin_<bloodline>_front.png, drawn from scratch in the DS style
+   * (80x80, same framing as the Wildlife fronts). Before this, a
+   * swapped-in Bondkin drew only a letter tile: makeBondkinBattler
+   * set sprite null and drawToken drew a dark square with an initial.
+   * Starwarden is the Elf file, Aelindra's battle sprite. */
   var BLOODLINES = {
-    Elf:       { totem: 'Starwarden',          num: '001', move: 'Leaf Cut', types: ['Grass'] },
-    Puffkin:   { totem: 'Brightpom Sovereign', num: '002', move: 'Gust',     types: ['Flying'] },
-    Elderkin:  { totem: 'Quiet Flame Sage',    num: '003', move: 'Ember',    types: ['Fire'] },
-    Harefolk:  { totem: 'Moonhare Matriarch',  num: '004', move: 'Gust',     types: ['Flying'] },
-    Drakescale:{ totem: 'Emberwyrm King',      num: '005', move: 'Ember',    types: ['Fire'] }
+    Elf:       { totem: 'Starwarden',          num: '001', move: 'Leaf Cut', types: ['Grass'],  file: 'b_bondkin_elf_front.png' },
+    Puffkin:   { totem: 'Brightpom Sovereign', num: '002', move: 'Gust',     types: ['Flying'], file: 'b_bondkin_puffkin_front.png' },
+    Elderkin:  { totem: 'Quiet Flame Sage',    num: '003', move: 'Ember',    types: ['Fire'],   file: 'b_bondkin_elderkin_front.png' },
+    Harefolk:  { totem: 'Moonhare Matriarch',  num: '004', move: 'Gust',     types: ['Flying'], file: 'b_bondkin_harefolk_front.png' },
+    Drakescale:{ totem: 'Emberwyrm King',      num: '005', move: 'Ember',    types: ['Fire'],   file: 'b_bondkin_drakescale_front.png' }
   };
 
   var TRAINER_BACK = {
@@ -452,7 +458,7 @@
       speed: 11,
       moves: moves,
       pp: pp,
-      sprite: null,
+      sprite: info.file || null,
       isPlayerSide: true
     };
   }
@@ -639,6 +645,10 @@
     var dialogImg = loadImage(asset('ov3_dialog_box_dark.png'));
     var foeImg = loadImage(asset(foe.sprite));
     var myImg = loadImage(asset(TRAINER_BACK[gender]));
+    /* V9-SPRITES: preload the bench Bondkin battle sprites, so a swap
+     * shows the sprite on the first frame instead of the letter tile
+     * while the file loads. */
+    bench.forEach(function (mate) { if (mate.sprite) { loadImage(asset(mate.sprite)); } });
     loadImage(asset('fx_slash.png'));
     var marenImg = loadImage(asset(COLD_OPEN.portrait));
     loadImage(asset('fx_fire.png'));
@@ -878,7 +888,11 @@
       var img = null;
       var letter = battler.displayName.charAt(0);
       if (isMine) {
-        if (battler.kind === 'bondkin') { img = null; letter = battler.displayName.charAt(0); }
+        /* V9-SPRITES: a swapped-in Bondkin draws its bloodline battle
+         * sprite. loadImage caches, so calling it per frame is safe.
+         * A Bondkin with no sprite file still falls back to the
+         * letter tile below. */
+        if (battler.kind === 'bondkin') { img = battler.sprite ? loadImage(asset(battler.sprite)) : null; letter = battler.displayName.charAt(0); }
         else { img = myImg; }
       } else {
         img = foeImg;

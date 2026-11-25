@@ -274,33 +274,36 @@
       name: 'Whelp',
       codex: '002',
       types: 'Fire',
-      eggSprite: asset('egg_whelp.png'),
-      crackedSprite: asset('egg_cracked_whelp.png'),
+      eggSprite: asset('egg9_whelp.png'),
+      crackedSprite: asset('egg9_cracked_whelp.png'),
       frontSprite: asset('b_whelp_front.png'),
       backSprite: asset('b_whelp_back.png'),
-      blurb: 'A warm egg. It hums like a banked fire when you hold it.'
+      blurb: 'A warm egg. It hums like a banked fire when you hold it.',
+      hint: 'Hatches a Whelp, Fire. A small ember cub, quick to spark.'
     },
     {
       id: 'puk',
       name: 'Puk',
       codex: '104',
       types: 'Flying and Dragon',
-      eggSprite: asset('egg_puk.png'),
-      crackedSprite: asset('egg_cracked_puk.png'),
+      eggSprite: asset('egg9_puk.png'),
+      crackedSprite: asset('egg9_cracked_puk.png'),
       frontSprite: asset('b_puk_front.png'),
       backSprite: asset('b_puk_back.png'),
-      blurb: 'A light egg. It shivers, and for a moment you feel wind on your face.'
+      blurb: 'A light egg. It shivers, and for a moment you feel wind on your face.',
+      hint: 'Hatches a Puk, Flying and Dragon. Fast in the air, proud on the ground.'
     },
     {
       id: 'mandragora',
       name: 'Mandragora',
       codex: '029',
       types: 'Grass',
-      eggSprite: asset('egg_mandragora.png'),
-      crackedSprite: asset('egg_cracked_mandragora.png'),
+      eggSprite: asset('egg9_mandragora.png'),
+      crackedSprite: asset('egg9_cracked_mandragora.png'),
       frontSprite: asset('b_mandragora_front.png'),
       backSprite: asset('b_mandragora_back.png'),
-      blurb: 'A green egg. It smells of rain, and something inside is singing.'
+      blurb: 'A green egg. It smells of rain, and something inside is singing.',
+      hint: 'Hatches a Mandragora, Grass. A root singer, slow to move, steady to grow.'
     }
   ];
 
@@ -399,9 +402,9 @@
         title: 'The Bag Opens: 3 Eggs',
         background: asset('bg_grass.png'),
         sprites: [
-          { img: asset('egg_whelp.png'), x: 36, y: 96, w: 56, h: 56, label: 'Whelp egg' },
-          { img: asset('egg_puk.png'), x: 100, y: 96, w: 56, h: 56, label: 'Puk egg' },
-          { img: asset('egg_mandragora.png'), x: 164, y: 96, w: 56, h: 56, label: 'Mandragora egg' }
+          { img: asset('egg9_whelp.png'), x: 36, y: 96, w: 56, h: 56, label: 'Whelp egg' },
+          { img: asset('egg9_puk.png'), x: 100, y: 96, w: 56, h: 56, label: 'Puk egg' },
+          { img: asset('egg9_mandragora.png'), x: 164, y: 96, w: 56, h: 56, label: 'Mandragora egg' }
         ],
         fx: ['sparkle'],
         fxAt: { x: 128, y: 124 },
@@ -869,9 +872,9 @@
       narrate('Pick one egg. The hatched Wildlife is your starter Wildlife, raised and trained as your first partner.')
     ],
     choice: choice('Pick one egg.', [
-      { id: 'whelp', label: 'Whelp egg, Fire', sprite: asset('egg_whelp.png') },
-      { id: 'puk', label: 'Puk egg, Flying and Dragon', sprite: asset('egg_puk.png') },
-      { id: 'mandragora', label: 'Mandragora egg, Grass', sprite: asset('egg_mandragora.png') }
+      { id: 'whelp', label: 'Whelp egg, Fire', sprite: asset('egg9_whelp.png') },
+      { id: 'puk', label: 'Puk egg, Flying and Dragon', sprite: asset('egg9_puk.png') },
+      { id: 'mandragora', label: 'Mandragora egg, Grass', sprite: asset('egg9_mandragora.png') }
     ]),
     onChoose: 'setStarterWildlife',
     next: 'grad_hatch'
@@ -892,28 +895,32 @@
       line('player', 'You', 'It is moving! Something inside is moving!'),
       narrate('A crack runs across the shell. Then another crack. Light spills out through the cracks.'),
       narrate('A flash of white light fills the room. When it fades, a small Wildlife blinks up at you.'),
+      narrate('The classroom gasps. Desks scrape. Every head in the room turns toward you.'),
+      line('rival', 'Sera', 'It hatched! Right in class! Yours actually hatched!'),
       narrate('Your starter Wildlife. Your first partner. It fits in a carry sling, too young to fight yet, and it is already yours.'),
       line('headteacher', 'Headteacher Odo', 'Trainer! That Wildlife does not belong in my classroom! And you do not belong in my school anymore!'),
       line('player', 'You', 'What? But I am graduating!'),
       line('headteacher', 'Headteacher Odo', 'You are dropping out. A trainer with a live Wildlife cannot sit in my school. Out. Now. Take your partner and go.'),
+      line('rival', 'Sera', 'Good luck out there, trainer. Show them what the mountain school taught you.'),
       narrate('So the player drops out of school. The egg hatches, and the school door closes behind you.')
     ],
     /* Hatch beats, in order: shake, crack, flash, reveal. The engine
      * plays them on the hatch screen. The cracked art is per picked
-     * egg: egg_cracked_whelp.png, egg_cracked_puk.png, or
-     * egg_cracked_mandragora.png. If the cracked art file is missing,
+     * egg: egg9_cracked_whelp.png, egg9_cracked_puk.png, or
+     * egg9_cracked_mandragora.png. If the cracked art file is missing,
      * the engine draws a procedural crack overlay on the whole egg
-     * instead. The reveal shows the hatched Wildlife back sprite
-     * (b_whelp_back.png, b_puk_back.png, or b_mandragora_back.png)
-     * with its name, Codex number, and type, DS style. The name,
-     * Codex number, and type for the picked egg come from
+     * instead. The reveal shows the hatched Wildlife FRONT sprite
+     * (b_whelp_front.png, b_puk_front.png, or b_mandragora_front.png),
+     * facing the player, with its name, Codex number, and type, DS
+     * style. V9-ART: the reveal used to show the back sprite. The
+     * name, Codex number, and type for the picked egg come from
      * hatchReveal(state). After the reveal, the story order goes on
      * to grad_hunter_fail and the hunter exam. */
     hatch: {
       steps: ['shake', 'crack', 'flash', 'reveal'],
       shakeBeats: 3,
-      crackArt: 'egg_cracked_<id>.png per picked egg, procedural crack overlay if missing',
-      revealArt: 'back sprite per picked egg, name and Codex number and type shown DS style'
+      crackArt: 'egg9_cracked_<id>.png per picked egg, procedural crack overlay if missing',
+      revealArt: 'front sprite per picked egg, name and Codex number and type shown DS style'
     },
     onEnter: 'markEggHatched',
     next: 'grad_hunter_fail'
@@ -931,7 +938,9 @@
       line('player', 'You', 'I want to register as a monster hunter. I have a Wildlife. I can do the work.'),
       line('hunterClerk', 'Clerk Ivo', 'Then take the test. Question one: what do you do when a wild Wildlife charges?'),
       line('player', 'You', 'Uh. Pet it?'),
+      narrate('The hunters in line behind you groan. One of them mutters, another first timer, and the clerk does not even look up.'),
       line('hunterClerk', 'Clerk Ivo', 'Fail. Next!'),
+      line('player', 'You', 'Wait, that was the whole test? One question?'),
       narrate('You register as a monster hunter, and you fail the test. The clerk stamps the paper anyway, just to get rid of you.'),
       line('hunterClerk', 'Clerk Ivo', 'Take the hunter exam if you want the permit. Study first. The exam does not forgive guessing.')
     ],
@@ -958,6 +967,8 @@
     lines: [
       narrate('The hunter exam hall. Long desks, hard chairs, and Clerk Ivo at the front with a stack of papers and a stamp that has ended many dreams.'),
       line('hunterClerk', 'Clerk Ivo', 'Sit. Hands where I can see them. No shouting answers at your Wildlife.'),
+      narrate('Pencils scratch. Someone two desks over is sweating through their collar. The hall smells of ink and nerves.'),
+      line('hunterClerk', 'Clerk Ivo', 'No whispering. No peeking. Eyes on your own paper. The stamp decides, not your friends.'),
       line('hunterClerk', 'Clerk Ivo', 'Three questions, trainer. Answer true, or go back to school. Three true answers and the permit is yours. One wrong answer and you study again and take it over.'),
       line('player', 'You', 'Three questions. I studied. I know this. I know this.'),
       line('hunterClerk', 'Clerk Ivo', 'Then prove it. First question.')
@@ -1012,7 +1023,8 @@
     background: asset('bg_hall.png'),
     lines: [
       line('hunterClerk', 'Clerk Ivo', 'Question one. What is the bank called, where Wildlife are kept and trained?'),
-      line('player', 'You', 'The bank... the bank where Wildlife are kept and trained. I know this one.')
+      line('player', 'You', 'The bank... the bank where Wildlife are kept and trained. I know this one.'),
+      line('hunterClerk', 'Clerk Ivo', 'Answer, trainer. The whole hall is listening.')
     ],
     examQuestion: 'q1_bank',
     choice: choice('What is the bank called?', [
@@ -1032,7 +1044,8 @@
     background: asset('bg_hall.png'),
     lines: [
       line('hunterClerk', 'Clerk Ivo', 'Question two. Who sits above The Thirteen as the 14th?'),
-      line('player', 'You', 'Above The Thirteen... the 14th. Think. The whole mountain knows this name.')
+      line('player', 'You', 'Above The Thirteen... the 14th. Think. The whole mountain knows this name.'),
+      line('hunterClerk', 'Clerk Ivo', 'Careful. This name has ended more dreams than the other two questions together.')
     ],
     examQuestion: 'q2_king',
     choice: choice('Who sits above The Thirteen as the 14th?', [
@@ -1052,7 +1065,8 @@
     background: asset('bg_hall.png'),
     lines: [
       line('hunterClerk', 'Clerk Ivo', 'Last question. A Bondkin has sense: speech, memory, and the power to choose. How does a Bondkin join a trainer?'),
-      line('player', 'You', 'Last one. Speech, memory, and the power to choose. How do they join?')
+      line('player', 'You', 'Last one. Speech, memory, and the power to choose. How do they join?'),
+      line('hunterClerk', 'Clerk Ivo', 'Last one. Say it like you mean it.')
     ],
     examQuestion: 'q3_bondkin',
     choice: choice('How does a Bondkin join a trainer?', [
@@ -1113,11 +1127,63 @@
       narrate('Clerk Ivo takes a brass stamp from his drawer, inks it slow, and brings it down on your paper with a thud that echoes off the hall walls.'),
       line('hunterClerk', 'Clerk Ivo', 'Hunter permit. Stamped, signed, and sealed. Do not make me regret it.'),
       narrate('The permit is yours. Your name, your Wildlife, and the stamp of the hunter registry, all on one paper.'),
+      narrate('Somewhere behind you, a chair scrapes. Another test taker whispers, three out of three, did you see that?'),
       line('player', 'You', 'A permit. My permit. I am a licensed hunter now.'),
       line('hunterClerk', 'Clerk Ivo', 'Licensed to hunt wild Wildlife, not to pet them. Now go. The guild hall is down the road, and Guild Clerk Petra is waiting on your signature.')
     ],
     fx: ['sparkle'],
     onEnter: 'grantHunterPermit',
+    next: 'hunter_permit_cheer'
+  });
+
+  /* V9-SYS: the permit celebration, a new beat between the permit
+   * and the guild hall. Same story: the permit is granted, the
+   * trainer goes to register. Nothing here grants or changes a
+   * flag; the permit was already granted by hunter_permit onEnter.
+   * The hall erupts, Ivo almost smiles, and the staging carries
+   * gold sparkle, the confetti light the engine draws. Every line
+   * carries a staging beat, as the validator requires. */
+  var PERMIT_CELEBRATION_STAGING = {
+    sceneId: 'hunter_permit_cheer',
+    beats: [
+      {
+        id: 'hall_erupts',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 84 },
+        note: 'The exam hall erupts. Papers in the air, cheers off the walls.'
+      },
+      {
+        id: 'ivo_almost_smiles',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 84 },
+        note: 'Clerk Ivo almost smiles. Almost.'
+      }
+    ]
+  };
+
+  defineScene({
+    id: 'hunter_permit_cheer',
+    chapter: 3,
+    title: 'Grad Arc: The Hall Cheers',
+    location: 'The hunter exam hall, the 14th world',
+    background: asset('bg_hall.png'),
+    staging: PERMIT_CELEBRATION_STAGING,
+    lines: [
+      narrate('The hall erupts. Chairs scrape, papers fly, and the other test takers cheer like the exam just ended for all of them.', { beat: 0 }),
+      line('hunterClerk', 'Clerk Ivo', 'Quiet! Quiet in my hall! ... Fine. One cheer. You earned one cheer.', { beat: 1 }),
+      narrate('Clerk Ivo waves the noise down, and for half a second he almost smiles. Then the stamp goes back in the drawer and the hall is his again.', { beat: 1 }),
+      line('player', 'You', 'Three out of three. I did it. I really did it.', { beat: 0 }),
+      narrate('Your Wildlife chirps from its sling, loud and proud, and the whole hall laughs with it, not at it.', { beat: 0 })
+    ],
+    fx: ['sparkle'],
     next: 'guild_register'
   });
 
@@ -1136,13 +1202,15 @@
     background: asset('bg_hall.png'),
     lines: [
       narrate('The guild hall. Banners, job boards, and the smell of fresh ink. Guild Clerk Petra waits at the long desk with two ledgers open.'),
+      narrate('Banners hang from the rafters, one for every guild rank, and the boards are crowded with trainers reading missions. A clerk at the next desk stamps a paper so hard the whole desk jumps.'),
       line('guildClerk', 'Guild Clerk Petra', 'Permit, please. Good. Stamped by Ivo himself. That almost never happens on the first pass.'),
       line('player', 'You', 'I want to register to become a monster trainer.'),
       line('guildClerk', 'Guild Clerk Petra', 'Then you register here, with the guild, or with the hiring bazaar across the square. Same permit, different road. The guild posts missions. The bazaar posts hire work. Pick one.'),
       narrate('A tall man in a blue coat with gold trim steps out of the back office. Every clerk in the hall stands a little straighter.'),
       line('guildmaster', 'Guildmaster Bram Hollis', 'Trainer. Petra tells me you passed Ivo on the first pass. Ivo fails everyone on the first pass. So either you studied, or you are lucky. Which is it?'),
       line('player', 'You', 'I studied, Guildmaster.'),
-      line('guildmaster', 'Guildmaster Bram Hollis', 'Good answer. Luck runs out. Study does not. Petra, sign the trainer up.')
+      line('guildmaster', 'Guildmaster Bram Hollis', 'Good answer. Luck runs out. Study does not. Petra, sign the trainer up.'),
+      line('guildClerk', 'Guild Clerk Petra', 'Heard that, hall? First pass on Ivo, and the Guildmaster noticed. Sign here, trainer, before he changes his mind.')
     ],
     choice: choice('Register with the guild, or with the hiring bazaar?', [
       { id: 'guild', label: 'Register with the guild' },
@@ -1182,6 +1250,7 @@
       line('player', 'You', 'Monster trainer. That sounds right. Better than monster breeder, better than monster bank clerk. That is not a lucrative position at all.'),
       line('guildmaster', 'Guildmaster Bram Hollis', 'Trainer it is. Your Wildlife rides in a sling until it can fight. Keep it fed, keep it close, and keep your eyes on the road down.'),
       line('guildClerk', 'Guild Clerk Petra', 'Your name is on the guild board now. Missions, pay, and the road to Saltquay. That is the guild road.'),
+      line('guildClerk', 'Guild Clerk Petra', 'The board is yours now, trainer. The whole hall saw you sign.'),
       narrate('The career ladder is climbed: egg, hatch, drop out, register, fail, exam, permit, guild, monster trainer. You are a monster trainer now.')
     ],
     gradArcEnd: true,
@@ -1199,6 +1268,7 @@
       line('guildClerk', 'Guild Clerk Petra', 'The broker across the square will stamp your hire papers. Hire work, day pay, and no guild board. You are a monster trainer either way.'),
       line('player', 'You', 'Monster trainer. That sounds right. Better than monster breeder, better than monster bank clerk. That is not a lucrative position at all.'),
       line('guildmaster', 'Guildmaster Bram Hollis', 'A trainer is a trainer, guild or bazaar. Your Wildlife rides in a sling until it can fight. Keep it fed, keep it close, and keep your eyes on the road down.'),
+      line('guildClerk', 'Guild Clerk Petra', 'The bazaar broker is waiting across the square. Tell him Petra sent you, and hold your head up.'),
       narrate('The career ladder is climbed: egg, hatch, drop out, register, fail, exam, permit, bazaar, monster trainer. You are a monster trainer now.')
     ],
     gradArcEnd: true,
@@ -1708,6 +1778,7 @@
     'hunter_exam_verdict',
     'hunter_exam_retry',
     'hunter_permit',
+    'hunter_permit_cheer',
     'guild_register',
     'guild_register_done',
     'guild_register_guild',
@@ -1904,7 +1975,8 @@
   };
 
   /* Hatch reveal data for the picked egg. The engine hatch screen
-   * reads this to pick the cracked art and the back sprite. */
+   * reads this to pick the cracked art and the front sprite. V9-ART:
+   * the reveal shows the front sprite, facing the player. */
   function hatchReveal(state) {
     var egg = eggById(state && state.starterWildlife);
     return {

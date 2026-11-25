@@ -109,6 +109,10 @@
     mandragora:{ name: 'Mandragora',codex: '029', kind: 'Wildlife', color: '#68b868', accent: '#d8f7c8', speed: 6,  hp: 40, atk: 7, move: 3, sheet: null }
   };
 
+  var STARTER_SHEETS = {
+    Whelp: 'ow_whelp.png', Puk: 'ow_puk.png', Mandragora: 'ow_mandragora.png'
+  };
+
   var ENEMIES = {
     saltwake_a: { name: 'Saltwake Cutthroat', sheet: 'g_saltwake_a.png', color: '#5a7a9a', accent: '#c8dce8', speed: 7, hp: 30, atk: 7, move: 4, job: 'Cutthroat' },
     saltwake_b: { name: 'Saltwake Lookout',   sheet: 'g_saltwake_b.png', color: '#8a6a9a', accent: '#e0c8f0', speed: 8, hp: 26, atk: 6, move: 4, job: 'Lookout' },
@@ -332,7 +336,8 @@
     var names = ['ov3_grid_grass.png', 'ov3_grid_harbor.png', 'ov3_grid_forest.png',
       'ov3_grid_menu.png', 'ov3_grid_turnbar.png', 'ov3_grid_cursor.png', 'ov3_dialog_box_dark.png'];
     var list = ['g_elf.png', 'g_puffkin.png', 'g_elderkin.png', 'g_harefolk.png',
-      'g_drakescale.png', 'g_maren.png', 'g_saltwake_a.png', 'g_saltwake_b.png'];
+      'g_drakescale.png', 'g_maren.png', 'g_saltwake_a.png', 'g_saltwake_b.png',
+      'ow_whelp.png', 'ow_puk.png', 'ow_mandragora.png'];
     list.forEach(function (n) { names.push(n); });
     ['fx_fire.png', 'fx_fira.png', 'fx_firaga.png', 'fx_blizzard.png',
      'fx_thunder.png', 'fx_cure.png', 'fx_holy.png', 'fx_snare_burst.png',
@@ -533,7 +538,99 @@
     ctx.restore();
   }
 
+  /* ------------------------------------------------------------------ */
+  /* V9 starter Wildlife grid animation. Whelp, Puk and Mandragora     */
+  /* fight on their real sprite sheets (ow_*.png) with a real          */
+  /* animation set, instead of the generic token blob: enter (drops    */
+  /* in from above when it steps on the field), idle bob, walk cycle,  */
+  /* attack lunge toward the facing, hit reaction (shake plus white    */
+  /* flash), faint (tips over and sinks). Pose timing comes from       */
+  /* unit.poseT, set in the frame loop the first frame a pose is      */
+  /* seen, so no call site has to change.                              */
+  /* ------------------------------------------------------------------ */
+
+  function drawStarterSprite(ctx, unit, sx, sy, pose, now) {
+    var img = unit.sheetImg || loadImage('ow_puk.png');
+    var dx = 0, dy = 0, bob = 0, rot = 0, alpha = 1, col = 0;
+    var enterP = 1;
+    if (unit.enterT !== undefined) {
+      enterP = clamp((now - unit.enterT) / 600, 0, 1);
+      if (enterP < 1) { dy = -30 * (1 - enterP) * (1 - enterP); }
+    }
+    var poseAge = now - (unit.poseT || now);
+    if (pose === POSE.IDLE) {
+      bob = Math.round(Math.sin(now / 280) * 1.5);
+      col = 0;
+    } else if (pose === POSE.WALK) {
+      col = [0, 1, 2, 1][Math.floor(now / 140) % 4];
+      bob = (col === 1) ? -1 : 0;
+    } else if (pose === POSE.ATTACK || pose === POSE.CAST) {
+      var ap = clamp(poseAge / 220, 0, 1);
+      var lunge = Math.round(8 * Math.sin(ap * Math.PI));
+      if (unit.facing === DIR.RIGHT) { dx = lunge; }
+      else if (unit.facing === DIR.LEFT) { dx = -lunge; }
+      else if (unit.facing === DIR.DOWN) { dy += Math.round(lunge * 0.5); }
+      else { dy -= Math.round(lunge * 0.5); }
+      col = (pose === POSE.CAST) ? 3 : 2;
+    } else if (pose === POSE.HIT) {
+      var hp = clamp(poseAge / 300, 0, 1);
+      if (hp < 1) {
+        dx = (Math.floor(now / 60) % 2 === 0) ? 2 : -2;
+        col = 1;
+      } else {
+        /* Hit reaction over: settle back to the idle bob until this
+         * unit acts again (nothing resets the pose for it). */
+        bob = Math.round(Math.sin(now / 280) * 1.5);
+        col = 0;
+      }
+    } else if (pose === POSE.KO) {
+      var kp = clamp((now - (unit.faintT || now)) / 600, 0, 1);
+      rot = -Math.PI / 2 * kp;
+      dy += Math.round(6 * kp);
+      alpha = 1 - 0.25 * kp;
+      col = 0;
+    }
+    /* Ground shadow, grows in as the starter lands from the enter drop. */
+    ctx.save();
+    ctx.globalAlpha = 0.30 * enterP;
+    ctx.fillStyle = '#000000';
+    ctx.beginPath(); ctx.ellipse(sx, sy + 2, 11, 4, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    /* Side ring, same as the token: blue for the party, red for foes. */
+    ctx.save();
+    ctx.strokeStyle = unit.side === 'player' ? '#3a7ae8' : '#e84a3a';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(sx, sy + 2, 13, 5, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+    if (!imageReady(img)) {
+      drawUnitToken(ctx, unit, sx, sy, bob);
+      return;
+    }
+    var row = Math.min(unit.facing, 3);
+    var mirror = false;
+    if (unit.facing === DIR.LEFT) { row = DIR.RIGHT; mirror = true; }
+    var cx = sx + dx;
+    var cy = sy + dy + bob;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(cx, cy - 10);
+    if (rot !== 0) { ctx.rotate(rot); }
+    if (mirror) { ctx.scale(-1, 1); }
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(img, col * FRAME_W, row * FRAME_H, FRAME_W, FRAME_H, -FRAME_W / 2, -FRAME_H / 2, FRAME_W, FRAME_H);
+    ctx.restore();
+    /* Hit flash: white blink while the hit reaction shakes. */
+    if (pose === POSE.HIT && poseAge < 300 && Math.floor(now / 60) % 2 === 0) {
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(cx - FRAME_W / 2, cy - FRAME_H + 6, FRAME_W, FRAME_H);
+      ctx.restore();
+    }
+  }
+
   function drawUnitSprite(ctx, unit, sx, sy, frame, now) {
+    if (unit.starterSprite) { drawStarterSprite(ctx, unit, sx, sy, frame, now); return; }
     var bob = (frame === POSE.IDLE) ? ((Math.floor(now / 500) % 2 === 0) ? 0 : -1) : 0;
     var img = unit.sheetImg;
     if (!img || img._fed13Missing || !img.complete || img.naturalWidth === 0) {
@@ -615,9 +712,24 @@
       sheet: def.sheet || null,
       sheetImg: def.sheet ? loadSheet(def.sheet) : null,
       pose: POSE.IDLE,
+      poseT: 0,        /* battle clock when the current pose started */
+      enterT: undefined, /* battle clock when the unit stepped on field */
+      fainting: false, /* starter Wildlife only: faint animation still playing */
+      faintT: 0,
       px: 0, py: 0, /* animated pixel position */
       spells: def.spells || ['Fire', 'Cure']
     };
+    /* V9: starter Wildlife fight on their real overworld sheets
+     * (ow_whelp.png, ow_puk.png, ow_mandragora.png: 4 rows of
+     * directions, 4 walk frames, same layout as the g_ sheets), so
+     * every battler has a real animated sprite instead of the token
+     * blob. An explicit sheet on the def still wins. */
+    var starterSheet = STARTER_SHEETS[u.name];
+    if (starterSheet && !u.sheet) {
+      u.sheet = starterSheet;
+      u.sheetImg = loadSheet(starterSheet);
+      u.starterSprite = true;
+    }
     var p = tileToScreen(u.x, u.y);
     u.px = p.x; u.py = p.y;
     return u;
@@ -776,6 +888,8 @@
       roster = makeFirstGridRoster(cfg);
       units = [roster.wildlife, roster.bondkin].concat(roster.foes);
     }
+    var mapImgName = gridMapImage(cfg);
+    var themeName = mapThemeOf({ mapImage: mapImgName });
     return {
       cfg: cfg || {},
       onEnd: (typeof onEnd === 'function') ? onEnd : null,
@@ -796,7 +910,9 @@
       effects: [],          /* { fx, x, y, size, t, dur } */
       log: [],
       weather: (cfg && cfg.weather) || 'none',
-      mapImage: gridMapImage(cfg),
+      mapImage: mapImgName,
+      mapTheme: themeName,
+      terrain: buildTerrain(themeName),
       mapImg: null,
       message: '',
       dialogue: null,       /* { lines: [{speaker, text}], i, done } */
@@ -928,6 +1044,13 @@
   function knockOut(b, unit) {
     unit.alive = false;
     unit.pose = POSE.KO;
+    /* V9: a starter Wildlife plays a faint animation (tips over,
+     * sinks) instead of vanishing at once. It keeps drawing while
+     * fainting; game logic already counts it dead. */
+    if (unit.starterSprite) {
+      unit.fainting = true;
+      unit.faintT = b.animClock;
+    }
     addFloat(b, unit, 'KO', '#ff5a4a');
     log(b, unit.name + ' is knocked out.');
   }
@@ -1018,7 +1141,12 @@
   function openMenu(b, title, items) {
     resetCamPan(b);
     var w = 148;
-    var h = 22 + items.length * 18;
+    /* V9: menus with a description line get 12px more height, and
+     * every menu anchors with its bottom at y 150 so the help strip
+     * (y 152-190) is never covered. */
+    var hasDesc = false;
+    for (var di = 0; di < items.length; di++) { if (items[di].desc) { hasDesc = true; break; } }
+    var h = 22 + items.length * 18 + (hasDesc ? 12 : 0);
     var sel = 0;
     for (var i = 0; i < items.length; i++) { if (!items[i].disabled) { sel = i; break; } }
     b.menu = {
@@ -1026,7 +1154,7 @@
       items: items,
       sel: sel,
       x: SCREEN_W - w - 6,
-      y: SCREEN_H - h - 6,
+      y: 150 - h,
       w: w, h: h
     };
   }
@@ -1123,24 +1251,25 @@
   function openCommandMenu(b, unit) {
     var canCombo = unit.kind === 'Bondkin' && unit.pathPoints >= COMBO_PP_COST;
     openMenu(b, unit.name + ' - Command', [
-      { label: 'Move', disabled: unit.hasMoved, run: function () { startMove(b, unit); } },
-      { label: 'Action', disabled: unit.hasActed, run: function () { openActionMenu(b, unit); } },
+      { label: 'Move', desc: 'Step to a blue tile.', disabled: unit.hasMoved, run: function () { startMove(b, unit); } },
+      { label: 'Action', desc: 'Attack, spells, or heal.', disabled: unit.hasActed, run: function () { openActionMenu(b, unit); } },
       { label: 'Combo' + (canCombo ? ' (' + COMBO_PP_COST + ' PP)' : ' (Bondkin only)'),
+        desc: 'Team attack. Costs 2 PP.',
         disabled: unit.hasActed || !canCombo,
         run: function () { startCombo(b, unit); } },
-      { label: 'Wait', run: function () { endActiveTurn(b, true); } }
+      { label: 'Wait', desc: 'End this turn now.', run: function () { endActiveTurn(b, true); } }
     ]);
   }
 
   function openActionMenu(b, unit) {
     var items = [
-      { label: 'Attack', run: function () { startTargeting(b, unit, { kind: 'attack', name: 'Attack', range: 1, fx: 'fx_slash' }); } },
-      { label: 'Fire - 8 MP', disabled: unit.mp < COST_BASIC, run: function () { startTargeting(b, unit, { kind: 'spell', name: 'Fire', cost: COST_BASIC, range: 3, fx: 'fx_fire', power: 14 }); } },
-      { label: 'Fira - 12 MP', disabled: unit.mp < COST_MID, run: function () { startTargeting(b, unit, { kind: 'spell', name: 'Fira', cost: COST_MID, range: 3, fx: 'fx_fira', power: 20 }); } },
-      { label: 'Cure - 8 MP', disabled: unit.mp < COST_BASIC, run: function () { startTargeting(b, unit, { kind: 'cure', name: 'Cure', cost: COST_BASIC, range: 3, fx: 'fx_cure', power: 16 }); } }
+      { label: 'Attack', desc: 'Hit a foe next to you.', run: function () { startTargeting(b, unit, { kind: 'attack', name: 'Attack', range: 1, fx: 'fx_slash' }); } },
+      { label: 'Fire - 8 MP', desc: 'Fire damage, range 3.', disabled: unit.mp < COST_BASIC, run: function () { startTargeting(b, unit, { kind: 'spell', name: 'Fire', cost: COST_BASIC, range: 3, fx: 'fx_fire', power: 14 }); } },
+      { label: 'Fira - 12 MP', desc: 'Strong fire, range 3.', disabled: unit.mp < COST_MID, run: function () { startTargeting(b, unit, { kind: 'spell', name: 'Fira', cost: COST_MID, range: 3, fx: 'fx_fira', power: 20 }); } },
+      { label: 'Cure - 8 MP', desc: 'Heal an ally, range 3.', disabled: unit.mp < COST_BASIC, run: function () { startTargeting(b, unit, { kind: 'cure', name: 'Cure', cost: COST_BASIC, range: 3, fx: 'fx_cure', power: 16 }); } }
     ];
     openMenu(b, 'Action', items.concat([
-      { label: 'Back', run: function () { openCommandMenu(b, unit); } }
+      { label: 'Back', desc: 'Back to commands.', run: function () { openCommandMenu(b, unit); } }
     ]));
   }
 
@@ -1550,6 +1679,236 @@
   /* Rendering: bottom screen                                            */
   /* ------------------------------------------------------------------ */
 
+  /* ------------------------------------------------------------------ */
+  /* V9 GRID MAP REDESIGN. The old map was a translucent checkerboard */
+  /* wash over the background image: flat, no terrain variety, no     */
+  /* border. The field is now real per-tile terrain, drawn opaque     */
+  /* over the background image (whose bushes and trees still frame    */
+  /* the edges), with a shaded bevel on every tile and a bordered     */
+  /* field outline. Terrain is visual only: move and attack ranges    */
+  /* ignore it, so coordinates and ranges work exactly as before.     */
+  /* Layout is deterministic (hash of x and y), so the same map       */
+  /* always looks the same. Grass map: grass, dirt path, stones,      */
+  /* flowers. Harbor map: water along the top edge, wooden planks     */
+  /* where the party deploys, stone quay, cobbles. Forest map: moss,  */
+  /* dirt path, mushrooms, stones.                                     */
+  /* ------------------------------------------------------------------ */
+
+  function mapThemeOf(b) {
+    var img = (b && b.mapImage) || '';
+    if (img.indexOf('harbor') >= 0) { return 'harbor'; }
+    if (img.indexOf('forest') >= 0) { return 'forest'; }
+    return 'grass';
+  }
+
+  function terrainHash(x, y) {
+    return ((x * 31 + y * 17 + 11) % 100 + 100) % 100;
+  }
+
+  var TERRAIN_PATH_GRASS = { '2,0': true, '2,1': true, '2,2': true, '3,2': true, '3,3': true, '3,4': true, '4,4': true, '4,5': true };
+  var TERRAIN_PATH_FOREST = { '1,0': true, '1,1': true, '2,1': true, '2,2': true, '3,3': true, '4,3': true, '4,4': true, '5,5': true };
+
+  function buildTerrain(theme) {
+    var t = [];
+    for (var y = 0; y < GRID_N; y++) {
+      var row = [];
+      for (var x = 0; x < GRID_N; x++) {
+        var h = terrainHash(x, y);
+        var kind;
+        if (theme === 'harbor') {
+          if (y === 0) { kind = 'water'; }
+          else if (x <= 1) { kind = 'plank'; }
+          else if (h % 11 === 0) { kind = 'stone'; }
+          else { kind = 'quay'; }
+        } else if (theme === 'forest') {
+          if (TERRAIN_PATH_FOREST[key(x, y)]) { kind = 'dirt'; }
+          else if (h % 8 === 0) { kind = 'mushroom'; }
+          else if (h % 10 === 0) { kind = 'stone'; }
+          else { kind = 'moss'; }
+        } else {
+          if (TERRAIN_PATH_GRASS[key(x, y)]) { kind = 'dirt'; }
+          else if (h % 7 === 0) { kind = 'stone'; }
+          else if (h % 9 === 0) { kind = 'flower'; }
+          else { kind = 'grass'; }
+        }
+        row.push(kind);
+      }
+      t.push(row);
+    }
+    return t;
+  }
+
+  function terrainBase(kind, x, y) {
+    var shade = (x + y) % 2 === 0;
+    if (kind === 'grass') { return shade ? '#58b848' : '#4da33f'; }
+    if (kind === 'dirt') { return '#a8793f'; }
+    if (kind === 'stone') { return '#8d8d96'; }
+    if (kind === 'flower') { return shade ? '#58b848' : '#4da33f'; }
+    if (kind === 'moss') { return shade ? '#3f7d38' : '#376e31'; }
+    if (kind === 'mushroom') { return shade ? '#3f7d38' : '#376e31'; }
+    if (kind === 'water') { return '#3a7ac8'; }
+    if (kind === 'plank') { return shade ? '#8a6a3a' : '#7d5f33'; }
+    if (kind === 'quay') { return shade ? '#7d7d88' : '#71717c'; }
+    return '#58b848';
+  }
+
+  function diamondPath(ctx, x, y) {
+    var p = tileToScreen(x, y);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x + TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y + TILE_H);
+    ctx.lineTo(p.x - TILE_W / 2, p.y + TILE_H / 2);
+    ctx.closePath();
+    return p;
+  }
+
+  function drawTerrainTile(ctx, x, y, kind) {
+    var p = diamondPath(ctx, x, y);
+    ctx.fillStyle = terrainBase(kind, x, y);
+    ctx.fill();
+    var h = terrainHash(x, y);
+    ctx.save();
+    ctx.clip();
+    /* Faceted depth: light north face, shaded south face. */
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    ctx.beginPath();
+    ctx.moveTo(p.x - TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y);
+    ctx.lineTo(p.x + TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y + TILE_H / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.beginPath();
+    ctx.moveTo(p.x - TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y + TILE_H);
+    ctx.lineTo(p.x + TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y + TILE_H / 2);
+    ctx.closePath();
+    ctx.fill();
+    /* Per-kind detail, placed by the tile hash so it never moves. */
+    if (kind === 'grass' || kind === 'moss') {
+      ctx.strokeStyle = kind === 'grass' ? 'rgba(20,90,20,0.55)' : 'rgba(10,50,15,0.6)';
+      ctx.lineWidth = 1;
+      var bx = p.x - 6 + (h % 9);
+      var by = p.y + 5 + (h % 5);
+      ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx - 1, by - 3); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(bx + 4, by + 1); ctx.lineTo(bx + 5, by - 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(bx + 8, by); ctx.lineTo(bx + 9, by - 3); ctx.stroke();
+    } else if (kind === 'dirt') {
+      ctx.fillStyle = 'rgba(60,35,10,0.5)';
+      ctx.fillRect(p.x - 7 + (h % 6), p.y + 6, 2, 2);
+      ctx.fillRect(p.x + 2 + (h % 5), p.y + 9, 2, 2);
+      ctx.fillRect(p.x - 1, p.y + 4 + (h % 4), 2, 2);
+      ctx.strokeStyle = 'rgba(120,80,35,0.6)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p.x - 8, p.y + 10); ctx.lineTo(p.x + 6, p.y + 7); ctx.stroke();
+    } else if (kind === 'stone') {
+      ctx.strokeStyle = 'rgba(40,40,48,0.7)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(p.x - 6, p.y + 6);
+      ctx.lineTo(p.x - 1, p.y + 9);
+      ctx.lineTo(p.x + 5, p.y + 6);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillRect(p.x - 5, p.y + 4, 3, 2);
+    } else if (kind === 'flower') {
+      var petal = (h % 2 === 0) ? '#ff7ab8' : '#ffd23a';
+      ctx.strokeStyle = '#2a6a2a';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p.x - 2, p.y + 11); ctx.lineTo(p.x - 2, p.y + 6); ctx.stroke();
+      ctx.fillStyle = petal;
+      ctx.fillRect(p.x - 4, p.y + 4, 2, 2);
+      ctx.fillRect(p.x - 1, p.y + 3, 2, 2);
+      ctx.fillRect(p.x - 4, p.y + 7, 2, 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(p.x - 3, p.y + 5, 2, 2);
+    } else if (kind === 'mushroom') {
+      ctx.fillStyle = '#e8e0c8';
+      ctx.fillRect(p.x - 1, p.y + 7, 2, 4);
+      ctx.fillStyle = '#e84a3a';
+      ctx.beginPath(); ctx.arc(p.x, p.y + 7, 4, Math.PI, 0); ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(p.x - 2, p.y + 4, 1, 1);
+      ctx.fillRect(p.x + 1, p.y + 5, 1, 1);
+    } else if (kind === 'water') {
+      ctx.strokeStyle = 'rgba(190,225,255,0.8)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(p.x - 4, p.y + 7, 3, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+      ctx.beginPath(); ctx.arc(p.x + 5, p.y + 10, 3, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+      ctx.strokeStyle = 'rgba(20,60,120,0.5)';
+      ctx.beginPath(); ctx.moveTo(p.x - 9, p.y + 12); ctx.lineTo(p.x + 9, p.y + 12); ctx.stroke();
+    } else if (kind === 'plank') {
+      ctx.strokeStyle = 'rgba(60,42,18,0.7)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p.x - 11, p.y + 6); ctx.lineTo(p.x + 11, p.y + 6); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.x - 11, p.y + 11); ctx.lineTo(p.x + 11, p.y + 11); ctx.stroke();
+      ctx.fillStyle = 'rgba(40,28,10,0.8)';
+      ctx.fillRect(p.x - 8, p.y + 4, 1, 1);
+      ctx.fillRect(p.x + 7, p.y + 9, 1, 1);
+    } else if (kind === 'quay') {
+      ctx.strokeStyle = 'rgba(40,40,48,0.55)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y + 2); ctx.lineTo(p.x, p.y + 14); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.x - 12, p.y + 8); ctx.lineTo(p.x + 12, p.y + 8); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      ctx.fillRect(p.x - 6, p.y + 4, 3, 2);
+    }
+    ctx.restore();
+    /* Beveled tile edges: light on the north edges, dark on the south. */
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(p.x - TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y);
+    ctx.lineTo(p.x + TILE_W / 2, p.y + TILE_H / 2);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,0.40)';
+    ctx.beginPath();
+    ctx.moveTo(p.x - TILE_W / 2, p.y + TILE_H / 2);
+    ctx.lineTo(p.x, p.y + TILE_H);
+    ctx.lineTo(p.x + TILE_W / 2, p.y + TILE_H / 2);
+    ctx.stroke();
+  }
+
+  function drawFieldBorder(ctx, theme) {
+    var top = tileToScreen(0, 0);
+    var right = tileToScreen(GRID_N - 1, 0);
+    var bottom = tileToScreen(GRID_N - 1, GRID_N - 1);
+    var left = tileToScreen(0, GRID_N - 1);
+    var pts = [
+      [top.x, top.y],
+      [right.x + TILE_W / 2, right.y + TILE_H / 2],
+      [bottom.x, bottom.y + TILE_H],
+      [left.x - TILE_W / 2, left.y + TILE_H / 2]
+    ];
+    function trace() {
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var i = 1; i < pts.length; i++) { ctx.lineTo(pts[i][0], pts[i][1]); }
+      ctx.closePath();
+    }
+    /* Drop shadow under the field, so the field sits on the map. */
+    ctx.save();
+    ctx.translate(0, 3);
+    trace();
+    ctx.fillStyle = 'rgba(0,0,0,0.30)';
+    ctx.fill();
+    ctx.restore();
+    /* Dark outer border, then a thin gold inner line. */
+    var edge = theme === 'harbor' ? '#16242e' : (theme === 'forest' ? '#12240f' : '#1e3a1a');
+    trace();
+    ctx.strokeStyle = edge;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    trace();
+    ctx.strokeStyle = 'rgba(255,233,138,0.85)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
   function drawTile(ctx, x, y, fill, stroke) {
     var p = tileToScreen(x, y);
     ctx.beginPath();
@@ -1595,14 +1954,21 @@
       }
     }
 
-    /* Deployment tiles stay green while placing. */
-    var showDeploy = b.phase === 'deploy';
+    /* V9 terrain: opaque per-tile terrain over the background image,
+     * with a bordered field outline. Deployment tiles get a green
+     * tint over the terrain instead of replacing it. */
     for (var x = 0; x < GRID_N; x++) {
       for (var y = 0; y < GRID_N; y++) {
-        var isDeploy = showDeploy && x <= 1;
-        var base = (x + y) % 2 === 0 ? 'rgba(90,180,90,0.55)' : 'rgba(70,150,70,0.55)';
-        if (isDeploy) { base = 'rgba(60,200,80,0.75)'; }
-        drawTile(ctx, x, y, base, 'rgba(0,0,0,0.25)');
+        var kind = (b.terrain && b.terrain[y] && b.terrain[y][x]) || 'grass';
+        drawTerrainTile(ctx, x, y, kind);
+      }
+    }
+    drawFieldBorder(ctx, b.mapTheme || 'grass');
+    if (b.phase === 'deploy') {
+      for (var dx = 0; dx < GRID_N; dx++) {
+        for (var dy = 0; dy < GRID_N; dy++) {
+          if (dx <= 1) { drawTile(ctx, dx, dy, 'rgba(60,200,80,0.45)', null); }
+        }
       }
     }
 
@@ -1646,8 +2012,9 @@
       }
     }
 
-    /* Units, sorted by tile depth so nearer units draw over farther ones. */
-    var drawList = b.units.filter(function (u) { return u.alive && !u.offField; });
+    /* Units, sorted by tile depth so nearer units draw over farther ones.
+     * A fainting starter Wildlife keeps drawing through its faint animation. */
+    var drawList = b.units.filter(function (u) { return (u.alive || u.fainting) && !u.offField; });
     drawList.sort(function (a, c) { return (a.x + a.y) - (c.x + c.y); });
     drawList.forEach(function (u) {
       drawUnitSprite(ctx, u, u.px, u.py + 8, u.pose, now);
@@ -1662,8 +2029,9 @@
       }
     });
 
-    /* KO markers for fallen units stay visible on their tile. */
-    b.units.filter(function (u) { return !u.alive && !u.offField; }).forEach(function (u) {
+    /* KO markers for fallen units stay visible on their tile, once the
+     * faint animation has finished. */
+    b.units.filter(function (u) { return !u.alive && !u.fainting && !u.offField; }).forEach(function (u) {
       var p = tileToScreen(u.x, u.y);
       drawText(ctx, 'KO', p.x - 8, p.y + 4, '#ff5a4a', true, 9);
     });
@@ -1694,11 +2062,10 @@
     ctx.restore();
 
     /* Battle log strip. Top of the bottom screen, in its own dedicated
-     * strip, clear of the menus: every menu sits at x >= 102 and
-     * y >= 74 (Action menu, 5 items, is the highest at y 74), so this
-     * strip (y 0-26, full width) never intersects any menu rect. The
-     * grid starts at GRID_OY 50, so no unit chrome reaches the strip.
-     * The message wraps by measured width to at most two lines, so a
+     * strip, clear of the menus: menus anchor with their bottom at
+     * y 150, so the highest menu top (5-item Action menu, y 26) only
+     * touches the bottom edge of this strip (y 0-26), never covering
+     * it. The message wraps by measured width to at most two lines, so a
      * long hint is never sliced mid-word: the old 52-char slice cut
      * the deployment hint off at "Press" and the single line was
      * drawn at y 10 with the ambient 'top' baseline, hanging below
@@ -1725,8 +2092,14 @@
     if (logLine && logDrawn < 2) { drawText(ctx, logLine, 4, logY, '#ffffff', false, 8); }
     ctx.restore();
 
-    /* Command menu. */
+    /* Command menu. Menus anchor with their bottom at y 150, above
+     * the help strip, so the strip is never covered. */
     if (b.menu) { drawMenu(ctx, b.menu); }
+
+    /* V9 control help strip: every grid control in plain words,
+     * always on screen at the bottom of the field. Drawn last so
+     * no menu or banner can cover it. */
+    drawHelpStrip(ctx);
 
     /* Win and lose banners. */
     if (b.phase === 'won' || b.phase === 'lost') {
@@ -1745,6 +2118,27 @@
       ctx.restore();
       drawText(ctx, b.phase === 'won' ? 'The harbor is safe.' : 'The party has fallen.', 78, 102, '#ffffff', false, 8);
     }
+  }
+
+  /* V9 control help strip. Every grid control in plain words, on
+   * the bottom screen below the field (y 152-190, the field ends at
+   * y 146), so the player never has to guess. Drawn last in
+   * drawBottomScreen so it is always visible. */
+  function drawHelpStrip(ctx) {
+    ctx.fillStyle = 'rgba(8,10,18,0.88)';
+    ctx.fillRect(0, 152, SCREEN_W, 40);
+    ctx.strokeStyle = '#ffe98a';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, 152.5); ctx.lineTo(SCREEN_W, 152.5); ctx.stroke();
+    ctx.save();
+    ctx.font = '8px monospace';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('Arrows/WASD: move cursor  A/Enter: select  B: back', 4, 156);
+    ctx.fillText('X: menu  Start: end deployment  F: speed 1x/2x/4x', 4, 167);
+    ctx.fillStyle = '#a8c8e8';
+    ctx.fillText('Tap a tile to move. Tap a unit, then a green tile.', 4, 178);
+    ctx.restore();
   }
 
   function drawWeather(ctx, b, now) {
@@ -1794,6 +2188,15 @@
       }
       drawText(ctx, item.label, m.x + 6, y + 8, item.disabled ? '#666a78' : '#ffffff', false, 8);
     });
+    /* V9: one-line description of the selected command, so every
+     * menu label explains itself. */
+    var selItem = m.items[m.sel];
+    if (selItem && selItem.desc) {
+      var descY = m.y + 20 + m.items.length * 18;
+      ctx.strokeStyle = '#5a7ab8';
+      ctx.beginPath(); ctx.moveTo(m.x + 4, descY - 2); ctx.lineTo(m.x + m.w - 4, descY - 2); ctx.stroke();
+      drawText(ctx, selItem.desc, m.x + 6, descY + 8, '#ffe98a', false, 8);
+    }
   }
 
   /* ------------------------------------------------------------------ */
@@ -2081,6 +2484,9 @@
           if (u.y >= GRID_N) { u.y = GRID_N - 1; }
           var p = tileToScreen(u.x, u.y);
           u.px = p.x; u.py = p.y;
+          /* V9: deployment is when the player first sees the field,
+           * so the enter animation replays here. */
+          u.enterT = b.animClock;
         }
       });
       log(b, 'Deployment: tap a unit, then tap a green tile. Press Start when ready.');
@@ -2297,6 +2703,10 @@
         b.effects.forEach(function (e) { e.t += sdt; });
         b.effects = b.effects.filter(function (e) { return e.t < e.dur; });
         b.units.forEach(function (u) {
+          /* V9 animation clocks: pose start, field entry, faint end. */
+          if (u.enterT === undefined && u.alive && !u.offField) { u.enterT = b.animClock; }
+          if (u.pose !== u._lastPose) { u._lastPose = u.pose; u.poseT = b.animClock; }
+          if (u.fainting && b.animClock - u.faintT > 600) { u.fainting = false; }
           var diff = u.hp - dispHp(u);
           if (diff !== 0) {
             var step = Math.max(1, Math.abs(diff) * sdt / 220);

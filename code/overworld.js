@@ -1443,6 +1443,9 @@
       var t = Math.min(1, p.moveT / STEP_MS);
       p.px = (p.fromX + (p.toX - p.fromX) * t) * TILE;
       p.py = (p.fromY + (p.toY - p.fromY) * t) * TILE;
+      // V9-WALK: the auto walk uses the same leg cycle as a manual
+      // walk, so the sprite walks instead of gliding on the idle pose.
+      p.frame = walkCycleFrame(p.moveT);
       if (t >= 1) {
         p.moving = false;
         p.px = p.toX * TILE;
@@ -1471,6 +1474,24 @@
     if (w.moveT < STEP_MS) return;
     w.moveT = 0;
     tryStep('down');
+  }
+  // V9-ROADWALK: A skips the auto walk. The player is put at the
+  // walk's own end tile, then finishRoadWalk runs, so a skip lands
+  // in exactly the end state a full walk reaches: road (9,13),
+  // field mode, roadWalkDone true, then the normal story handoff.
+  // Any open waypoint dialogue is closed without its afterClose,
+  // so nothing later flips the mode back to roadwalk.
+  function skipRoadWalk() {
+    if (!state.roadWalk) return false;
+    state.dialogue = null;
+    var p = state.player;
+    p.x = ROAD_DOWN.roadWalk.pathX;
+    p.y = ROAD_DOWN.roadWalk.toY;
+    p.fromX = p.x; p.fromY = p.y; p.toX = p.x; p.toY = p.y;
+    p.px = p.x * TILE; p.py = p.y * TILE;
+    p.moving = false; p.moveT = 0; p.frame = 0; p.dir = 'down';
+    finishRoadWalk();
+    return true;
   }
   function finishRoadWalk() {
     state.roadWalk = null;
@@ -1846,6 +1867,12 @@
     }
     if (state.mode === 'roadwalk') {
       if (KEY_DIRS[code]) { e.preventDefault(); }
+      // V9-ROADWALK: A skips the auto walk. Directions stay locked
+      // while the walk runs, but the player is never stuck in it.
+      else if (code === 'Enter' || code === 'Space' || code === 'KeyZ') {
+        skipRoadWalk();
+        e.preventDefault();
+      }
       return;
     }
     // FIX: arrows and W/S in the menu used to fall into the held-dir
@@ -1929,7 +1956,12 @@
       if (a === 'confirm') { advanceCinematic(); return true; }
       return false;
     }
-    if (state.mode === 'roadwalk') return false;
+    // V9-ROADWALK: A (on-screen button or key) skips the auto walk.
+    // Directions stay locked while the walk runs.
+    if (state.mode === 'roadwalk') {
+      if (a === 'confirm') { skipRoadWalk(); return true; }
+      return false;
+    }
     if (a === 'up' || a === 'down' || a === 'left' || a === 'right') {
       if (state.mode === 'menu') {
         if (a === 'up') state.menuIndex = (state.menuIndex + MENU_ITEMS.length - 1) % MENU_ITEMS.length;
@@ -1980,6 +2012,16 @@
     return null;
   }
 
+  // V9-WALK: the walk cycle frame for a step in progress. The two
+  // step poses alternate every half step, driven by elapsed step
+  // time, so the legs keep moving for the whole step and across
+  // chained steps. The old code froze one pose per tile and
+  // snapped back to the idle frame at every tile edge, and every
+  // fourth step showed the idle pose mid-walk.
+  function walkCycleFrame(moveT) {
+    return (Math.floor(moveT / (STEP_MS / 2)) % 2 === 0) ? 1 : 2;
+  }
+
   // Movement: tile by tile, smooth pixel interpolation, 3-frame walk.
   function tryStep(dir) {
     var p = state.player;
@@ -1997,8 +2039,10 @@
     p.fromX = p.x; p.fromY = p.y; p.toX = nx; p.toY = ny;
     p.x = nx; p.y = ny;
     p.moving = true; p.moveT = 0;
-    p.stepPhase = (p.stepPhase + 1) % WALK_FRAMES.length;
-    p.frame = WALK_FRAMES[p.stepPhase];
+    // V9-WALK: the first step pose at once, so no idle frame ever
+    // shows while a step is in progress. updatePlayer and
+    // updateRoadWalk keep cycling frames 1 and 2 from here.
+    p.frame = 1;
     return true;
   }
 
@@ -2007,12 +2051,20 @@
     if (p.moving) {
       p.moveT += dt;
       var t = Math.min(1, p.moveT / STEP_MS);
-      p.px = (p.fromX + (p.toX - p.fromX) * t) * TILE;
-      p.py = (p.fromY + (p.toY - p.fromY) * t) * TILE;
+      // V9-WALK: gentle ease in and out of each step, so the sprite
+      // slows into each tile instead of stopping dead at the edge.
+      var te = t * t * (3 - 2 * t);
+      p.px = (p.fromX + (p.toX - p.fromX) * te) * TILE;
+      p.py = (p.fromY + (p.toY - p.fromY) * te) * TILE;
+      // V9-WALK: legs animate for the whole step, not one frozen pose.
+      p.frame = walkCycleFrame(p.moveT);
       if (t >= 1) {
         p.moving = false;
         p.px = p.toX * TILE; p.py = p.toY * TILE;
-        p.frame = 0;
+        // V9-WALK: only settle to the idle frame when no movement
+        // input is left. A held key chains into the next step, and
+        // the legs must not snap to standing between tiles.
+        if (!state.pressDir && !heldDirection()) p.frame = 0;
         var exited = tryExit();
         // Touch trigger: only when the step ends on this map in field
         // mode. A map transition or a gate dialogue skips it.
@@ -2023,6 +2075,12 @@
     // A queued on-screen press steps exactly once, then clears, so a
     // tap never holds a direction. Keyboard held keys still step
     // through heldDirection when no press is queued.
+    // V9-WALK: standing still always shows the idle frame. A step
+    // that ends while a key is held keeps its step pose, and if the
+    // key is lifted in the gap before the next step starts, nothing
+    // would otherwise reset the pose, so the sprite would stand
+    // frozen mid-stride. This line closes that gap.
+    if (!state.pressDir && !heldDirection()) p.frame = 0;
     var dir = null;
     if (state.pressDir) { dir = state.pressDir; state.pressDir = null; }
     else dir = heldDirection();
@@ -2593,6 +2651,27 @@
     ctx.restore();
   }
 
+  // V9-ROADWALK: hint pill shown while the pilgrim road auto walk
+  // runs and during its waypoint dialogues. The walk locks all
+  // movement, so the player is told it is automatic and what A
+  // does, instead of the controls looking broken. Mid-walk it sits
+  // on the same strip as the field hint (y168); during a waypoint
+  // dialogue it sits just above the text box.
+  function drawRoadWalkHint(ctx, y, text) {
+    ctx.save();
+    ctx.font = '9px monospace';
+    ctx.textBaseline = 'top';
+    var w = ctx.measureText(text).width;
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fillRect(4, y, w + 10, 13);
+    ctx.strokeStyle = '#d9a441';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(4.5, y + 0.5, w + 9, 12);
+    ctx.fillStyle = '#ffe9a8';
+    ctx.fillText(text, 9, y + 2);
+    ctx.restore();
+  }
+
   function drawDpadHint(ctx) {
     ctx.save();
     /* HINT-FIX: the old draw sat at VIEW_H - 12, on the bottom
@@ -2880,6 +2959,15 @@
       drawTextBox(ctx, d.lines, d.index, d.shown);
     }
     if (state.mode === 'field') drawDpadHint(ctx);
+    // V9-ROADWALK: the auto walk hint, mid-walk and during its
+    // waypoint dialogues. A advances a waypoint dialogue, so the
+    // dialogue hint says continue; mid-walk A skips the walk.
+    if (state.roadWalk && state.mode === 'roadwalk') {
+      drawRoadWalkHint(ctx, VIEW_H - 24, 'Auto walk. Press A to skip.');
+    }
+    if (state.roadWalk && state.mode === 'dialogue' && state.dialogue) {
+      drawRoadWalkHint(ctx, VIEW_H - 52 - 4 - 18, 'Auto walk. Press A to continue.');
+    }
   }
 
   function loop(t) {

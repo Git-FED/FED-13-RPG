@@ -190,11 +190,11 @@
      Arc partner names are the story draft names in story.js NAMES_DRAFT.
      Greetings are the story draft greetings, quoted on the showcase. */
   var BLOODLINES = [
-    { id: 'elf', num: '001', name: 'Elf', totem: 'Starwarden', totemTitle: 'guardian of the Elf bloodline', trait: 'Balanced, all special jobs.', reward: 'Starwarden Oath', desc: 'Forest and starlit. Long eared. Totem Spirit Starwarden.', img: 'assets/p_bondkin_elf.png', arc: 'Aelindra', line: 'Long eared, forest and starlit. A balanced wanderer, master of all jobs.', greeting: 'The stars have been watching this road a long time, trainer.' },
-    { id: 'puffkin', num: '002', name: 'Puffkin', totem: 'Brightpom Sovereign', totemTitle: 'master tinkerer of the Puffkin bloodline', trait: 'Magic, fairy.', reward: 'Brightpom Gear', desc: 'Small, bright, clever. Totem Spirit Brightpom Sovereign.', img: 'assets/p_bondkin_puffkin.png', arc: 'Pip', line: 'Small, bright, clever. A master tinkerer from the Tinkerwright Guild.', greeting: 'Oh good, a trainer! I have six ideas and no hands free!' },
-    { id: 'elderkin', num: '003', name: 'Elderkin', totem: 'Quiet Flame Sage', totemTitle: 'keeper of the Elderkin bloodline', trait: 'Magic, strong.', reward: 'Quiet Flame Tome', desc: 'Old, calm, deep magic. Totem Spirit Quiet Flame Sage.', img: 'assets/p_bondkin_elderkin.png', arc: 'Halden', line: 'Old, calm, deep magic. A quiet sage who keeps the old flame lore.', greeting: 'Quiet now. The harbor listens, and so do I.' },
-    { id: 'harefolk', num: '004', name: 'Harefolk', totem: 'Moonhare Matriarch', totemTitle: 'swiftest of the Harefolk bloodline', trait: 'Fighting, fast.', reward: 'Moonhare Flute', desc: 'Swift, sharp, moonlit. Totem Spirit Moonhare Matriarch.', img: 'assets/p_bondkin_harefolk.png', arc: 'Marnie', line: 'Swift, sharp, moonlit. Fastest runners of the deep forest.', greeting: 'You walk like prey that never learned to run. I can fix that.' },
-    { id: 'drakescale', num: '005', name: 'Drakescale', totem: 'Emberwyrm King', totemTitle: 'strongest of the Drakescale bloodline', trait: 'Dragon, tough.', reward: 'Emberwyrm Horn', desc: 'Scaled, hardy, ember born. Totem Spirit Emberwyrm King.', img: 'assets/p_bondkin_drakescale.png', arc: 'Cinder', line: 'Scaled, hardy, ember born. Tough warriors with fire in their blood.', greeting: 'Hmph. Small trainer, loud harbor. Let us see your fire.' }
+    { id: 'elf', num: '001', name: 'Elf', totem: 'Starwarden', totemTitle: 'guardian of the Elf bloodline', trait: 'Balanced, all special jobs.', reward: 'Starwarden Oath', desc: 'Forest and starlit. Long eared. Totem Spirit Starwarden.', img: 'assets/bl_elf.png', arc: 'Aelindra', line: 'Long eared, forest and starlit. A balanced wanderer, master of all jobs.', greeting: 'The stars have been watching this road a long time, trainer.' },
+    { id: 'puffkin', num: '002', name: 'Puffkin', totem: 'Brightpom Sovereign', totemTitle: 'master tinkerer of the Puffkin bloodline', trait: 'Magic, fairy.', reward: 'Brightpom Gear', desc: 'Small, bright, clever. Totem Spirit Brightpom Sovereign.', img: 'assets/bl_puffkin.png', arc: 'Pip', line: 'Small, bright, clever. A master tinkerer from the Tinkerwright Guild.', greeting: 'Oh good, a trainer! I have six ideas and no hands free!' },
+    { id: 'elderkin', num: '003', name: 'Elderkin', totem: 'Quiet Flame Sage', totemTitle: 'keeper of the Elderkin bloodline', trait: 'Magic, strong.', reward: 'Quiet Flame Tome', desc: 'Old, calm, deep magic. Totem Spirit Quiet Flame Sage.', img: 'assets/bl_elderkin.png', arc: 'Halden', line: 'Old, calm, deep magic. A quiet sage who keeps the old flame lore.', greeting: 'Quiet now. The harbor listens, and so do I.' },
+    { id: 'harefolk', num: '004', name: 'Harefolk', totem: 'Moonhare Matriarch', totemTitle: 'swiftest of the Harefolk bloodline', trait: 'Fighting, fast.', reward: 'Moonhare Flute', desc: 'Swift, sharp, moonlit. Totem Spirit Moonhare Matriarch.', img: 'assets/bl_harefolk.png', arc: 'Marnie', line: 'Swift, sharp, moonlit. Fastest runners of the deep forest.', greeting: 'You walk like prey that never learned to run. I can fix that.' },
+    { id: 'drakescale', num: '005', name: 'Drakescale', totem: 'Emberwyrm King', totemTitle: 'strongest of the Drakescale bloodline', trait: 'Dragon, tough.', reward: 'Emberwyrm Horn', desc: 'Scaled, hardy, ember born. Totem Spirit Emberwyrm King.', img: 'assets/bl_drakescale.png', arc: 'Cinder', line: 'Scaled, hardy, ember born. Tough warriors with fire in their blood.', greeting: 'Hmph. Small trainer, loud harbor. Let us see your fire.' }
   ];
 
   /* ---------- Craft Grimoires (hold Crafts, picked at creation) ---------- */
@@ -248,10 +248,14 @@
     { id: 'they', label: 'they', he: 'they', him: 'them', his: 'their' }
   ];
 
+  /* V9-ART: eggs redrawn from scratch (egg9_*.png), each distinct and
+   * matched to what hatches. front is the front-facing hatch reveal
+   * sprite: the reveal shows the Wildlife facing the player, never
+   * its back. hint is the one-line hatch preview shown at the pick. */
   var EGGS = [
-    { id: 'whelp', codex: '002', name: 'Whelp', type: 'Fire', img: 'assets/egg_whelp.png', cracked: 'assets/egg_cracked_whelp.png', back: 'assets/b_whelp_back.png' },
-    { id: 'puk', codex: '104', name: 'Puk', type: 'Flying and Dragon', img: 'assets/egg_puk.png', cracked: 'assets/egg_cracked_puk.png', back: 'assets/b_puk_back.png' },
-    { id: 'mandragora', codex: '029', name: 'Mandragora', type: 'Grass', img: 'assets/egg_mandragora.png', cracked: 'assets/egg_cracked_mandragora.png', back: 'assets/b_mandragora_back.png' }
+    { id: 'whelp', codex: '002', name: 'Whelp', type: 'Fire', img: 'assets/egg9_whelp.png', cracked: 'assets/egg9_cracked_whelp.png', front: 'assets/b_whelp_front.png', back: 'assets/b_whelp_back.png', hint: 'Hatches a Whelp, Fire. A small ember cub, quick to spark.' },
+    { id: 'puk', codex: '104', name: 'Puk', type: 'Flying and Dragon', img: 'assets/egg9_puk.png', cracked: 'assets/egg9_cracked_puk.png', front: 'assets/b_puk_front.png', back: 'assets/b_puk_back.png', hint: 'Hatches a Puk, Flying and Dragon. Fast in the air, proud on the ground.' },
+    { id: 'mandragora', codex: '029', name: 'Mandragora', type: 'Grass', img: 'assets/egg9_mandragora.png', cracked: 'assets/egg9_cracked_mandragora.png', front: 'assets/b_mandragora_front.png', back: 'assets/b_mandragora_back.png', hint: 'Hatches a Mandragora, Grass. A root singer, slow to move, steady to grow.' }
   ];
 
   function hatchEggById(id) {
@@ -536,6 +540,59 @@
     if (cur) { lines.push(cur); }
     return lines;
   }
+  /* DIALOGUE-FIT v9: the box art's cream interior is narrower than the
+   * box rect. Light art 512x128, centre profiles: cream x 32-480,
+   * y 24-104, drawn at 244x58 from x 6 y 128, so canvas cream is
+   * x 15.5-239.6, y 137.1-176.9. The old textX 14 / textW 228 put the
+   * first glyph on the left gold frame and full-width lines on the
+   * right frame, and 4 lines on a 10px step ran descenders past the
+   * cream bottom (10px DejaVu ink runs to y + 11.6). Text now sits
+   * inside the cream: left 30, right 234 (portrait text starts at 64),
+   * first line top 137, 9px step, so 4 lines end at canvas y 175.6.
+   * The dark art's interior is full-bleed, so the same inset fits it.
+   * Worker D's v8 "242.9 edge" was the box rect edge, not the cream,
+   * which is why his portrait lines measured fine while full-width
+   * narration lines still clipped on both sides.
+   * V9 STUD FIX (2026-11-25): left 20 was still wrong. The box art's
+   * corner stud diamond reaches canvas x 25.5 at y 130.7-139.8 on BOTH
+   * arts (its bottom tip sits where line 1's first glyph starts), so
+   * the tail page "single flaw anywhere ever." had its first 's'
+   * clipped by the stud even though ink minX 20 was inside the cream.
+   * The dark art's left frame line also runs to x 18.4 in the text
+   * bands. Left 30 clears the diamond tip by 4.5px on every line
+   * (top and bottom studs share the 25.5 tip). Right 234 clears the
+   * dark art's right ornament, which starts at x 236.7. */
+  var DIALOGUE_TEXT_X = 30;       /* no-portrait left edge, canvas px */
+  var DIALOGUE_TEXT_PORTRAIT_X = 64;
+  var DIALOGUE_TEXT_RIGHT = 234;  /* right edge for every layout */
+  var DIALOGUE_TEXT_Y = 9;        /* first line top, relative to box y */
+  var DIALOGUE_LINE_STEP = 9;
+  var DIALOGUE_MAX_LINES = 4;
+  var DIALOGUE_FONT_SIZES = [10, 9, 8];
+  var measureCanvas = null;
+  function dialogueMeasureCtx() {
+    if (!measureCanvas) { measureCanvas = document.createElement('canvas'); }
+    return measureCanvas.getContext('2d');
+  }
+  function dialogueTextW(portrait) {
+    return DIALOGUE_TEXT_RIGHT - (portrait ? DIALOGUE_TEXT_PORTRAIT_X : DIALOGUE_TEXT_X);
+  }
+  /* Largest size (10, 9, 8) whose wrap of text fits 4 lines, plus the
+   * wrapped lines at that size. Measured with the real font, on an
+   * offscreen context, so the fit never depends on whatever font the
+   * last draw left on a screen context (the v8 lesson). */
+  function fitDialogueText(text, textW) {
+    var mctx = dialogueMeasureCtx();
+    var lines = null;
+    var px = 8;
+    for (var s = 0; s < DIALOGUE_FONT_SIZES.length; s++) {
+      mctx.font = DIALOGUE_FONT_SIZES[s] + 'px monospace';
+      lines = wrapLines(mctx, text, textW);
+      px = DIALOGUE_FONT_SIZES[s];
+      if (lines.length <= DIALOGUE_MAX_LINES) { break; }
+    }
+    return { fontPx: px, lines: lines };
+  }
   function hpColor(hp, maxHp) {
     var r = hp / Math.max(1, maxHp);
     if (r > 0.521) { return '#38b838'; }
@@ -606,6 +663,7 @@
     charsShown: 0,
     done: false,
     onDone: null,
+    fontPx: 10,        /* DIALOGUE-FIT v9: size showText fitted for this call */
     speed: 2,          /* chars per frame at 60 Hz, slow DS text */
     timer: 0,
     speedSetting: 'slow'
@@ -617,7 +675,44 @@
   }
   function showText(lines, portrait, onDone, speaker) {
     if (typeof lines === 'string') { lines = [lines]; }
-    textBox.lines = lines.slice();
+    /* DIALOGUE-FIT v9: fit every line to the cream before it is shown.
+     * Each line is measured at the real text width (portrait or not)
+     * and shrunk 10 to 9 to 8px until it wraps to 4 lines. A line
+     * still longer than 4 visual lines at 8px is split into 4-line
+     * pages, one textBox line per page, so no tail is ever silently
+     * dropped by the draw cap (the old code showed the first 4 wrapped
+     * lines and threw the rest away: the tail of the 194-char creation
+     * narration and the 212-char Petra opener never displayed). A page
+     * types out like any other line: A finishes it, A again turns the
+     * page. Short lines are untouched: one page at 10px. Every page
+     * draws at the call's single fitted size, so the wrap on screen is
+     * the wrap that was fitted. */
+    var textW = dialogueTextW(!!portrait);
+    var fitPx = 10;
+    var perLine = [];
+    for (var li = 0; li < lines.length; li++) {
+      var fit0 = fitDialogueText(lines[li] || '', textW);
+      perLine.push(fit0);
+      if (fit0.fontPx < fitPx) { fitPx = fit0.fontPx; }
+    }
+    var expanded = [];
+    for (var k = 0; k < lines.length; k++) {
+      var fl = perLine[k].lines;
+      if (perLine[k].fontPx !== fitPx) {
+        var mctx = dialogueMeasureCtx();
+        mctx.font = fitPx + 'px monospace';
+        fl = wrapLines(mctx, lines[k] || '', textW);
+      }
+      if (fl.length <= DIALOGUE_MAX_LINES) {
+        expanded.push(lines[k]);
+      } else {
+        for (var p = 0; p < fl.length; p += DIALOGUE_MAX_LINES) {
+          expanded.push(fl.slice(p, p + DIALOGUE_MAX_LINES).join(' '));
+        }
+      }
+    }
+    textBox.lines = expanded.length ? expanded : lines.slice();
+    textBox.fontPx = fitPx;
     textBox.portrait = portrait || null;
     textBox.speaker = speaker || null;
     textBox.lineIndex = 0;
@@ -703,8 +798,13 @@
       }
       ctx.restore();
     }
-    var textX = x + 8;
-    var textW = w - 16;
+    /* DIALOGUE-FIT v9: text sits inside the cream, not the box rect:
+     * left 30, right 234; portrait text starts at 64. The old x + 8 /
+     * w - 16 (14 / 228) put the first glyph on the left gold frame and
+     * full-width lines on the right frame. V9 STUD FIX: left 30 clears
+     * the corner stud diamond (right tip x 25.5, both arts). */
+    var textX = DIALOGUE_TEXT_X;
+    var textW = DIALOGUE_TEXT_RIGHT - DIALOGUE_TEXT_X;
     if (textBox.portrait) {
       var ok = drawImageOrNull(ctx, textBox.portrait, x + 6, y + 6, 44, 44);
       if (!ok) {
@@ -713,8 +813,8 @@
         drawText(ctx, '?', x + 22, y + 18, '#101030', '16px monospace');
       }
       drawPortraitFrame(ctx, x + 6, y + 6, 44, 44);
-      textX = x + 58;
-      textW = w - 66;
+      textX = DIALOGUE_TEXT_PORTRAIT_X;
+      textW = DIALOGUE_TEXT_RIGHT - DIALOGUE_TEXT_PORTRAIT_X;
     }
     var full = textBox.lines[textBox.lineIndex] || '';
     var shown = full.slice(0, textBox.charsShown);
@@ -722,18 +822,22 @@
      * wrapLines used to run before ctx.font was set to 10px, so it
      * measured with whatever font the previous draw left on this
      * context and wrapped lines wider than the box, clipping the
-     * last words at the right edge. A 4th line is allowed so a long
+     * last words at the right edge. DIALOGUE-FIT v9: the size comes
+     * from showText (textBox.fontPx), so the wrap on screen is the
+     * wrap that was fitted, and a 4th line is allowed so a long
      * line is never silently dropped. */
-    ctx.font = '10px monospace';
+    var fontPx = textBox.fontPx || 10;
+    var font = fontPx + 'px monospace';
+    ctx.font = font;
     var wrapped = wrapLines(ctx, shown, textW);
     /* DIALOGUE-LAYOUT-FIX v8-grid-pill: the box art's cream interior
      * is canvas y 137-177 (the art is 512x128 drawn at 244x58, cream
-     * y 20-108), so lines start at y+9 on a 10px step: tops 137, 147,
-     * 157, 167, glyph bottoms inside 177. The old y+8 on a 13px step
-     * put line 1 on the dark top band (its top cut) and line 4 at
-     * 175-187, its lower half cut by the bottom border. */
-    for (var i = 0; i < wrapped.length && i < 4; i++) {
-      drawText(ctx, wrapped[i], textX, y + 9 + i * 10, ink);
+     * y 20-108). DIALOGUE-FIT v9: a 9px step (tops 137, 146, 155, 164)
+     * keeps 4 lines of 10px ink (bottom 175.6) inside the cream; the
+     * old 10px step put line 4 at 167-179, its descenders cut by the
+     * bottom frame. */
+    for (var i = 0; i < wrapped.length && i < DIALOGUE_MAX_LINES; i++) {
+      drawText(ctx, wrapped[i], textX, y + DIALOGUE_TEXT_Y + i * DIALOGUE_LINE_STEP, ink, font);
     }
     /* Continue prompt when the line is complete */
     if (textBox.charsShown >= full.length) {
@@ -1130,16 +1234,58 @@
     ctx.fillRect(0, H - 16, W, 16);
     drawText(ctx, text, 10, H - 14, '#c8c8e8');
   }
+  /* V9-SYS: shared Are you sure? panel. Any screen guarding a
+   * destructive or irreversible action draws this on the bottom
+   * screen: a gold title, plain lines saying exactly what will
+   * happen and what will be lost, then Yes and No. The caller passes
+   * sel defaulted to 1 (No), so an accidental A press backs out
+   * instead of destroying something. B or X also backs out. The
+   * bank sell flow keeps its own two step confirms; this panel is
+   * the same pattern for the other guarded actions, not a second
+   * copy of the sell flow. */
+  var CONFIRM_ITEMS = ['Yes', 'No'];
+  function drawConfirmPanel(ctx, title, lines, sel) {
+    clearScreen(ctx, '#0a0a1e');
+    drawText(ctx, title, 10, 10, '#e8c838', '12px monospace');
+    ctx.font = '10px monospace';
+    var y = 30;
+    for (var i = 0; i < lines.length; i++) {
+      var sub = wrapLines(ctx, lines[i], W - 20);
+      for (var j = 0; j < sub.length; j++) {
+        drawText(ctx, sub[j], 10, y, '#fff');
+        y += 13;
+      }
+    }
+    drawMenuList(ctx, '', CONFIRM_ITEMS, sel, y + 6, false);
+    drawBottomHint(ctx, 'Up/Down pick. A: confirm  B: no');
+  }
   function drawTopBanner(ctx, title, sub) {
     clearScreen(ctx, '#0a0a1e');
-    drawText(ctx, title, 10, 10, '#e8c838', '14px monospace');
-    if (sub) { drawText(ctx, sub, 10, 30, '#c8c8e8'); }
+    drawText(ctx, title, 10, 10, '#e8c838', fitBannerFont(ctx, title, W - 20, 14, 10));
+    if (sub) { drawText(ctx, sub, 10, 30, '#c8c8e8', fitBannerFont(ctx, sub, W - 20, 10, 8)); }
+  }
+  /* DIALOGUE-FIT v9: banner text used to draw unwrapped at a fixed size,
+   * so a long subtitle ran off the right edge of the screen ("Saltquay
+   * guild hall. First card on the bo"). Shrink it to fit in one line
+   * instead; the layout has no room for a second subtitle line.
+   * Returns a font string; leaves ctx.font at the fitted size. */
+  function fitBannerFont(ctx, text, maxW, startPx, minPx) {
+    var px = startPx;
+    while (px > minPx) {
+      ctx.font = px + 'px monospace';
+      if (ctx.measureText(text).width <= maxW) { break; }
+      px--;
+    }
+    return px + 'px monospace';
   }
 
   /* ---------- TITLE SCREEN ---------- */
   var titleSel = 0;
-  var titleMode = 'menu'; /* menu or options */
+  var titleMode = 'menu'; /* menu, options, or confirmNewGame */
   var optionSel = 0;
+  /* V9-SYS: New Game confirm selection. 1 is No, the default, so an
+   * accidental A press keeps the saved game. */
+  var titleConfirmSel = 1;
   var options = { textSpeed: 'slow', sound: true };
 
   function titleItems() {
@@ -1301,6 +1447,22 @@
       drawTitleFrame(ctx);
       return;
     }
+    /* V9-SYS: the New Game confirm replaces the title menu on the
+     * bottom screen. It names the saved trainer and what starting
+     * over costs, and defaults to No. */
+    if (titleMode === 'confirmNewGame') {
+      var savedName = (state && state.trainer && state.trainer.name) ? state.trainer.name : 'your trainer';
+      var savedLv = (state && state.trainer && typeof state.trainer.level === 'number') ? state.trainer.level : 1;
+      /* The panel draws last and clears the screen, so the title
+       * frame never covers its title or first line. Drawing the
+       * frame after the panel hid both behind its ornaments. */
+      drawConfirmPanel(ctx, 'ARE YOU SURE?', [
+        'A saved game exists: ' + savedName + ', Lv ' + savedLv + '.',
+        'A new game replaces it. The saved trainer, party,',
+        'and progress will be lost when the new game saves.'
+      ], titleConfirmSel);
+      return;
+    }
     /* PRESS START: smooth fade in and out instead of a hard on/off blink.
      * The 256x64 art is drawn at 104x26 at y 24. The title frame art
      * covers the top 22 px of the screen, so the old y 8 strip had its
@@ -1341,6 +1503,18 @@
   screens.title = {
     enter: function () { titleSel = 0; titleMode = 'menu'; },
     onPress: function (a) {
+      /* V9-SYS: New Game with a save on file asks first. Yes starts
+       * the new game; No and B go back to the title menu with the
+       * save untouched. */
+      if (titleMode === 'confirmNewGame') {
+        if (a === 'up' || a === 'down') { titleConfirmSel = (titleConfirmSel + 1) % 2; }
+        else if (a === 'cancel') { titleMode = 'menu'; }
+        else if (a === 'confirm' || a === 'start') {
+          if (titleConfirmSel === 0) { startNewGame(); }
+          else { titleMode = 'menu'; }
+        }
+        return;
+      }
       if (titleMode === 'options') {
         if (a === 'up') { optionSel = (optionSel + 2) % 3; }
         else if (a === 'down') { optionSel = (optionSel + 1) % 3; }
@@ -1359,7 +1533,14 @@
       else if (a === 'down') { titleSel = (titleSel + 1) % items.length; }
       else if (a === 'confirm' || a === 'start') {
         var pick = items[titleSel];
-        if (pick === 'New Game') { startNewGame(); }
+        /* V9-SYS: New Game over an existing save asks first. The old
+         * save is only replaced when the new trainer finishes
+         * creation and saves, but the player must know that is what
+         * starting a new game means before the intro plays. */
+        if (pick === 'New Game') {
+          if (hasSave()) { titleMode = 'confirmNewGame'; titleConfirmSel = 1; }
+          else { startNewGame(); }
+        }
         else if (pick === 'Continue') {
           /* ROUND 2 BUG C: Continue in the same page session is a
            * fresh entry, so the overworld loads the save instead of
@@ -1725,6 +1906,12 @@
    * Before this patch the grad arc scenes existed as data only and
    * were never played. */
   var storyPlay = null;
+  /* V9-SYS: egg pick confirm. The picked egg id waits here while the
+   * player answers Yes or No. Selection defaults to No, so an
+   * accidental A press leaves the pick unmade and the choice list
+   * still open. */
+  var storyEggConfirmSel = 1;
+  var storyEggPending = null;
   /* FIX BATCH B1: single story battle consumer. The engine story
    * runner calls it from storyLinesDone; the overworld trigger chain
    * hands its scenes to this same story screen, so both paths run
@@ -1917,6 +2104,17 @@
     var total = 0;
     var shown = 0;
     var res = story.playScene(sceneId, storyStateForEngine(), function (ln, next, sc) {
+      /* V9-SYS: staged scenes pick their beat frame from the line,
+       * the same rule FED13.engine.showDialogue uses. The story
+       * runner passes its own display here, so showDialogue never
+       * runs for story scenes and the staging state would stay
+       * empty forever: the celebration sparkle and the Ghoul beats
+       * would never draw. Set or clear the staging per line. */
+      if (sc && sc.staging && sc.staging.beats && typeof ln.beat === 'number') {
+        setStaging(sc.staging.beats, ln.beat);
+      } else {
+        clearStaging();
+      }
       shown++;
       var portrait = (ln && ln.portrait) || null;
       var who = (ln && ln.speakerName) ? ln.speakerName + ': ' : '';
@@ -1934,6 +2132,53 @@
     total = (res && res.lines) ? res.lines.length : 0;
     if (total === 0) {
       storyLinesDone();
+    }
+  }
+  /* V9-ART: egg pick preview, top screen during the egg_choice
+   * choice phase. All 3 eggs large in a row with name and type under
+   * each, the selected one in a gold frame, and a preview panel below
+   * showing the selected egg's hatched Wildlife FRONT sprite, its
+   * name, Codex number, type, and one-line hatch hint. Nothing here
+   * shows a back sprite: the preview faces the player. */
+  function drawEggPickPreviewTop(ctx) {
+    var sel = (storyPlay && storyPlay.choiceSel) || 0;
+    for (var i = 0; i < EGGS.length; i++) {
+      var x = 16 + i * 84;
+      var ok = drawImageOrNull(ctx, EGGS[i].img, x, 44, 56, 56);
+      if (!ok) {
+        ctx.fillStyle = '#e8c838';
+        ctx.beginPath();
+        ctx.ellipse(x + 8, 52, 20, 24, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (i === sel) {
+        ctx.strokeStyle = '#e8c838';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x - 4, 40, 64, 64);
+      }
+      drawText(ctx, EGGS[i].name, x + 6, 106, i === sel ? '#e8c838' : '#fff');
+      /* Type centred under its egg: "Flying and Dragon" at 8px is
+       * wider than the 84px column, and left aligned it ran into the
+       * next egg's type ("Dragon Grass"). */
+      ctx.font = '8px monospace';
+      var typeW = ctx.measureText(EGGS[i].type).width;
+      drawText(ctx, EGGS[i].type, x + 28 - Math.floor(typeW / 2), 118, '#8888aa', '8px monospace');
+    }
+    var egg = EGGS[sel];
+    ctx.fillStyle = 'rgba(5,5,15,0.72)';
+    ctx.fillRect(6, 130, W - 12, 58);
+    ctx.strokeStyle = '#e8c838';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(7, 131, W - 14, 56);
+    drawImageOrNull(ctx, egg.front, 12, 134, 48, 48);
+    drawText(ctx, 'Hatches: ' + egg.name + ', Codex ' + egg.codex, 66, 137, '#e8c838');
+    drawText(ctx, egg.type, 66, 148, '#fff', '9px monospace');
+    /* Hint wraps to 3 lines: the Puk and Mandragora hints run long,
+     * and the old 2-line cap silently dropped the tail ("ground."). */
+    ctx.font = '9px monospace';
+    var hintLines = wrapLines(ctx, egg.hint, W - 76);
+    for (var h = 0; h < hintLines.length && h < 3; h++) {
+      drawText(ctx, hintLines[h], 66, 159 + h * 11, '#c8c8e8', '9px monospace');
     }
   }
   function drawStoryChoice(ctx, scene, selected) {
@@ -1957,9 +2202,41 @@
         var marker = (j === selected && k === 0) ? '> ' : '  ';
         drawText(ctx, marker + optLines[k], 10, y + k * 12, j === selected ? '#101030' : '#fff');
       }
+      /* V9-ART: egg pick rows carry their egg sprite at the right,
+       * so each option reads as its egg at a glance. */
+      if (scene.id === 'egg_choice') {
+        var eggOpt = hatchEggById(scene.choice.options[j].id);
+        drawImageOrNull(ctx, eggOpt.img, W - 34, y - 2, 20, 20);
+      }
       y += h + 2;
     }
     drawBottomHint(ctx, 'Up and Down to pick. A to confirm.');
+  }
+  /* V9-SYS: the egg pick hatch, run only after the Yes on the egg
+   * confirm panel. Moved here verbatim from the old egg_choice
+   * branch in the choice handler (SCHOOL SCENES FIX v8-grid-pill):
+   * the story choice hook (setStarterWildlife, already run) only
+   * sets state fields, so this does the party push and the hatch
+   * into grad_hatch, exactly as the old egg screen did. */
+  function eggChoiceHatch(eggId) {
+    var egg = hatchEggById(eggId);
+    state.party.push({ kind: 'Wildlife', name: egg.name, codex: egg.codex, type: egg.type, level: 1, hp: 12, maxHp: 12, egg: true, bond: 1 });
+    syncPlayerProfile();
+    setFlag('egg_picked');
+    setFlag('egg_' + egg.id);
+    saveGame();
+    /* V9-ART: the pick confirms visibly before the hatch starts: a
+     * text box with the picked egg as its portrait, naming the egg
+     * and its type. Phase flips to feedback so the text box draws
+     * instead of the choice list. A advances it, then the hatch
+     * sequence plays. */
+    storyPlay.phase = 'feedback';
+    showText(['You picked the ' + egg.name + ' egg, ' + egg.type + '.',
+      'It is warm in your hands. The hatch begins.'], egg.img, function () {
+      playHatchSequence(egg.id, function () {
+        startStoryScene('grad_hatch');
+      });
+    });
   }
   screens.storyScene = {
     enter: function (data) {
@@ -1974,6 +2251,24 @@
     },
     onPress: function (a) {
       if (textBox.active) { return; }
+      /* V9-SYS: egg pick confirm. Up and Down flip Yes and No, B
+       * backs out to the choice list, A on Yes hatches the pending
+       * egg, A on No backs out. Nothing is picked until Yes. */
+      if (storyPlay && storyPlay.phase === 'eggConfirm') {
+        if (a === 'up' || a === 'down') { storyEggConfirmSel = (storyEggConfirmSel + 1) % 2; }
+        else if (a === 'cancel') { storyEggPending = null; storyPlay.phase = 'choice'; }
+        else if (a === 'confirm' || a === 'start') {
+          if (storyEggConfirmSel === 0) {
+            var pendingEgg = storyEggPending;
+            storyEggPending = null;
+            eggChoiceHatch(pendingEgg);
+          } else {
+            storyEggPending = null;
+            storyPlay.phase = 'choice';
+          }
+        }
+        return;
+      }
       if (!storyPlay || storyPlay.phase !== 'choice' || !storyPlay.scene || !storyPlay.scene.choice) { return; }
       var opts = storyPlay.scene.choice.options || [];
       if (!opts.length) { return; }
@@ -1986,20 +2281,13 @@
         try { story.choose(scene.id, opt.id, storyStateForEngine()); } catch (e) {}
         saveGame();
         if (scene.id === 'egg_choice') {
-          /* SCHOOL SCENES FIX v8-grid-pill: the egg screen used to do
-           * the party push and the hatch; the story choice hook
-           * (setStarterWildlife, already run above) only sets state
-           * fields. Do the same push here, then hatch into grad_hatch,
-           * exactly as the old egg screen did. */
-          var egg = hatchEggById(opt.id);
-          state.party.push({ kind: 'Wildlife', name: egg.name, codex: egg.codex, type: egg.type, level: 1, hp: 12, maxHp: 12, egg: true, bond: 1 });
-          syncPlayerProfile();
-          setFlag('egg_picked');
-          setFlag('egg_' + egg.id);
-          saveGame();
-          playHatchSequence(egg.id, function () {
-            startStoryScene('grad_hatch');
-          });
+          /* V9-SYS: the egg pick is the one story choice that cannot
+           * be undone, so it asks first. The pick only hatches when
+           * the player answers Yes on the confirm panel; No returns
+           * to the choice list with nothing picked. */
+          storyEggPending = opt.id;
+          storyEggConfirmSel = 1;
+          storyPlay.phase = 'eggConfirm';
           return;
         }
         if (scene.examQuestion && typeof story.examQuestionFeedback === 'function') {
@@ -2018,7 +2306,7 @@
       }
     },
     update: function () { textUpdate(); },
-    draw: function () {
+    draw: function (t) {
       if (!storyPlay || !storyPlay.scene) { return; }
       var scene = storyPlay.scene;
       clearScreen(topCtx, '#0a0a1e');
@@ -2030,9 +2318,37 @@
       if (scene.location) {
         drawText(topCtx, scene.location, 10, 8 + Math.min(titleLines.length, 2) * 14, '#c8c8e8', '9px monospace');
       }
-      if (scene.background) { drawImageOrNull(topCtx, scene.background, 16, 52, 224, 110); }
+      /* V9-ART: during the egg pick, the top screen is the egg
+       * preview (3 eggs, selected preview panel) instead of the
+       * mountain background. */
+      /* V9-SYS: a staged scene draws its current beat frame under
+       * the title, clipped to the picture area so the title and
+       * location stay readable. The beat carries the background,
+       * sprites, and FX (sparkle for the permit celebration). A
+       * scene without staging, or a line without a beat, falls back
+       * to the plain background image as before. */
+      var staged = (scene.staging && scene.staging.beats) ? currentStagingBeat() : null;
+      if ((storyPlay.phase === 'choice' || storyPlay.phase === 'eggConfirm') && scene.id === 'egg_choice') { drawEggPickPreviewTop(topCtx); }
+      else if (staged) {
+        topCtx.save();
+        topCtx.beginPath();
+        topCtx.rect(0, 40, W, H - 40);
+        topCtx.clip();
+        drawStagingFrame(topCtx, staged, t);
+        topCtx.restore();
+      }
+      else if (scene.background) { drawImageOrNull(topCtx, scene.background, 16, 52, 224, 110); }
       clearScreen(bottomCtx, '#0a0a1e');
-      if (storyPlay.phase === 'choice' && scene.choice) {
+      if (storyPlay.phase === 'eggConfirm') {
+        /* V9-SYS: the egg pick confirm panel. It names the pending
+         * egg and says the pick cannot be changed. */
+        var pendEgg = hatchEggById(storyEggPending);
+        drawConfirmPanel(bottomCtx, 'PICK THIS EGG?', [
+          'The ' + pendEgg.name + ' egg, ' + pendEgg.type + ', will be',
+          'your starter Wildlife. This pick cannot be changed.'
+        ], storyEggConfirmSel);
+        drawTextBox(bottomCtx);
+      } else if (storyPlay.phase === 'choice' && scene.choice) {
         drawStoryChoice(bottomCtx, scene, storyPlay.choiceSel);
       } else {
         drawTextBox(bottomCtx);
@@ -2203,7 +2519,11 @@
       drawText(ctx, dangerLines[i], 78, 108 + i * 11, '#a01818', '9px monospace');
     }
     var pulse = 0.5 + 0.5 * Math.sin((t || 0) / 500);
-    drawText(ctx, 'BOUNTY', 128, 132, '#8a6d00', 'bold 9px monospace');
+    /* DIALOGUE-FIT v9: the label was drawn left-aligned at x 128, so it
+     * sat right of centre over the centred reward below it. Centre it. */
+    ctx.font = 'bold 9px monospace';
+    var bountyW = ctx.measureText('BOUNTY').width;
+    drawText(ctx, 'BOUNTY', 128 - bountyW / 2, 132, '#8a6d00', 'bold 9px monospace');
     ctx.textAlign = 'center';
     ctx.fillStyle = '#8a6d00';
     ctx.font = 'bold 20px monospace';
@@ -2226,12 +2546,24 @@
     if (jobBoardFinePrint) {
       drawText(ctx, 'FINE PRINT', 10, y, '#a8d8f0', 'bold 10px monospace');
       y += 14;
+      /* DIALOGUE-FIT v9: measure with the font that is drawn. The wrap
+       * below used to measure with the bold 10px the label left on the
+       * context; bold monospace advances the same as regular, so this
+       * only locks the assumption in place. */
+      ctx.font = '10px monospace';
       lines = wrapLines(ctx, v.finePrint, W - 20);
       for (i = 0; i < lines.length && i < 6; i++) {
         drawText(ctx, lines[i], 10, y + i * 12, '#c8c8e8');
       }
       y += Math.min(lines.length, 6) * 12 + 4;
-      drawText(ctx, 'Wallet cap 999,999 Cr. This bounty alone lands at 1,000,000 Cr.', 10, y, '#ffe98a', '9px monospace');
+      /* DIALOGUE-FIT v9: this line was drawn unwrapped at 9px, 67 chars
+       * (363px) from x 10, so the 1,000,000 Cr tail ran off the right
+       * edge of the screen. Wrap it at the size it is drawn. */
+      ctx.font = '9px monospace';
+      var walletLines = wrapLines(ctx, 'Wallet cap 999,999 Cr. This bounty alone lands at 1,000,000 Cr.', W - 20);
+      for (i = 0; i < walletLines.length && i < 2; i++) {
+        drawText(ctx, walletLines[i], 10, y + i * 11, '#ffe98a', '9px monospace');
+      }
     } else {
       for (i = 0; i < v.lines.length; i++) {
         var wl = wrapLines(ctx, v.lines[i], W - 20);
@@ -2243,12 +2575,28 @@
       y += 2;
       drawText(ctx, 'STAKES', 10, y, '#e8c838', 'bold 9px monospace');
       y += 12;
+      /* DIALOGUE-FIT v9: the wrap below used to measure with the bold
+       * 9px font the STAKES label left on the context, then draw at
+       * 10px, so lines that measured inside the box drew past its right
+       * edge ("Wildlife from collar control, and open th"). Measure with
+       * the font that is drawn (the v8 lesson, same bug in a new place). */
+      ctx.font = '10px monospace';
       var sl = wrapLines(ctx, v.stakes, W - 20);
       for (i = 0; i < sl.length && i < 3; i++) {
         drawText(ctx, sl[i], 10, y + i * 12, '#c8c8e8');
       }
       y += Math.min(sl.length, 3) * 12 + 4;
-      drawText(ctx, v.trial + '. ' + v.location + '. Posted by the ' + v.postedBy + '.', 10, y, '#8888aa', '9px monospace');
+      /* DIALOGUE-FIT v9: same overflow as the wallet line above (67
+       * chars at 9px is 363px from x 10). Wrap it so it can never run
+       * off the right edge. NOTE: on this card the menu at y 138 draws
+       * over this line's y, so it stays hidden behind the menu until
+       * the card bottom layout is reworked; wrapping it now means it
+       * is at least correct if it ever shows. */
+      ctx.font = '9px monospace';
+      var trialLines = wrapLines(ctx, v.trial + '. ' + v.location + '. Posted by the ' + v.postedBy + '.', W - 20);
+      for (i = 0; i < trialLines.length && i < 2; i++) {
+        drawText(ctx, trialLines[i], 10, y + i * 11, '#8888aa', '9px monospace');
+      }
     }
     if (textBox.active) {
       drawTextBox(ctx);
@@ -3181,12 +3529,16 @@
    * Plays the grad arc hatch for the picked egg. Steps in order:
    * shake (the egg wobbles, 3 beats), crack (cracked egg art when the
    * file is present, else a procedural crack overlay on the whole egg),
-   * flash (white flash, auto), reveal (hatched Wildlife back sprite,
-   * name, Codex number, and type, DS style). A advances shake and
-   * crack. The flash runs on its own, then the reveal text plays, then
-   * the party entry flips from egg to hatched and the onDone callback
-   * runs. The closing lines carry the hunter exam hook, the next step
-   * in the story order after grad_hatch. */
+   * flash (white flash, auto), reveal (hatched Wildlife FRONT sprite,
+   * facing the player, name, Codex number, and type, DS style). A
+   * advances shake and crack. The flash runs on its own, then the
+   * reveal text plays, then the party entry flips from egg to hatched
+   * and the onDone callback runs. The closing lines carry the hunter
+   * exam hook, the next step in the story order after grad_hatch.
+   * V9-ART: the reveal used to show the back sprite, so the player
+   * looked at the Whelp's back. It now shows the front sprite at
+   * every step of the reveal, including the text portrait and the
+   * party entry it creates. */
   var HATCH_FLASH_MS = 450;
   var hatch = { egg: null, phase: 'shake', flashStart: 0, onDone: null };
 
@@ -3234,7 +3586,9 @@
       if (p.name === egg.name && p.egg) {
         p.egg = false;
         p.hatched = true;
-        p.img = egg.back;
+        /* V9-ART: front sprite, facing the player. backImg stays the
+         * back view for any battle back-view use. */
+        p.img = egg.front;
         p.backImg = egg.back;
         break;
       }
@@ -3277,7 +3631,9 @@
       if (hatch.phase === 'flash' && Date.now() - hatch.flashStart >= HATCH_FLASH_MS) {
         hatch.phase = 'reveal';
         var egg = hatch.egg || EGGS[0];
-        showText(hatchRevealLines(egg), egg.back, function () { hatchFinish(); });
+        /* V9-ART: front sprite as the text portrait, so the hatched
+         * Wildlife faces the player while the reveal lines play. */
+        showText(hatchRevealLines(egg), egg.front, function () { hatchFinish(); });
       }
     },
     draw: function (t) {
@@ -3307,10 +3663,11 @@
         topCtx.fillStyle = 'rgba(255,255,255,' + alpha.toFixed(2) + ')';
         topCtx.fillRect(0, 0, W, H);
       } else if (hatch.phase === 'reveal') {
-        /* Hatched Wildlife, back sprite, DS style, with name, Codex
-         * number, and type under it. */
-        var backOk = drawImageOrNull(topCtx, egg.back, 80, 36, 96, 96);
-        if (!backOk) {
+        /* Hatched Wildlife, FRONT sprite facing the player, DS style,
+         * with name, Codex number, and type under it. V9-ART: this
+         * used to draw egg.back, so the Whelp showed its back. */
+        var frontOk = drawImageOrNull(topCtx, egg.front, 80, 36, 96, 96);
+        if (!frontOk) {
           drawImageOrNull(topCtx, egg.img, 96, 64, 64, 64);
         }
         drawText(topCtx, egg.name, 10, 140, '#e8c838', '14px monospace');
@@ -3963,9 +4320,9 @@
     drakescale: { job: 'Warrior', hp: 40, portrait: 'assets/p_bondkin_drakescale.png', sprite: 'assets/g_drakescale.png' }
   };
   var WILDLIFE_PARTY = {
-    whelp: { sprite: 'assets/b_whelp_front.png', portrait: 'assets/p_whelp.png', egg: 'assets/egg_whelp.png' },
-    puk: { sprite: 'assets/b_puk_front.png', portrait: 'assets/p_puk.png', egg: 'assets/egg_puk.png' },
-    mandragora: { sprite: 'assets/b_mandragora_front.png', portrait: 'assets/p_mandragora.png', egg: 'assets/egg_mandragora.png' }
+    whelp: { sprite: 'assets/b_whelp_front.png', portrait: 'assets/p_whelp.png', egg: 'assets/egg9_whelp.png' },
+    puk: { sprite: 'assets/b_puk_front.png', portrait: 'assets/p_puk.png', egg: 'assets/egg9_puk.png' },
+    mandragora: { sprite: 'assets/b_mandragora_front.png', portrait: 'assets/p_mandragora.png', egg: 'assets/egg9_mandragora.png' }
   };
   var ARC_BONDKIN_FALLBACK_NAMES = { elf: 'Aelindra', puffkin: 'Pip', elderkin: 'Halden', harefolk: 'Marnie', drakescale: 'Cinder' };
   function clampBond(v) {
@@ -4984,11 +5341,37 @@
 
   /* ---------- MENU (X) ---------- */
   var menuSel = 0;
-  var MENU_ITEMS = ['Party', 'Bag', 'Grimoire', 'Monster Bank', 'Save', 'Settings'];
+  var MENU_ITEMS = ['Party', 'Bag', 'Grimoire', 'Monster Bank', 'Save', 'Settings', 'Quit to Title'];
+  /* V9-SYS: menu confirm mode. main, confirmSave (overwrite the save
+   * on file), or confirmQuit (quit to title without saving). The
+   * selection defaults to No, so an accidental A press changes
+   * nothing. */
+  var menuMode = 'main';
+  var menuConfirmSel = 1;
   screens.menu = {
-    enter: function () { menuSel = 0; },
+    enter: function () { menuSel = 0; menuMode = 'main'; menuConfirmSel = 1; },
     onPress: function (a) {
       if (textBox.active) { return; }
+      /* V9-SYS: confirm modes eat every press until they resolve.
+       * Up and Down flip Yes and No, B and X back out to the menu,
+       * A on No backs out, A on Yes does the guarded action. */
+      if (menuMode === 'confirmSave' || menuMode === 'confirmQuit') {
+        if (a === 'up' || a === 'down') { menuConfirmSel = (menuConfirmSel + 1) % 2; }
+        else if (a === 'cancel' || a === 'menu') { menuMode = 'main'; }
+        else if (a === 'confirm') {
+          if (menuConfirmSel === 0) {
+            if (menuMode === 'confirmSave') {
+              menuMode = 'main';
+              var ok = saveGame();
+              showText([ok ? 'Saved. Do not turn off the power.' : 'Save failed.'], null, function () { setScreen('menu'); });
+            } else {
+              menuMode = 'main';
+              setScreen('title');
+            }
+          } else { menuMode = 'main'; }
+        }
+        return;
+      }
       if (a === 'up') { menuSel = (menuSel + MENU_ITEMS.length - 1) % MENU_ITEMS.length; }
       else if (a === 'down') { menuSel = (menuSel + 1) % MENU_ITEMS.length; }
       else if (a === 'cancel' || a === 'menu') { setScreen('overworld'); }
@@ -5011,10 +5394,21 @@
           }
         }
         else if (pick === 'Save') {
-          var ok = saveGame();
-          showText([ok ? 'Saved. Do not turn off the power.' : 'Save failed.'], null, function () { setScreen('menu'); });
+          /* V9-SYS: saving over a save on file asks first. First
+           * save of a session has nothing to overwrite, so it saves
+           * straight away. */
+          if (hasSave()) { menuMode = 'confirmSave'; menuConfirmSel = 1; }
+          else {
+            var ok = saveGame();
+            showText([ok ? 'Saved. Do not turn off the power.' : 'Save failed.'], null, function () { setScreen('menu'); });
+          }
         }
         else if (pick === 'Settings') { setScreen('settings', { returnTo: 'menu' }); }
+        else if (pick === 'Quit to Title') {
+          /* V9-SYS: quitting never saves. The confirm says so, and
+           * No or B leaves the player in the game, untouched. */
+          menuMode = 'confirmQuit'; menuConfirmSel = 1;
+        }
       }
     },
     update: function () { textUpdate(); },
@@ -5027,8 +5421,22 @@
        * panel instead of straddling its top gold border or its left
        * gold edge. */
       drawScreenBg(bottomCtx, 'assets/ov3_menu_panel.png');
-      drawMenuList(bottomCtx, '', MENU_ITEMS, menuSel, 38, false, 24);
-      drawBottomHint(bottomCtx, 'X or B: close');
+      if (menuMode === 'confirmSave') {
+        drawConfirmPanel(bottomCtx, 'OVERWRITE SAVE?', [
+          'Your saved game will be replaced by',
+          'this session. The old save cannot',
+          'be brought back.'
+        ], menuConfirmSel);
+      } else if (menuMode === 'confirmQuit') {
+        drawConfirmPanel(bottomCtx, 'QUIT TO TITLE?', [
+          'Any progress since your last save',
+          'will be lost. Quitting does not',
+          'save the game.'
+        ], menuConfirmSel);
+      } else {
+        drawMenuList(bottomCtx, '', MENU_ITEMS, menuSel, 38, false, 24);
+        drawBottomHint(bottomCtx, 'X or B: close');
+      }
       drawTextBox(bottomCtx);
     }
   };
@@ -5110,6 +5518,23 @@
         },
         showMissionCard: showMissionCard,
         getMainMission1Card: getMainMission1Card,
+        /* V9-SYS: read-only verification probe for the Are you sure?
+         * confirms. The driver reads this to assert a panel is open
+         * (title confirmNewGame, menu confirmSave / confirmQuit,
+         * story eggConfirm) and that Cancel / No left it closed. It
+         * reports state only and changes nothing. */
+        confirmState: function () {
+          return {
+            title: titleMode,
+            titleSel: titleConfirmSel,
+            menu: menuMode,
+            menuSel: menuConfirmSel,
+            story: storyPlay ? storyPlay.phase : null,
+            eggSel: storyEggConfirmSel,
+            bank: bankPhase,
+            bankSellId: bankSellId
+          };
+        },
         /* FIX BATCH B1: the one story battle consumer, shared by the
          * engine story runner and the overworld trigger chain. */
         startSceneBattle: dispatchStoryBattle
