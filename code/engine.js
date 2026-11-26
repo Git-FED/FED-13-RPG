@@ -2569,33 +2569,33 @@
         var wl = wrapLines(ctx, v.lines[i], W - 20);
         for (var j = 0; j < wl.length && y < 84; j++) {
           drawText(ctx, wl[j], 10, y, '#ffffff');
-          y += 12;
+          y += 10;
         }
       }
       y += 2;
       drawText(ctx, 'STAKES', 10, y, '#e8c838', 'bold 9px monospace');
-      y += 12;
-      /* DIALOGUE-FIT v9: the wrap below used to measure with the bold
-       * 9px font the STAKES label left on the context, then draw at
-       * 10px, so lines that measured inside the box drew past its right
-       * edge ("Wildlife from collar control, and open th"). Measure with
-       * the font that is drawn (the v8 lesson, same bug in a new place). */
+      y += 11;
+      /* V10-ENGINE-UI item 3: the trial line used to land at y 138,
+       * exactly under the menu (rows start y 138), so the gold
+       * highlight bar hid it. The card bottom is reworked to a
+       * fixed budget: body and stakes at 10px pitch, the trial
+       * strip fixed at y 118 and 128, and the stakes capped to
+       * whatever fits above that strip, so the trial line can
+       * never slide under the menu whatever the card text is.
+       * Trial line 2 ends at 128 + 9 = 137, one pixel above the
+       * menu highlight. Its colour is brightened from dim grey
+       * to readable light blue-grey. */
       ctx.font = '10px monospace';
       var sl = wrapLines(ctx, v.stakes, W - 20);
-      for (i = 0; i < sl.length && i < 3; i++) {
-        drawText(ctx, sl[i], 10, y + i * 12, '#c8c8e8');
+      var stakesRoom = 118 - y;
+      var stakesMax = Math.max(0, Math.min(3, Math.floor(stakesRoom / 10)));
+      for (i = 0; i < sl.length && i < stakesMax; i++) {
+        drawText(ctx, sl[i], 10, y + i * 10, '#c8c8e8');
       }
-      y += Math.min(sl.length, 3) * 12 + 4;
-      /* DIALOGUE-FIT v9: same overflow as the wallet line above (67
-       * chars at 9px is 363px from x 10). Wrap it so it can never run
-       * off the right edge. NOTE: on this card the menu at y 138 draws
-       * over this line's y, so it stays hidden behind the menu until
-       * the card bottom layout is reworked; wrapping it now means it
-       * is at least correct if it ever shows. */
       ctx.font = '9px monospace';
       var trialLines = wrapLines(ctx, v.trial + '. ' + v.location + '. Posted by the ' + v.postedBy + '.', W - 20);
       for (i = 0; i < trialLines.length && i < 2; i++) {
-        drawText(ctx, trialLines[i], 10, y + i * 11, '#8888aa', '9px monospace');
+        drawText(ctx, trialLines[i], 10, 118 + i * 10, '#c8c8e8', '9px monospace');
       }
     }
     if (textBox.active) {
@@ -4661,7 +4661,19 @@
           drawPartyImageOrInitial(bottomCtx, s.sprite, 27, y + 1, 16, 16, s.name.charAt(0), '#3a2a1a');
           drawText(bottomCtx, 'Slot ' + s.slot + '  ' + s.name, 66, y + 2, rowInk);
           drawText(bottomCtx, 'Lv ' + s.level, 196, y + 2, rowInk, '9px monospace');
-          drawText(bottomCtx, 'Wildlife  ' + (s.type || ''), 66, y + 13, rowGold, '9px monospace');
+          /* PARTY-FIX 3 (v10): a long type ran into the HP label at
+           * x196. Puk is canonically "Flying and Dragon", so its row
+           * read "Wildlife Flying and Dra[n]20/20". The kind line
+           * now drops whole words from the end until it clears
+           * x192, the same reason the Bondkin kind drops the job. */
+          bottomCtx.font = '9px monospace';
+          var wWords = ('Wildlife  ' + (s.type || '')).split(' ');
+          var wKind = wWords[0];
+          for (var wki = 1; wki < wWords.length; wki++) {
+            if (66 + bottomCtx.measureText(wKind + ' ' + wWords[wki]).width > 192) { break; }
+            wKind += ' ' + wWords[wki];
+          }
+          drawText(bottomCtx, wKind, 66, y + 13, rowGold, '9px monospace');
           drawText(bottomCtx, 'HP ' + s.hp + '/' + s.maxHp, 196, y + 13, rowGold, '9px monospace');
         } else {
           drawPartyImageOrInitial(bottomCtx, s.portrait, 27, y + 1, 16, 16, s.name.charAt(0), '#1a2a3a');
@@ -4955,12 +4967,12 @@
   };
 
   /* ---------- MONSTER BANK SCREEN (DS style, two screens) ---------- */
-  var bankPhase = 'counter'; /* counter, roster, deploy, sell, sellConfirm1, sellConfirm2 */
+  var bankPhase = 'counter'; /* counter, roster, deploy, sell, sellConfirm1, sellConfirm2, rarity */
   var bankSel = 0;
   var bankCursor = 0;        /* roster slot 0 to 23 */
   var bankSellId = null;
   var bankReturnTo = 'overworld';
-  var BANK_COUNTER_ITEMS = ['View Roster', 'Deploy Team', 'Sell Wildlife', 'Leave'];
+  var BANK_COUNTER_ITEMS = ['View Roster', 'Deploy Team', 'Sell Wildlife', 'Rarity Prices', 'Leave'];
 
   function bankShortName(name) {
     return String(name || '').slice(0, 5);
@@ -5060,8 +5072,13 @@
           if (bankSel === 0) { bankPhase = 'roster'; }
           else if (bankSel === 1) { bankPhase = 'deploy'; }
           else if (bankSel === 2) { bankPhase = 'sell'; }
+          else if (bankSel === 3) { bankPhase = 'rarity'; }
           else { setScreen(bankReturnTo); }
         }
+        return;
+      }
+      if (bankPhase === 'rarity') {
+        if (a === 'cancel') { bankPhase = 'counter'; }
         return;
       }
       if (bankPhase === 'roster' || bankPhase === 'deploy' || bankPhase === 'sell') {
@@ -5151,9 +5168,9 @@
         /* Counter strip art behind the counter menu list. */
         drawImageOrNull(bottomCtx, 'assets/ov3_bank_counter.png', 0, 12, W, 64);
         /* BANK-FIX v6: the menu items sat bare on the counter art.
-         * They now sit on a dark panel with a gold edge. Items run
-         * y20 to y72, so the panel runs y14 to y78. */
-        drawBox(bottomCtx, 6, 14, W - 12, 64, 'rgba(5,5,15,0.85)', '#e8c838');
+         * They now sit on a dark panel with a gold edge. Five items
+         * run y20 to y76, so the panel runs y14 to y90. */
+        drawBox(bottomCtx, 6, 14, W - 12, 76, 'rgba(5,5,15,0.85)', '#e8c838');
         drawMenuList(bottomCtx, '', BANK_COUNTER_ITEMS, bankSel, 20, false);
         drawBottomHint(bottomCtx, 'A: pick  B: leave');
         drawTextBox(bottomCtx);
@@ -5188,17 +5205,74 @@
         drawTextBox(bottomCtx);
         return;
       }
+      if (bankPhase === 'rarity') {
+        drawBannerOverBg(topCtx, 'assets/ov3_bank_bg.png', 'RARITY PRICES', 'What Broker Voss pays at Stage 1.');
+        /* V10-ENGINE-BANK-PARTY item 7: the rarity tiers and their
+         * Stage 1 base values lived only in the code comments and
+         * the price function, never on the Bank screen. Six tiers
+         * from BANK_BASE_CR, on one dark panel with a gold edge,
+         * same BANK-FIX pattern as the counter screen. */
+        drawBox(topCtx, 6, 48, W - 12, 96, 'rgba(5,5,15,0.85)', '#e8c838');
+        drawText(topCtx, 'Tier        Stage 1 base', 10, 52, '#e8c838');
+        var rarityRows = [
+          ['Common', '0 Cr', 'never bought'],
+          ['Uncommon', '150 Cr', ''],
+          ['Rare', '400 Cr', ''],
+          ['Epic', '900 Cr', ''],
+          ['Legendary', '2,500 Cr', ''],
+          ['Mythic', '6,000 Cr', '']
+        ];
+        for (var rri = 0; rri < rarityRows.length; rri++) {
+          var ry = 68 + rri * 13;
+          drawText(topCtx, rarityRows[rri][0], 10, ry, '#fff');
+          drawText(topCtx, rarityRows[rri][1], 76, ry, '#ffe98a');
+          if (rarityRows[rri][2]) { drawText(topCtx, rarityRows[rri][2], 140, ry, '#c8c8e8', '9px monospace'); }
+        }
+        drawScreenBg(bottomCtx, 'assets/ov3_bank_bg.png');
+        /* The pricing rules, wrapped to the bottom screen width,
+         * on one dark panel with a gold edge. */
+        drawBox(bottomCtx, 6, 6, W - 12, 132, 'rgba(5,5,15,0.85)', '#e8c838');
+        bottomCtx.font = '10px monospace';
+        var rarityRules = [
+          'Price = base x Stage + Lv x 10 Cr, then variant and fusion multipliers.',
+          'Stage x1, x1.5, x2. Hollow x2. Echo x2.5. Fused x3.',
+          'Common is never bought. Starters and story Wildlife are never sold.',
+          'Broker Voss buys 3 Wildlife a day. No buyback. No reclaim.'
+        ];
+        var rry = 12;
+        for (var rli = 0; rli < rarityRules.length; rli++) {
+          var rsub = wrapLines(bottomCtx, rarityRules[rli], W - 20);
+          for (var rsj = 0; rsj < rsub.length; rsj++) {
+            drawText(bottomCtx, rsub[rsj], 10, rry, '#fff');
+            rry += 16;
+          }
+        }
+        drawBottomHint(bottomCtx, 'B: back to the counter');
+        drawTextBox(bottomCtx);
+        return;
+      }
       var sw = bankWildlifeById(bankSellId);
       if (bankPhase === 'sellConfirm1') {
         drawBannerOverBg(topCtx, 'assets/ov3_bank_bg.png', 'SELL: FIRST CONFIRM', sw ? sw.name + '  ' + bankPrice(sw) + ' Cr' : 'No Wildlife picked.');
         if (sw) {
+          /* V10-ENGINE-UI item 4: these five lines used to sit bare
+           * on the big gold seal emblem, and the gold sale-price
+           * line was struck through by it. They now sit on one
+           * solid dark panel with a gold edge (the same BANK-FIX
+           * pattern the counter screen uses), and the price line
+           * is brightened to pale gold so it reads on the dark. */
+          drawBox(topCtx, 6, 48, W - 12, 80, 'rgba(5,5,15,0.85)', '#e8c838');
           drawText(topCtx, 'Name: ' + sw.name, 10, 52, '#fff');
           drawText(topCtx, 'Rarity: ' + sw.rarity + '  Stage ' + sw.stage + '  Lv ' + sw.level, 10, 68, '#fff');
           drawText(topCtx, 'Variant: ' + sw.variant + '  Fused: ' + (sw.fused ? 'yes' : 'no'), 10, 84, '#fff');
-          drawText(topCtx, 'Sale price: ' + bankPrice(sw) + ' Cr, paid at once.', 10, 100, '#e8c838');
+          drawText(topCtx, 'Sale price: ' + bankPrice(sw) + ' Cr, paid at once.', 10, 100, '#ffe98a');
           drawText(topCtx, 'Wallet after sale: ' + (state.wallet.cr + bankPrice(sw)) + ' Cr.', 10, 116, '#fff');
         }
         drawScreenBg(bottomCtx, 'assets/ov3_bank_bg.png');
+        /* V10-ENGINE-UI item 4: the warning block below sat bare
+         * on the seal too (gold-on-gold for the first two lines).
+         * One dark panel behind the whole block, same pattern. */
+        drawBox(bottomCtx, 6, 6, W - 12, 108, 'rgba(5,5,15,0.85)', '#e8c838');
         drawText(bottomCtx, 'A sold Wildlife is gone forever.', 10, 12, '#e8a838', '11px monospace');
         drawText(bottomCtx, 'No buyback. No reclaim. No return.', 10, 30, '#e8a838');
         /* The two warning lines used to run straight off the right
@@ -5217,11 +5291,20 @@
       if (bankPhase === 'sellConfirm2') {
         drawBannerOverBg(topCtx, 'assets/ov3_bank_bg.png', 'SELL: FINAL CHECK', sw ? sw.name + '  ' + bankPrice(sw) + ' Cr' : 'No Wildlife picked.');
         if (sw) {
+          /* V10-ENGINE-BANK-PARTY follow-on from item 4: these three
+           * lines sat bare on the big gold seal emblem, the same
+           * defect confirm-1 had. One solid dark panel with a gold
+           * edge behind them, same BANK-FIX pattern. */
+          drawBox(topCtx, 6, 48, W - 12, 52, 'rgba(5,5,15,0.85)', '#e8c838');
           drawText(topCtx, 'Final check: ' + sw.name + ' for ' + bankPrice(sw) + ' Cr.', 10, 52, '#fff');
           drawText(topCtx, 'Sold today after this sale: ' + (bank.soldToday + 1) + ' / 3.', 10, 68, '#fff');
           drawText(topCtx, 'Roster after this sale: ' + (bank.roster.length - 1) + ' / 24.', 10, 84, '#fff');
         }
         drawScreenBg(bottomCtx, 'assets/ov3_bank_bg.png');
+        /* V10-ENGINE-BANK-PARTY follow-on from item 4: the last
+         * chance lines sat bare on the seal too (gold on gold for
+         * the first line). One dark panel behind the whole block. */
+        drawBox(bottomCtx, 6, 6, W - 12, 58, 'rgba(5,5,15,0.85)', '#e8c838');
         drawText(bottomCtx, 'This is the last chance to stop.', 10, 12, '#e8a838', '11px monospace');
         drawText(bottomCtx, 'Press A and the sale goes through.', 10, 30, '#fff');
         drawText(bottomCtx, 'Press B and nothing is sold.', 10, 48, '#fff');

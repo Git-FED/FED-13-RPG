@@ -27,9 +27,10 @@
  * Guild scenes still always use his full name and title, never plain Bram.
  * If Git-FED renames the draft Bondkin, only NAMES_DRAFT.arcBondkin
  * changes; Guildmaster Bram Hollis stays as named.
- * PORTRAIT: PORTRAITS.guildmaster points at p_guildmaster.png, the
- * distinct Guildmaster portrait. The Elderkin arc Bondkin Halden
- * has his own portrait, p_bondkin_elderkin.png. No scene changes.
+ * PORTRAIT: PORTRAITS.guildmaster points at p_guildmaster_v10.png,
+ * the redesigned Guildmaster Bram Hollis portrait. The Elderkin arc
+ * Bondkin Halden has his own portrait, p_bondkin_elderkin.png.
+ * No scene changes.
  *
  * FX fallback: fx_slash, fx_smoke, fx_sparkle and fx_shield now exist
  * as image files in build/assets, and this module loads those files
@@ -444,10 +445,11 @@
     headteacher: asset('p_headteacher.png'),
     hunterClerk: asset('p_hunter_clerk.png'),
     guildClerk: asset('p_guild_clerk.png'),
-    /* Guildmaster portrait: p_guildmaster.png, the distinct
-     * Guildmaster portrait. The Elderkin arc Bondkin Halden has his
-     * own portrait, p_bondkin_elderkin.png. */
-    guildmaster: asset('p_guildmaster.png'),
+    /* Guildmaster portrait: p_guildmaster_v10.png, the redesigned
+     * Guildmaster Bram Hollis portrait (v10 art batch). The Elderkin
+     * arc Bondkin Halden has his own portrait,
+     * p_bondkin_elderkin.png. */
+    guildmaster: asset('p_guildmaster_v10.png'),
     brokerVoss: asset('p_voss.png'),
     wardenMirelle: asset('p_mirelle.png'),
     wardenWren: asset('p_wren.png'),
@@ -880,6 +882,392 @@
     next: 'grad_hatch'
   });
 
+  /* ------------------------------------------------------------------ */
+  /* V10-STORY: grad arc staging. The grad arc was still boring because */
+  /* only the permit cheer scene staged anything on the top screen;     */
+  /* every other grad scene drew the same flat background image while   */
+  /* the lines played. These beats give each grad scene a staged top   */
+  /* screen in the existing story scene system: Clerk Ivo, Headteacher */
+  /* Odo, Guild Clerk Petra, Guildmaster Bram Hollis, and the hall     */
+  /* crowd, one beat per line, same shape as GHOUL_ENCOUNTER_STAGING   */
+  /* and PERMIT_CELEBRATION_STAGING. Sprites are sex and race neutral  */
+  /* on purpose: the player and the rival change with creation, so no  */
+  /* staged beat ever shows the player or the rival. The engine draws  */
+  /* the beat frame under the scene title and sets it per line from    */
+  /* line.beat, so every line below carries a beat. No new flags, no   */
+  /* new hooks, no plot change. FX anchors sit low (y 150) so gold     */
+  /* sparkle does not cross a portrait face, per the v9 note.          */
+  /* ------------------------------------------------------------------ */
+
+  var GRAD_HATCH_STAGING = {
+    sceneId: 'grad_hatch',
+    beats: [
+      {
+        id: 'classroom',
+        title: 'The Classroom',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Classmate' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Classmate' }
+        ],
+        fx: [],
+        note: 'Graduation week. The classroom turns to look.'
+      },
+      {
+        id: 'egg_glow',
+        title: 'The Egg Shakes',
+        background: asset('bg_hall.png'),
+        sprites: [],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 120 },
+        note: 'The egg shakes, cracks, and light spills out.'
+      },
+      {
+        id: 'hatch_cheer',
+        title: 'It Hatched!',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Classmate' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Classmate' }
+        ],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 60 },
+        note: 'The hatch lands and the classroom cheers.'
+      },
+      {
+        id: 'sling',
+        title: 'Your First Partner',
+        background: asset('bg_hall.png'),
+        sprites: [],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 150 },
+        note: 'Your starter Wildlife, small enough for a carry sling.'
+      },
+      {
+        id: 'odo',
+        title: 'Headteacher Odo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_headteacher.png'), x: 88, y: 44, w: 80, h: 80, label: 'Headteacher Odo' }
+        ],
+        fx: [],
+        note: 'Headteacher Odo points at the door.'
+      }
+    ]
+  };
+
+  var GRAD_HUNTER_FAIL_STAGING = {
+    sceneId: 'grad_hunter_fail',
+    beats: [
+      {
+        id: 'office',
+        title: 'The Registry Office',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 28, y: 110, w: 40, h: 40, label: 'Hunter' },
+          { img: asset('p_hunter_clerk.png'), x: 104, y: 44, w: 48, h: 48, label: 'Clerk Ivo' },
+          { img: asset('ow_townsfolk_b.png'), x: 188, y: 110, w: 40, h: 40, label: 'Hunter' }
+        ],
+        fx: [],
+        note: 'The registry office, and the queue of hunters behind you.'
+      },
+      {
+        id: 'ivo',
+        title: 'Clerk Ivo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Clerk Ivo does not even look up.'
+      },
+      {
+        id: 'queue_groan',
+        title: 'The Queue Groans',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Hunter' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Hunter' }
+        ],
+        fx: [],
+        note: 'The hunters in line groan behind you.'
+      }
+    ]
+  };
+
+  var HUNTER_EXAM_STAGING = {
+    sceneId: 'hunter_exam',
+    beats: [
+      {
+        id: 'hall',
+        title: 'The Exam Hall',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 28, y: 110, w: 40, h: 40, label: 'Test taker' },
+          { img: asset('p_hunter_clerk.png'), x: 104, y: 44, w: 48, h: 48, label: 'Clerk Ivo' },
+          { img: asset('ow_townsfolk_b.png'), x: 188, y: 110, w: 40, h: 40, label: 'Test taker' }
+        ],
+        fx: [],
+        note: 'Long desks, hard chairs, and Clerk Ivo at the front.'
+      },
+      {
+        id: 'ivo',
+        title: 'Clerk Ivo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Clerk Ivo reads the rules out loud.'
+      },
+      {
+        id: 'nerves',
+        title: 'The Hall Waits',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Test taker' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Test taker' }
+        ],
+        fx: [],
+        note: 'Pencils scratch. Someone is sweating through their collar.'
+      }
+    ]
+  };
+
+  /* One shared staging for the three exam question scenes: Ivo asks,
+   * Ivo waits while the player thinks, Ivo presses for the answer. */
+  var HUNTER_EXAM_Q_STAGING = {
+    sceneId: 'hunter_exam_q',
+    beats: [
+      {
+        id: 'asks',
+        title: 'Clerk Ivo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Clerk Ivo asks the question.'
+      },
+      {
+        id: 'waits',
+        title: 'The Hall Waits',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 104, y: 60, w: 48, h: 48, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Ivo waits. The hall waits with him.'
+      },
+      {
+        id: 'presses',
+        title: 'Clerk Ivo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Clerk Ivo presses for the answer.'
+      }
+    ]
+  };
+
+  var HUNTER_EXAM_VERDICT_STAGING = {
+    sceneId: 'hunter_exam_verdict',
+    beats: [
+      {
+        id: 'verdict',
+        title: 'The Verdict',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Clerk Ivo counts the marks twice.'
+      }
+    ]
+  };
+
+  var HUNTER_EXAM_RETRY_STAGING = {
+    sceneId: 'hunter_exam_retry',
+    beats: [
+      {
+        id: 'ivo',
+        title: 'Clerk Ivo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Wrong. One wrong answer is one too many.'
+      },
+      {
+        id: 'hall',
+        title: 'The Exam Hall',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Test taker' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Test taker' }
+        ],
+        fx: [],
+        note: 'Study, then take it again.'
+      }
+    ]
+  };
+
+  var HUNTER_PERMIT_STAGING = {
+    sceneId: 'hunter_permit',
+    beats: [
+      {
+        id: 'ivo_blinks',
+        title: 'Clerk Ivo',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: [],
+        note: 'Three out of three. Ivo blinks at the paper.'
+      },
+      {
+        id: 'stamp',
+        title: 'The Stamp Lands',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 150 },
+        note: 'The brass stamp comes down with a thud.'
+      },
+      {
+        id: 'permit',
+        title: 'The Permit',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
+        ],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 150 },
+        note: 'Stamped, signed, and sealed.'
+      },
+      {
+        id: 'whisper',
+        title: 'The Hall Whispers',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Test taker' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Test taker' }
+        ],
+        fx: [],
+        note: 'Three out of three, did you see that?'
+      }
+    ]
+  };
+
+  var GUILD_REGISTER_STAGING = {
+    sceneId: 'guild_register',
+    beats: [
+      {
+        id: 'hall',
+        title: 'The Guild Hall',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 28, y: 110, w: 40, h: 40, label: 'Trainer' },
+          { img: asset('p_guild_clerk.png'), x: 104, y: 44, w: 48, h: 48, label: 'Guild Clerk Petra' },
+          { img: asset('ow_townsfolk_b.png'), x: 188, y: 110, w: 40, h: 40, label: 'Trainer' }
+        ],
+        fx: [],
+        note: 'Banners, job boards, and the smell of fresh ink.'
+      },
+      {
+        id: 'petra',
+        title: 'Guild Clerk Petra',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_guild_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Guild Clerk Petra' }
+        ],
+        fx: [],
+        note: 'Guild Clerk Petra waits at the long desk.'
+      },
+      {
+        id: 'guildmaster',
+        title: 'Guildmaster Bram Hollis',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_guildmaster_v10.png'), x: 88, y: 44, w: 80, h: 80, label: 'Guildmaster Bram Hollis' }
+        ],
+        fx: [],
+        note: 'Every clerk in the hall stands a little straighter.'
+      },
+      {
+        id: 'banners',
+        title: 'The Banners',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Trainer' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Trainer' }
+        ],
+        fx: [],
+        note: 'Banners hang from the rafters, one for every guild rank.'
+      }
+    ]
+  };
+
+  var GUILD_REGISTER_DONE_STAGING = {
+    sceneId: 'guild_register_done',
+    beats: [
+      {
+        id: 'petra',
+        title: 'Guild Clerk Petra',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_guild_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Guild Clerk Petra' }
+        ],
+        fx: [],
+        note: 'Guild Clerk Petra opens the right ledger.'
+      }
+    ]
+  };
+
+  /* One shared staging for the two guild registration closers. */
+  var GUILD_CLOSER_STAGING = {
+    sceneId: 'guild_register_closer',
+    beats: [
+      {
+        id: 'petra',
+        title: 'Guild Clerk Petra',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_guild_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Guild Clerk Petra' }
+        ],
+        fx: [],
+        note: 'Sign here, and here.'
+      },
+      {
+        id: 'guildmaster',
+        title: 'Guildmaster Bram Hollis',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('p_guildmaster_v10.png'), x: 88, y: 44, w: 80, h: 80, label: 'Guildmaster Bram Hollis' }
+        ],
+        fx: [],
+        note: 'A trainer is a trainer, guild or bazaar.'
+      },
+      {
+        id: 'hall',
+        title: 'The Guild Hall',
+        background: asset('bg_hall.png'),
+        sprites: [
+          { img: asset('ow_townsfolk_a.png'), x: 36, y: 96, w: 48, h: 48, label: 'Trainer' },
+          { img: asset('ow_townsfolk_b.png'), x: 172, y: 96, w: 48, h: 48, label: 'Trainer' }
+        ],
+        fx: ['sparkle'],
+        fxAt: { x: 128, y: 60 },
+        note: 'You are a monster trainer now.'
+      }
+    ]
+  };
+
   /* ------------------------- */
   /* (3) Grad arc.             */
   /* ------------------------- */
@@ -890,19 +1278,20 @@
     title: 'Grad Arc: The Egg Hatches',
     location: 'The mountain school, the 14th world',
     background: asset('bg_mountain.png'),
+    staging: GRAD_HATCH_STAGING,
     lines: [
-      narrate('Graduation week. Your egg is warm in your hands. It shakes. Once. Twice. Three times.'),
-      line('player', 'You', 'It is moving! Something inside is moving!'),
-      narrate('A crack runs across the shell. Then another crack. Light spills out through the cracks.'),
-      narrate('A flash of white light fills the room. When it fades, a small Wildlife blinks up at you.'),
-      narrate('The classroom gasps. Desks scrape. Every head in the room turns toward you.'),
-      line('rival', 'Sera', 'It hatched! Right in class! Yours actually hatched!'),
-      narrate('Your starter Wildlife. Your first partner. It fits in a carry sling, too young to fight yet, and it is already yours.'),
-      line('headteacher', 'Headteacher Odo', 'Trainer! That Wildlife does not belong in my classroom! And you do not belong in my school anymore!'),
-      line('player', 'You', 'What? But I am graduating!'),
-      line('headteacher', 'Headteacher Odo', 'You are dropping out. A trainer with a live Wildlife cannot sit in my school. Out. Now. Take your partner and go.'),
-      line('rival', 'Sera', 'Good luck out there, trainer. Show them what the mountain school taught you.'),
-      narrate('So the player drops out of school. The egg hatches, and the school door closes behind you.')
+      narrate('Graduation week. Your egg is warm in your hands. It shakes. Once. Twice. Three times.', { beat: 1 }),
+      line('player', 'You', 'It is moving! Something inside is moving!', { beat: 1 }),
+      narrate('A crack runs across the shell. Then another crack. Light spills out through the cracks.', { beat: 1 }),
+      narrate('A flash of white light fills the room. When it fades, a small Wildlife blinks up at you.', { beat: 2 }),
+      narrate('The classroom gasps. Desks scrape. Every head in the room turns toward you.', { beat: 0 }),
+      line('rival', 'Sera', 'It hatched! Right in class! Yours actually hatched!', { beat: 2 }),
+      narrate('Your starter Wildlife. Your first partner. It fits in a carry sling, too young to fight yet, and it is already yours.', { beat: 3 }),
+      line('headteacher', 'Headteacher Odo', 'Trainer! That Wildlife does not belong in my classroom! And you do not belong in my school anymore!', { beat: 4 }),
+      line('player', 'You', 'What? But I am graduating!', { beat: 4 }),
+      line('headteacher', 'Headteacher Odo', 'You are dropping out. A trainer with a live Wildlife cannot sit in my school. Out. Now. Take your partner and go.', { beat: 4 }),
+      line('rival', 'Sera', 'Good luck out there, trainer. Show them what the mountain school taught you.', { beat: 2 }),
+      narrate('So the player drops out of school. The egg hatches, and the school door closes behind you.', { beat: 0 })
     ],
     /* Hatch beats, in order: shake, crack, flash, reveal. The engine
      * plays them on the hatch screen. The cracked art is per picked
@@ -932,17 +1321,18 @@
     title: 'Grad Arc: Register as a Monster Hunter, Fail the Test',
     location: 'The hunter registry, the 14th world',
     background: asset('bg_hall.png'),
+    staging: GRAD_HUNTER_FAIL_STAGING,
     lines: [
-      narrate('No school, no plan, one small Wildlife in a sling. The registry office smells of old paper and older coffee.'),
-      line('hunterClerk', 'Clerk Ivo', 'Name? Age? Business? We register monster hunters here, not lost students.'),
-      line('player', 'You', 'I want to register as a monster hunter. I have a Wildlife. I can do the work.'),
-      line('hunterClerk', 'Clerk Ivo', 'Then take the test. Question one: what do you do when a wild Wildlife charges?'),
-      line('player', 'You', 'Uh. Pet it?'),
-      narrate('The hunters in line behind you groan. One of them mutters, another first timer, and the clerk does not even look up.'),
-      line('hunterClerk', 'Clerk Ivo', 'Fail. Next!'),
-      line('player', 'You', 'Wait, that was the whole test? One question?'),
-      narrate('You register as a monster hunter, and you fail the test. The clerk stamps the paper anyway, just to get rid of you.'),
-      line('hunterClerk', 'Clerk Ivo', 'Take the hunter exam if you want the permit. Study first. The exam does not forgive guessing.')
+      narrate('No school, no plan, one small Wildlife in a sling. The registry office smells of old paper and older coffee.', { beat: 0 }),
+      line('hunterClerk', 'Clerk Ivo', 'Name? Age? Business? We register monster hunters here, not lost students.', { beat: 1 }),
+      line('player', 'You', 'I want to register as a monster hunter. I have a Wildlife. I can do the work.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Then take the test. Question one: what do you do when a wild Wildlife charges?', { beat: 1 }),
+      line('player', 'You', 'Uh. Pet it?', { beat: 1 }),
+      narrate('The hunters in line behind you groan. One of them mutters, another first timer, and the clerk does not even look up.', { beat: 2 }),
+      line('hunterClerk', 'Clerk Ivo', 'Fail. Next!', { beat: 1 }),
+      line('player', 'You', 'Wait, that was the whole test? One question?', { beat: 1 }),
+      narrate('You register as a monster hunter, and you fail the test. The clerk stamps the paper anyway, just to get rid of you.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Take the hunter exam if you want the permit. Study first. The exam does not forgive guessing.', { beat: 1 })
     ],
     next: 'hunter_exam'
   });
@@ -964,14 +1354,15 @@
     title: 'Grad Arc: The Hunter Exam',
     location: 'The hunter exam hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: HUNTER_EXAM_STAGING,
     lines: [
-      narrate('The hunter exam hall. Long desks, hard chairs, and Clerk Ivo at the front with a stack of papers and a stamp that has ended many dreams.'),
-      line('hunterClerk', 'Clerk Ivo', 'Sit. Hands where I can see them. No shouting answers at your Wildlife.'),
-      narrate('Pencils scratch. Someone two desks over is sweating through their collar. The hall smells of ink and nerves.'),
-      line('hunterClerk', 'Clerk Ivo', 'No whispering. No peeking. Eyes on your own paper. The stamp decides, not your friends.'),
-      line('hunterClerk', 'Clerk Ivo', 'Three questions, trainer. Answer true, or go back to school. Three true answers and the permit is yours. One wrong answer and you study again and take it over.'),
-      line('player', 'You', 'Three questions. I studied. I know this. I know this.'),
-      line('hunterClerk', 'Clerk Ivo', 'Then prove it. First question.')
+      narrate('The hunter exam hall. Long desks, hard chairs, and Clerk Ivo at the front with a stack of papers and a stamp that has ended many dreams.', { beat: 0 }),
+      line('hunterClerk', 'Clerk Ivo', 'Sit. Hands where I can see them. No shouting answers at your Wildlife.', { beat: 1 }),
+      narrate('Pencils scratch. Someone two desks over is sweating through their collar. The hall smells of ink and nerves.', { beat: 2 }),
+      line('hunterClerk', 'Clerk Ivo', 'No whispering. No peeking. Eyes on your own paper. The stamp decides, not your friends.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Three questions, trainer. Answer true, or go back to school. Three true answers and the permit is yours. One wrong answer and you study again and take it over.', { beat: 1 }),
+      line('player', 'You', 'Three questions. I studied. I know this. I know this.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Then prove it. First question.', { beat: 1 })
     ],
     exam: {
       id: 'hunter_exam',
@@ -1021,10 +1412,12 @@
     title: 'Grad Arc: Exam Question 1 of 3',
     location: 'The hunter exam hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: HUNTER_EXAM_Q_STAGING,
     lines: [
-      line('hunterClerk', 'Clerk Ivo', 'Question one. What is the bank called, where Wildlife are kept and trained?'),
-      line('player', 'You', 'The bank... the bank where Wildlife are kept and trained. I know this one.'),
-      line('hunterClerk', 'Clerk Ivo', 'Answer, trainer. The whole hall is listening.')
+      line('hunterClerk', 'Clerk Ivo', 'Question one. What is the bank called, where Wildlife are kept and trained?', { beat: 0 }),
+      line('player', 'You', 'The bank... the bank where Wildlife are kept and trained. I know this one.', { beat: 1 }),
+      narrate('A pencil stops scratching somewhere behind you. The whole hall is listening too.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Answer, trainer. The whole hall is listening.', { beat: 2 })
     ],
     examQuestion: 'q1_bank',
     choice: choice('What is the bank called?', [
@@ -1042,10 +1435,12 @@
     title: 'Grad Arc: Exam Question 2 of 3',
     location: 'The hunter exam hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: HUNTER_EXAM_Q_STAGING,
     lines: [
-      line('hunterClerk', 'Clerk Ivo', 'Question two. Who sits above The Thirteen as the 14th?'),
-      line('player', 'You', 'Above The Thirteen... the 14th. Think. The whole mountain knows this name.'),
-      line('hunterClerk', 'Clerk Ivo', 'Careful. This name has ended more dreams than the other two questions together.')
+      line('hunterClerk', 'Clerk Ivo', 'Question two. Who sits above The Thirteen as the 14th?', { beat: 0 }),
+      line('player', 'You', 'Above The Thirteen... the 14th. Think. The whole mountain knows this name.', { beat: 1 }),
+      narrate('The hall holds its breath. Even the clock on the wall seems to stop ticking.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Careful. This name has ended more dreams than the other two questions together.', { beat: 2 })
     ],
     examQuestion: 'q2_king',
     choice: choice('Who sits above The Thirteen as the 14th?', [
@@ -1063,10 +1458,12 @@
     title: 'Grad Arc: Exam Question 3 of 3',
     location: 'The hunter exam hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: HUNTER_EXAM_Q_STAGING,
     lines: [
-      line('hunterClerk', 'Clerk Ivo', 'Last question. A Bondkin has sense: speech, memory, and the power to choose. How does a Bondkin join a trainer?'),
-      line('player', 'You', 'Last one. Speech, memory, and the power to choose. How do they join?'),
-      line('hunterClerk', 'Clerk Ivo', 'Last one. Say it like you mean it.')
+      line('hunterClerk', 'Clerk Ivo', 'Last question. A Bondkin has sense: speech, memory, and the power to choose. How does a Bondkin join a trainer?', { beat: 0 }),
+      line('player', 'You', 'Last one. Speech, memory, and the power to choose. How do they join?', { beat: 1 }),
+      narrate('Somewhere, a chair creaks. Ivo does not blink. Neither does anyone else.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Last one. Say it like you mean it.', { beat: 2 })
     ],
     examQuestion: 'q3_bondkin',
     choice: choice('How does a Bondkin join a trainer?', [
@@ -1089,8 +1486,9 @@
       var result = examVerdict(state);
       return result && result.passed ? 'hunter_permit' : 'hunter_exam_retry';
     },
+    staging: HUNTER_EXAM_VERDICT_STAGING,
     lines: [
-      narrate('Clerk Ivo counts the marks on your paper, twice, like he hopes he misread them.')
+      narrate('Clerk Ivo counts the marks on your paper, twice, like he hopes he misread them.', { beat: 0 })
     ],
     next: 'hunter_permit'
   });
@@ -1101,11 +1499,12 @@
     title: 'Grad Arc: Fail the Exam, Study Again',
     location: 'The hunter exam hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: HUNTER_EXAM_RETRY_STAGING,
     lines: [
-      line('hunterClerk', 'Clerk Ivo', 'Wrong. One wrong answer is one too many. The permit is not for guessers.'),
-      line('player', 'You', 'I... I will study. I will be back.'),
-      line('hunterClerk', 'Clerk Ivo', 'Study first. The exam does not forgive guessing. The bank is the Monster Bank, the king above The Thirteen is King Malachar Duskspire, and Bondkin ask to join. Learn it cold, then come back.'),
-      narrate('You failed the hunter exam. Study, then take it again.')
+      line('hunterClerk', 'Clerk Ivo', 'Wrong. One wrong answer is one too many. The permit is not for guessers.', { beat: 0 }),
+      line('player', 'You', 'I... I will study. I will be back.', { beat: 0 }),
+      line('hunterClerk', 'Clerk Ivo', 'Study first. The exam does not forgive guessing. The bank is the Monster Bank, the king above The Thirteen is King Malachar Duskspire, and Bondkin ask to join. Learn it cold, then come back.', { beat: 0 }),
+      narrate('You failed the hunter exam. Study, then take it again.', { beat: 1 })
     ],
     next: 'hunter_exam'
   });
@@ -1121,15 +1520,16 @@
     title: 'Grad Arc: The Permit',
     location: 'The hunter exam hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: HUNTER_PERMIT_STAGING,
     lines: [
-      narrate('Three answers, all true. The clerk blinks at the paper like it has insulted him.'),
-      line('hunterClerk', 'Clerk Ivo', 'Huh. Three out of three. Fine.'),
-      narrate('Clerk Ivo takes a brass stamp from his drawer, inks it slow, and brings it down on your paper with a thud that echoes off the hall walls.'),
-      line('hunterClerk', 'Clerk Ivo', 'Hunter permit. Stamped, signed, and sealed. Do not make me regret it.'),
-      narrate('The permit is yours. Your name, your Wildlife, and the stamp of the hunter registry, all on one paper.'),
-      narrate('Somewhere behind you, a chair scrapes. Another test taker whispers, three out of three, did you see that?'),
-      line('player', 'You', 'A permit. My permit. I am a licensed hunter now.'),
-      line('hunterClerk', 'Clerk Ivo', 'Licensed to hunt wild Wildlife, not to pet them. Now go. The guild hall is down the road, and Guild Clerk Petra is waiting on your signature.')
+      narrate('Three answers, all true. The clerk blinks at the paper like it has insulted him.', { beat: 0 }),
+      line('hunterClerk', 'Clerk Ivo', 'Huh. Three out of three. Fine.', { beat: 0 }),
+      narrate('Clerk Ivo takes a brass stamp from his drawer, inks it slow, and brings it down on your paper with a thud that echoes off the hall walls.', { beat: 1 }),
+      line('hunterClerk', 'Clerk Ivo', 'Hunter permit. Stamped, signed, and sealed. Do not make me regret it.', { beat: 2 }),
+      narrate('The permit is yours. Your name, your Wildlife, and the stamp of the hunter registry, all on one paper.', { beat: 2 }),
+      narrate('Somewhere behind you, a chair scrapes. Another test taker whispers, three out of three, did you see that?', { beat: 3 }),
+      line('player', 'You', 'A permit. My permit. I am a licensed hunter now.', { beat: 2 }),
+      line('hunterClerk', 'Clerk Ivo', 'Licensed to hunt wild Wildlife, not to pet them. Now go. The guild hall is down the road, and Guild Clerk Petra is waiting on your signature.', { beat: 0 })
     ],
     fx: ['sparkle'],
     onEnter: 'grantHunterPermit',
@@ -1153,7 +1553,7 @@
           { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
         ],
         fx: ['sparkle'],
-        fxAt: { x: 128, y: 84 },
+        fxAt: { x: 128, y: 150 },
         note: 'The exam hall erupts. Papers in the air, cheers off the walls.'
       },
       {
@@ -1163,7 +1563,7 @@
           { img: asset('p_hunter_clerk.png'), x: 88, y: 44, w: 80, h: 80, label: 'Clerk Ivo' }
         ],
         fx: ['sparkle'],
-        fxAt: { x: 128, y: 84 },
+        fxAt: { x: 128, y: 150 },
         note: 'Clerk Ivo almost smiles. Almost.'
       }
     ]
@@ -1200,17 +1600,18 @@
     title: 'Grad Arc: Register With a Bazaar or Guild',
     location: 'The guild hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: GUILD_REGISTER_STAGING,
     lines: [
-      narrate('The guild hall. Banners, job boards, and the smell of fresh ink. Guild Clerk Petra waits at the long desk with two ledgers open.'),
-      narrate('Banners hang from the rafters, one for every guild rank, and the boards are crowded with trainers reading missions. A clerk at the next desk stamps a paper so hard the whole desk jumps.'),
-      line('guildClerk', 'Guild Clerk Petra', 'Permit, please. Good. Stamped by Ivo himself. That almost never happens on the first pass.'),
-      line('player', 'You', 'I want to register to become a monster trainer.'),
-      line('guildClerk', 'Guild Clerk Petra', 'Then you register here, with the guild, or with the hiring bazaar across the square. Same permit, different road. The guild posts missions. The bazaar posts hire work. Pick one.'),
-      narrate('A tall man in a blue coat with gold trim steps out of the back office. Every clerk in the hall stands a little straighter.'),
-      line('guildmaster', 'Guildmaster Bram Hollis', 'Trainer. Petra tells me you passed Ivo on the first pass. Ivo fails everyone on the first pass. So either you studied, or you are lucky. Which is it?'),
-      line('player', 'You', 'I studied, Guildmaster.'),
-      line('guildmaster', 'Guildmaster Bram Hollis', 'Good answer. Luck runs out. Study does not. Petra, sign the trainer up.'),
-      line('guildClerk', 'Guild Clerk Petra', 'Heard that, hall? First pass on Ivo, and the Guildmaster noticed. Sign here, trainer, before he changes his mind.')
+      narrate('The guild hall. Banners, job boards, and the smell of fresh ink. Guild Clerk Petra waits at the long desk with two ledgers open.', { beat: 0 }),
+      narrate('Banners hang from the rafters, one for every guild rank, and the boards are crowded with trainers reading missions. A clerk at the next desk stamps a paper so hard the whole desk jumps.', { beat: 3 }),
+      line('guildClerk', 'Guild Clerk Petra', 'Permit, please. Good. Stamped by Ivo himself. That almost never happens on the first pass.', { beat: 1 }),
+      line('player', 'You', 'I want to register to become a monster trainer.', { beat: 1 }),
+      line('guildClerk', 'Guild Clerk Petra', 'Then you register here, with the guild, or with the hiring bazaar across the square. Same permit, different road. The guild posts missions. The bazaar posts hire work. Pick one.', { beat: 1 }),
+      narrate('A tall man in a blue coat with gold trim steps out of the back office. Every clerk in the hall stands a little straighter.', { beat: 2 }),
+      line('guildmaster', 'Guildmaster Bram Hollis', 'Trainer. Petra tells me you passed Ivo on the first pass. Ivo fails everyone on the first pass. So either you studied, or you are lucky. Which is it?', { beat: 2 }),
+      line('player', 'You', 'I studied, Guildmaster.', { beat: 2 }),
+      line('guildmaster', 'Guildmaster Bram Hollis', 'Good answer. Luck runs out. Study does not. Petra, sign the trainer up.', { beat: 2 }),
+      line('guildClerk', 'Guild Clerk Petra', 'Heard that, hall? First pass on Ivo, and the Guildmaster noticed. Sign here, trainer, before he changes his mind.', { beat: 1 })
     ],
     choice: choice('Register with the guild, or with the hiring bazaar?', [
       { id: 'guild', label: 'Register with the guild' },
@@ -1233,8 +1634,9 @@
       }
       return 'guild_register_guild';
     },
+    staging: GUILD_REGISTER_DONE_STAGING,
     lines: [
-      narrate('Guild Clerk Petra opens the right ledger and turns it toward you.')
+      narrate('Guild Clerk Petra opens the right ledger and turns it toward you.', { beat: 0 })
     ],
     next: 'guild_register_guild'
   });
@@ -1245,13 +1647,14 @@
     title: 'Grad Arc: Monster Trainer, Guild Road',
     location: 'The guild hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: GUILD_CLOSER_STAGING,
     lines: [
-      line('guildClerk', 'Guild Clerk Petra', 'Sign here, and here. Welcome to the guild, monster trainer.'),
-      line('player', 'You', 'Monster trainer. That sounds right. Better than monster breeder, better than monster bank clerk. That is not a lucrative position at all.'),
-      line('guildmaster', 'Guildmaster Bram Hollis', 'Trainer it is. Your Wildlife rides in a sling until it can fight. Keep it fed, keep it close, and keep your eyes on the road down.'),
-      line('guildClerk', 'Guild Clerk Petra', 'Your name is on the guild board now. Missions, pay, and the road to Saltquay. That is the guild road.'),
-      line('guildClerk', 'Guild Clerk Petra', 'The board is yours now, trainer. The whole hall saw you sign.'),
-      narrate('The career ladder is climbed: egg, hatch, drop out, register, fail, exam, permit, guild, monster trainer. You are a monster trainer now.')
+      line('guildClerk', 'Guild Clerk Petra', 'Sign here, and here. Welcome to the guild, monster trainer.', { beat: 0 }),
+      line('player', 'You', 'Monster trainer. That sounds right. Better than monster breeder, better than monster bank clerk. That is not a lucrative position at all.', { beat: 0 }),
+      line('guildmaster', 'Guildmaster Bram Hollis', 'Trainer it is. Your Wildlife rides in a sling until it can fight. Keep it fed, keep it close, and keep your eyes on the road down.', { beat: 1 }),
+      line('guildClerk', 'Guild Clerk Petra', 'Your name is on the guild board now. Missions, pay, and the road to Saltquay. That is the guild road.', { beat: 0 }),
+      line('guildClerk', 'Guild Clerk Petra', 'The board is yours now, trainer. The whole hall saw you sign.', { beat: 0 }),
+      narrate('The career ladder is climbed: egg, hatch, drop out, register, fail, exam, permit, guild, monster trainer. You are a monster trainer now.', { beat: 2 })
     ],
     gradArcEnd: true,
     next: 'road_down_gate'
@@ -1263,13 +1666,14 @@
     title: 'Grad Arc: Monster Trainer, Bazaar Road',
     location: 'The guild hall, the 14th world',
     background: asset('bg_hall.png'),
+    staging: GUILD_CLOSER_STAGING,
     lines: [
-      line('guildClerk', 'Guild Clerk Petra', 'The bazaar road it is. Same permit, different ledger. Sign here, and here.'),
-      line('guildClerk', 'Guild Clerk Petra', 'The broker across the square will stamp your hire papers. Hire work, day pay, and no guild board. You are a monster trainer either way.'),
-      line('player', 'You', 'Monster trainer. That sounds right. Better than monster breeder, better than monster bank clerk. That is not a lucrative position at all.'),
-      line('guildmaster', 'Guildmaster Bram Hollis', 'A trainer is a trainer, guild or bazaar. Your Wildlife rides in a sling until it can fight. Keep it fed, keep it close, and keep your eyes on the road down.'),
-      line('guildClerk', 'Guild Clerk Petra', 'The bazaar broker is waiting across the square. Tell him Petra sent you, and hold your head up.'),
-      narrate('The career ladder is climbed: egg, hatch, drop out, register, fail, exam, permit, bazaar, monster trainer. You are a monster trainer now.')
+      line('guildClerk', 'Guild Clerk Petra', 'The bazaar road it is. Same permit, different ledger. Sign here, and here.', { beat: 0 }),
+      line('guildClerk', 'Guild Clerk Petra', 'The broker across the square will stamp your hire papers. Hire work, day pay, and no guild board. You are a monster trainer either way.', { beat: 0 }),
+      line('player', 'You', 'Monster trainer. That sounds right. Better than monster breeder, better than monster bank clerk. That is not a lucrative position at all.', { beat: 0 }),
+      line('guildmaster', 'Guildmaster Bram Hollis', 'A trainer is a trainer, guild or bazaar. Your Wildlife rides in a sling until it can fight. Keep it fed, keep it close, and keep your eyes on the road down.', { beat: 1 }),
+      line('guildClerk', 'Guild Clerk Petra', 'The bazaar broker is waiting across the square. Tell him Petra sent you, and hold your head up.', { beat: 0 }),
+      narrate('The career ladder is climbed: egg, hatch, drop out, register, fail, exam, permit, bazaar, monster trainer. You are a monster trainer now.', { beat: 2 })
     ],
     gradArcEnd: true,
     next: 'road_down_gate'

@@ -334,13 +334,13 @@
   // with no portrait file get no portrait and no frame, and the
   // text keeps its full width. No dialogue text is changed.
   var SPEAKER_PORTRAITS = {
-    'Bram Hollis': 'assets/p_bram.png',
+    'Bram Hollis': 'assets/p_guildmaster_v10.png',
     'Warden Mirelle Voss': 'assets/p_mirelle.png',
     'Mirelle Voss': 'assets/p_mirelle.png',
     'Warden Wren Hallowlight': 'assets/p_wren.png',
     'Wren Hallowlight': 'assets/p_wren.png',
     'Broker Voss': 'assets/p_voss.png',
-    'Guildmaster': 'assets/p_guildmaster.png',
+    'Guildmaster': 'assets/p_guildmaster_v10.png',
     'Guild Clerk Petra': 'assets/p_guild_clerk.png',
     'Maren Saltwright': 'assets/p_maren.png',
     'Wisp': 'assets/p_wisp.png'
@@ -1228,7 +1228,7 @@
     moveCooldown: 0,
     dialogue: null, // { lines, index, shown }
     menuIndex: 0, submenu: null, // { title, lines }
-    grimoireIndex: 0, grimoireDetail: -1, // Grimoire screen cursor, -1 is the list
+    grimoireIndex: 0, grimoireDetail: -1, grimoirePage: 0, // Grimoire screen cursor, -1 is the list
     menuNavLatch: false, // D-pad edge latch so held Up/Down steps once
     period: 'day', periodAuto: true,
     gateSealed: false,
@@ -1330,8 +1330,29 @@
 
   // Dialogue. A advances, B or X closes at the end.
   function openDialogue(lines) {
-    state.dialogue = { lines: lines.slice(), index: 0, shown: 0 };
+    state.dialogue = { lines: expandDialogueLines(lines), index: 0, shown: 0 };
     state.mode = 'dialogue';
+  }
+  /* TEXTBOX-FIT v10: a line that still wraps past 4 lines at 8px is
+   * split into 4-line pages here, so no tail is ever silently dropped
+   * by the draw cap (the old code showed the first 4 wrapped lines
+   * and threw the rest away: the tail of all three Broker Voss lines,
+   * "myself." / "building." / "gone forever.", never displayed).
+   * The width is the narrow portrait width whenever the line has a
+   * speaker portrait file, so the pages hold even once the portrait
+   * loads; drawTextBox re-fits every frame, so a page never draws
+   * past 4 lines whatever size it picks. */
+  function expandDialogueLines(lines) {
+    var out = [];
+    (lines || []).forEach(function (line) {
+      var textW = speakerPortraitFile(line) ? (VIEW_W - 8 - 64) : (VIEW_W - 8 - 16);
+      var fit = fitTextBoxLine(line, textW);
+      if (fit.lines.length <= TEXT_BOX_MAX_LINES) { out.push(line); return; }
+      for (var p = 0; p < fit.lines.length; p += TEXT_BOX_MAX_LINES) {
+        out.push(fit.lines.slice(p, p + TEXT_BOX_MAX_LINES).join(' '));
+      }
+    });
+    return out;
   }
   function advanceDialogue() {
     var d = state.dialogue;
@@ -1523,11 +1544,28 @@
     state.grimoireIndex = (state.grimoireIndex + d + entries.length) % entries.length;
   }
   function grimoireConfirm() {
-    if (state.grimoireDetail >= 0) { state.grimoireDetail = -1; return; }
+    // TEXTBOX-FIT v10: A on a multi-page detail turns the page; A on
+    // the last page goes back to the list, as before.
+    if (state.grimoireDetail >= 0) {
+      var entries = buildGrimoireEntries();
+      var pages = grimoireDetailPages(entries[state.grimoireDetail]);
+      if ((state.grimoirePage || 0) < pages.length - 1) {
+        state.grimoirePage = (state.grimoirePage || 0) + 1;
+        return;
+      }
+      state.grimoireDetail = -1;
+      state.grimoirePage = 0;
+      return;
+    }
     state.grimoireDetail = state.grimoireIndex;
+    state.grimoirePage = 0;
   }
   function grimoireBack() {
-    if (state.grimoireDetail >= 0) { state.grimoireDetail = -1; return; }
+    if (state.grimoireDetail >= 0) {
+      state.grimoireDetail = -1;
+      state.grimoirePage = 0;
+      return;
+    }
     state.mode = 'field';
   }
 
@@ -1538,6 +1576,7 @@
       state.mode = 'grimoire';
       state.grimoireIndex = 0;
       state.grimoireDetail = -1;
+      state.grimoirePage = 0;
       storyTrigger('grimoireOpened', { map: state.mapId });
       return;
     } else if (item === 'Party') {
@@ -2452,6 +2491,51 @@
     }
   }
 
+  /* TEXTBOX-FIT v10: the same defect class as the engine v9 dialogue
+   * fit. The old box wrapped at a fixed 10px and capped the draw at
+   * 4 lines, so a line wrapping to 5 lost its tail on screen (all
+   * three Broker Voss lines), and a 4-line line at 10px put its 4th
+   * line at by+42, ink to by+53.6, 1.6px past the 52px box bottom
+   * (every Wren line, every 4-line caption). The fit measures with
+   * the font that will be drawn, on an offscreen context, so it never
+   * depends on whatever font the last draw left behind (the v8
+   * lesson), and shrinks 10 to 9 to 8px until the wrap fits 4 lines.
+   * The 4-line geometry is 11px steps from by+5, so 4 lines of 10px
+   * ink end at by+49.6, inside the box with room to spare. */
+  var TEXT_BOX_FONT_SIZES = [10, 9, 8];
+  var TEXT_BOX_MAX_LINES = 4;
+  var measureCanvas = null;
+  function textMeasureCtx() {
+    if (!measureCanvas) { measureCanvas = document.createElement('canvas'); }
+    return measureCanvas.getContext('2d');
+  }
+  function wrapLinesFor(ctx, text, maxW) {
+    var words = String(text).split(' ');
+    var lines = [];
+    var cur = '';
+    for (var i = 0; i < words.length; i++) {
+      var test = cur ? cur + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxW && cur) {
+        lines.push(cur);
+        cur = words[i];
+      } else { cur = test; }
+    }
+    if (cur) { lines.push(cur); }
+    return lines;
+  }
+  function fitTextBoxLine(text, textW) {
+    var mctx = textMeasureCtx();
+    var lines = null;
+    var px = 8;
+    for (var s = 0; s < TEXT_BOX_FONT_SIZES.length; s++) {
+      mctx.font = TEXT_BOX_FONT_SIZES[s] + 'px monospace';
+      lines = wrapLinesFor(mctx, text, textW);
+      px = TEXT_BOX_FONT_SIZES[s];
+      if (lines.length <= TEXT_BOX_MAX_LINES) { break; }
+    }
+    return { fontPx: px, lines: lines };
+  }
+
   function drawTextBox(ctx, lines, index, shown) {
     var boxH = 52;
     var bx = 4, by = VIEW_H - boxH - 4, bw = VIEW_W - 8;
@@ -2491,17 +2575,17 @@
       ctx.lineWidth = 1;
       ctx.strokeRect(bx + 7.5, by + 7.5, 37, 37);
     }
-    /* DIALOGUE-FIX v8: 10px, not 11px. At 11px the guildmaster line
-     * ("Guildmaster: Take down Maren Saltwright. Reward: 1,000,000
-     * Cr. Trial Battle 1.") wrapped to 4 lines in a box that fits 3,
-     * so "1." fell off the bottom edge. At 10px it wraps to 3 lines
-     * (28 / 29 / 19 chars in the 184px portrait width). The 4-line
-     * cap in wrapText keeps any longer line inside the box. */
+    /* TEXTBOX-FIT v10: fit the FULL line, not the typed prefix, so
+     * the wrap never shifts as the text types out (greedy wrap is
+     * prefix-stable, so the shown prefix wraps the same way). The
+     * fitted size is the largest of 10/9/8 whose wrap fits 4 lines;
+     * every current line fits, and openDialogue pages any future
+     * line that still runs past 4 at 8px. */
     ctx.fillStyle = '#1a1a2e';
-    ctx.font = '10px monospace';
     ctx.textBaseline = 'top';
+    var fit = fitTextBoxLine(line, textW);
     var text = line.slice(0, shown);
-    wrapText(ctx, text, textX, by + 6, textW, 12);
+    wrapText(ctx, text, textX, by + 5, textW, 11, fit.fontPx);
     // Continue prompt blinks on the same 400ms beat as the other
     // dialogue screens. ov3_dialog_arrow.png replaces the 'v'/'A'
     // text when it has loaded; the text is the fallback.
@@ -2521,22 +2605,48 @@
     ctx.restore();
   }
 
-  function wrapText(ctx, text, x, y, maxW, lh) {
-    var words = text.split(' ');
-    var line = '';
-    var yy = y;
+  /* TEXTBOX-FIT v10: the font is set here, before measuring, so the
+   * wrap always measures with the font that is drawn (the v8 lesson:
+   * never trust whatever font the last draw left on the context).
+   * Returns the number of lines drawn, so callers advance by the
+   * true wrapped count instead of a width estimate. The 4-line cap
+   * stays as a safety net only; fitTextBoxLine and openDialogue
+   * guarantee no fitted text ever reaches it with a tail. */
+  function wrapText(ctx, text, x, y, maxW, lh, fontPx) {
+    if (fontPx) { ctx.font = fontPx + 'px monospace'; }
+    var lines = wrapLinesFor(ctx, text, maxW);
     var drawn = 0;
-    for (var i = 0; i < words.length; i++) {
-      var test = line ? line + ' ' + words[i] : words[i];
-      if (ctx.measureText(test).width > maxW && line) {
-        if (drawn < 4) { ctx.fillText(line, x, yy); drawn++; }
-        line = words[i];
-        yy += lh;
-      } else {
-        line = test;
-      }
+    for (var i = 0; i < lines.length && drawn < 4; i++) {
+      ctx.fillText(lines[i], x, y + drawn * lh);
+      drawn++;
     }
-    if (line && drawn < 4) { ctx.fillText(line, x, yy); }
+    return drawn;
+  }
+
+  /* TEXTBOX-FIT v10: Grimoire detail pages. A detail entry holds up
+   * to 6 logical lines, each wrapping to as many as 4 visual lines
+   * at 11px, but the panel only fits 8 visual lines above the footer
+   * (y58 to VIEW_H-28). The old code drew every line and checked the
+   * guard after, so the guide entry smeared its 4th line across the
+   * footer and its last two lines never drew at all. Pages are cut
+   * on visual lines at 11px, 12px a line plus 2px after each logical
+   * line, so a page never crosses the footer. */
+  function grimoireDetailPages(entry) {
+    var mctx = textMeasureCtx();
+    mctx.font = '11px monospace';
+    var LIMIT = (VIEW_H - 28) - 58;
+    var pages = [[]];
+    var height = 0;
+    (entry.lines || []).forEach(function (ln) {
+      var wl = wrapLinesFor(mctx, ln, VIEW_W - 24);
+      for (var i = 0; i < wl.length; i++) {
+        var h = 12 + ((i === wl.length - 1) ? 2 : 0);
+        if (height > 0 && height + h > LIMIT) { pages.push([]); height = 0; }
+        pages[pages.length - 1].push({ text: wl[i], h: h });
+        height += h;
+      }
+    });
+    return pages;
   }
 
   function drawGrimoire(ctx) {
@@ -2561,17 +2671,22 @@
       ctx.fillStyle = '#1a1a2e';
       ctx.font = '11px monospace';
       ctx.fillText(shown.title, 12, 42);
+      var pages = grimoireDetailPages(shown);
+      var pageIdx = Math.min(state.grimoirePage || 0, pages.length - 1);
       var y = 58;
-      shown.lines.forEach(function (ln) {
-        var before = y;
-        wrapText(ctx, ln, 12, y, VIEW_W - 24, 12);
-        var est = Math.max(1, Math.ceil(ctx.measureText(ln).width / (VIEW_W - 24)));
-        y = before + est * 12 + 2;
-        if (y > VIEW_H - 28) return;
+      pages[pageIdx].forEach(function (v) {
+        ctx.fillText(v.text, 12, y);
+        y += v.h;
       });
       ctx.font = '10px monospace';
       ctx.fillStyle = '#5d6d7e';
-      ctx.fillText('A or B: back to the list  X: close', 12, VIEW_H - 16);
+      if (pages.length > 1 && pageIdx < pages.length - 1) {
+        ctx.fillText('A: next page ' + (pageIdx + 1) + '/' + pages.length + '  B: back  X: close', 12, VIEW_H - 16);
+      } else if (pages.length > 1) {
+        ctx.fillText('A: back to list  B: back  X: close', 12, VIEW_H - 16);
+      } else {
+        ctx.fillText('A or B: back to the list  X: close', 12, VIEW_H - 16);
+      }
     } else {
       for (var i = 0; i < entries.length; i++) {
         var yy = 44 + i * 18;
@@ -2582,7 +2697,7 @@
       }
       ctx.font = '10px monospace';
       ctx.fillStyle = '#5d6d7e';
-      wrapText(ctx, shown.sub, 12, 44 + entries.length * 18 + 4, VIEW_W - 24, 12);
+      wrapText(ctx, shown.sub, 12, 44 + entries.length * 18 + 4, VIEW_W - 24, 12, 10);
       ctx.fillText('A: open  B or X: close', 12, VIEW_H - 16);
     }
     ctx.restore();
